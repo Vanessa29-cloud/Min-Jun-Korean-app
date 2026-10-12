@@ -5,69 +5,221 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Creative Wellness Hub</title>
     <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --btn-bg: #238636;
+            --btn-hover: #2ea043;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
+
         .card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 500px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 550px;
+            width: 100%;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
         }
+
         h1 {
-            color: #58a6ff;
-            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
+
+        p.subtitle {
+            color: #8b949e;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            text-align: left;
+            font-size: 0.85rem;
+            color: #8b949e;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select {
+            background-color: #21262d;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--accent-color);
+        }
+
         button {
-            background-color: #238636;
+            background-color: var(--btn-bg);
             color: #ffffff;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1.05rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
         }
+
         button:hover {
-            background-color: #2ea043;
+            background-color: var(--btn-hover);
+            transform: translateY(-2px);
         }
+
+        button:active {
+            transform: translateY(0);
+        }
+
         #output {
             margin-top: 25px;
-            font-style: italic;
-            color: #8b949e;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #21262d;
+            border-left: 4px solid var(--accent-color);
+            text-align: left;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .capsule-text {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #f0f6fc;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #388bfd26;
+            color: var(--accent-color);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
+
     <div class="card">
         <h1>AI Creative Wellness Hub</h1>
-        <p>Your interactive motivation dashboard combining books, music, art, and computer science.</p>
-        <button id="inspireBtn">Get Creative Boost</button>
-        <div id="output">Click the button for a motivational capsule!</div>
+        <p class="subtitle">Personalized motivation combining Music, Books, Art, and Code</p>
+
+        <div class="controls">
+            <label for="moodSelect">Current Mood</label>
+            <select id="moodSelect">
+                <option value="uninspired">Uninspired / Stuck</option>
+                <option value="anxious">Anxious / Overwhelmed</option>
+                <option value="tired">Tired / Low Energy</option>
+                <option value="ambitious">Ready to Conquer</option>
+            </select>
+
+            <label for="categorySelect">Inspiration Source</label>
+            <select id="categorySelect">
+                <option value="all">✨ All Sources (AI Mix)</option>
+                <option value="music">🎵 Music & Lyrics</option>
+                <option value="books">📚 Books & Literature</option>
+                <option value="art">🎨 Visual Art & Aesthetics</option>
+                <option value="tech">💻 Computer Science & Logic</option>
+            </select>
+        </div>
+
+        <button id="inspireBtn">Generate Motivation Capsule</button>
+
+        <div id="output">
+            <div class="capsule-text">Select your mood and click above to generate a tailored creative boost!</div>
+        </div>
     </div>
 
     <script>
-        const capsules = [
-            "🎵 'Regarde-moi bien, c'est mon moment' — Keep pushing forward!",
-            "📚 'Creativity is intelligence having fun.' — Albert Einstein",
-            "🎨 'Art enables us to find ourselves and lose ourselves at the same time.' — Thomas Merton"
+        // Data Bank for Rule-Based AI Engine
+        const data = [
+            // Music
+            { mood: 'uninspired', category: 'music', text: "🎵 'Regarde-moi bien, c'est mon moment' — Take your stage and rewrite your narrative." },
+            { mood: 'ambitious', category: 'music', text: "🎵 'Maintenant, faites place à la reine!' — Channel your inner confidence and create boldly." },
+            { mood: 'tired', category: 'music', text: "🎵 'I cut my hair, changed my mind...' — Reset, redefine your space, and start fresh." },
+            { mood: 'anxious', category: 'music', text: "🎵 Soft ambient keys or open Em to G guitar chords can lower cortisol and restore focus." },
+
+            // Books
+            { mood: 'uninspired', category: 'books', text: "📚 'Creativity is intelligence having fun.' — Albert Einstein" },
+            { mood: 'anxious', category: 'books', text: "📚 'You do not have to finish everything today; you only have to take one small step.' — Marcus Aurelius" },
+            { mood: 'tired', category: 'books', text: "📚 'Rest is not laziness; it is the soil in which inspiration grows.' — Virginia Woolf" },
+            { mood: 'ambitious', category: 'books', text: "📚 'Whatever you can do, or dream you can, begin it. Boldness has genius, power, and magic in it.' — Goethe" },
+
+            // Art
+            { mood: 'uninspired', category: 'art', text: "🎨 Visual Prompt: Try designing a dark 'Cyber Night' aesthetic with neon blue and soft violet gradients." },
+            { mood: 'anxious', category: 'art', text: "🎨 Aesthetic Prompt: Focus on minimalism—clean typography, soft sage green palettes, and wide breathing spaces." },
+            { mood: 'tired', category: 'art', text: "🎨 Visual Focus: Soft pastel warm tones, warm candlelight hues, and structured organic textures." },
+            { mood: 'ambitious', category: 'art', text: "🎨 Visual Prompt: High-contrast typography with metallic gold accents on deep obsidian background." },
+
+            // Tech / CS
+            { mood: 'uninspired', category: 'tech', text: "💻 'First, solve the problem. Then, write the code.' — John Johnson" },
+            { mood: 'anxious', category: 'tech', text: "💻 Break complex algorithms into simple sub-routines. Big problems are just smaller functions combined." },
+            { mood: 'tired', category: 'tech', text: "💻 Remember to debug your physical battery: hydrate, stretch, and step away from the monitor." },
+            { mood: 'ambitious', category: 'tech', text: "💻 'The computer was born to solve problems that did not exist before.' — Bill Gates" }
         ];
 
         document.getElementById('inspireBtn').addEventListener('click', function() {
-            const randomIndex = Math.floor(Math.random() * capsules.length);
-            document.getElementById('output').textContent = capsules[randomIndex];
+            const selectedMood = document.getElementById('moodSelect').value;
+            const selectedCategory = document.getElementById('categorySelect').value;
+
+            // Filter logic (Rule-based recommendation engine)
+            let filteredResults = data.filter(item => {
+                const moodMatch = item.mood === selectedMood;
+                const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory;
+                return moodMatch && categoryMatch;
+            });
+
+            // Fallback if combination is empty
+            if (filteredResults.length === 0) {
+                filteredResults = data.filter(item => item.mood === selectedMood);
+            }
+
+            const randomIndex = Math.floor(Math.random() * filteredResults.length);
+            const recommendation = filteredResults[randomIndex];
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `
+                <div>
+                    <span class="tag">${recommendation.category.toUpperCase()} • ${selectedMood.toUpperCase()}</span>
+                    <div class="capsule-text">${recommendation.text}</div>
+                </div>
+            `;
         });
     </script>
 </body>
