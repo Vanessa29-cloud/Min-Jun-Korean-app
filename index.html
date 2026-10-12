@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Creative Wellness Hub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        h1 {
+            color: #58a6ff;
+            font-size: 1.8rem;
+        }
+        button {
+            background-color: #238636;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s ease;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        #output {
+            margin-top: 25px;
+            font-style: italic;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>AI Creative Wellness Hub</h1>
+        <p>Your interactive motivation dashboard combining books, music, art, and computer science.</p>
+        <button id="inspireBtn">Get Creative Boost</button>
+        <div id="output">Click the button for a motivational capsule!</div>
+    </div>
+
+    <script>
+        const capsules = [
+            "🎵 'Regarde-moi bien, c'est mon moment' — Keep pushing forward!",
+            "📚 'Creativity is intelligence having fun.' — Albert Einstein",
+            "🎨 'Art enables us to find ourselves and lose ourselves at the same time.' — Thomas Merton"
+        ];
+
+        document.getElementById('inspireBtn').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * capsules.length);
+            document.getElementById('output').textContent = capsules[randomIndex];
+        });
+    </script>
+</body>
+</html>
