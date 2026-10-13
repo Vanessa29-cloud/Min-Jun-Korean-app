@@ -1,226 +1,570 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Creative Wellness Hub</title>
-    <style>
-        :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --text-color: #c9d1d9;
-            --accent-color: #58a6ff;
-            --btn-bg: #238636;
-            --btn-hover: #2ea043;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillPulse: Korean Immersion & STEM Companion</title>
+  
+  <!-- Tailwind CSS for Cyber Violet / Neon Teal styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0b0f19',
+            cardBg: '#131b2e',
+            cyberViolet: '#8b5cf6',
+            neonTeal: '#14b8a6',
+            warmGold: '#fbbf24',
+          }
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2.5rem;
-            max-width: 550px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-            transition: all 0.3s ease;
-        }
-
-        h1 {
-            color: var(--accent-color);
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        p.subtitle {
-            color: #8b949e;
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        label {
-            text-align: left;
-            font-size: 0.85rem;
-            color: #8b949e;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        select {
-            background-color: #21262d;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        select:focus {
-            border-color: var(--accent-color);
-        }
-
-        button {
-            background-color: var(--btn-bg);
-            color: #ffffff;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 1.05rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: var(--btn-hover);
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        #output {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #21262d;
-            border-left: 4px solid var(--accent-color);
-            text-align: left;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-        }
-
-        .capsule-text {
-            font-size: 1.05rem;
-            line-height: 1.5;
-            color: #f0f6fc;
-        }
-
-        .tag {
-            display: inline-block;
-            background: #388bfd26;
-            color: var(--accent-color);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-    </style>
+      }
+    }
+  </script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-<body>
+<body class="bg-obsidian text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <div class="card">
-        <h1>AI Creative Wellness Hub</h1>
-        <p class="subtitle">Personalized motivation combining Music, Books, Art, and Code</p>
-
-        <div class="controls">
-            <label for="moodSelect">Current Mood</label>
-            <select id="moodSelect">
-                <option value="uninspired">Uninspired / Stuck</option>
-                <option value="anxious">Anxious / Overwhelmed</option>
-                <option value="tired">Tired / Low Energy</option>
-                <option value="ambitious">Ready to Conquer</option>
-            </select>
-
-            <label for="categorySelect">Inspiration Source</label>
-            <select id="categorySelect">
-                <option value="all">✨ All Sources (AI Mix)</option>
-                <option value="music">🎵 Music & Lyrics</option>
-                <option value="books">📚 Books & Literature</option>
-                <option value="art">🎨 Visual Art & Aesthetics</option>
-                <option value="tech">💻 Computer Science & Logic</option>
-            </select>
+  <!-- HEADER NAVIGATION -->
+  <header class="border-b border-slate-800 bg-cardBg/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyberViolet to-neonTeal flex items-center justify-center text-xl font-bold shadow-lg shadow-cyberViolet/20">
+          SP
         </div>
-
-        <button id="inspireBtn">Generate Motivation Capsule</button>
-
-        <div id="output">
-            <div class="capsule-text">Select your mood and click above to generate a tailored creative boost!</div>
+        <div>
+          <h1 class="text-lg font-bold bg-gradient-to-r from-cyberViolet via-teal-300 to-neonTeal bg-clip-text text-transparent">SkillPulse</h1>
+          <p class="text-xs text-slate-400">Korean Immersion & STEM Companion</p>
         </div>
+      </div>
+
+      <!-- Tab Switchers -->
+      <nav class="flex space-x-2 bg-obsidian/60 p-1 rounded-xl border border-slate-800">
+        <button id="tab-btn-korean" onclick="switchTab('korean')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-cyberViolet text-white shadow-md">
+          <i class="fa-solid font-bold fa-language mr-2"></i>🇰🇷 Korean Buddy
+        </button>
+        <button id="tab-btn-stem" onclick="switchTab('stem')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all text-slate-400 hover:text-white">
+          <i class="fa-solid fa-atom mr-2"></i>🔬 STEM & CS Coach
+        </button>
+        <button id="tab-btn-drafts" onclick="switchTab('drafts')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all text-slate-400 hover:text-white">
+          <i class="fa-solid fa-pen-nib mr-2"></i>📝 Practice & Song Studio
+        </button>
+      </nav>
+
+      <!-- Immersion Mode Toggle -->
+      <div class="flex items-center space-x-2 bg-cardBg px-3 py-1.5 rounded-lg border border-slate-700">
+        <span class="text-xs text-slate-300 font-medium">Full Immersion:</span>
+        <button id="immersion-toggle" onclick="toggleImmersion()" class="w-11 h-6 bg-slate-700 rounded-full p-1 transition-colors relative">
+          <div id="immersion-dot" class="w-4 h-4 bg-white rounded-full transition-transform"></div>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <script>
-        // Data Bank for Rule-Based AI Engine
-        const data = [
-            // Music
-            { mood: 'uninspired', category: 'music', text: "🎵 'Regarde-moi bien, c'est mon moment' — Take your stage and rewrite your narrative." },
-            { mood: 'ambitious', category: 'music', text: "🎵 'Maintenant, faites place à la reine!' — Channel your inner confidence and create boldly." },
-            { mood: 'tired', category: 'music', text: "🎵 'I cut my hair, changed my mind...' — Reset, redefine your space, and start fresh." },
-            { mood: 'anxious', category: 'music', text: "🎵 Soft ambient keys or open Em to G guitar chords can lower cortisol and restore focus." },
+  <!-- MAIN WORKSPACE -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1">
 
-            // Books
-            { mood: 'uninspired', category: 'books', text: "📚 'Creativity is intelligence having fun.' — Albert Einstein" },
-            { mood: 'anxious', category: 'books', text: "📚 'You do not have to finish everything today; you only have to take one small step.' — Marcus Aurelius" },
-            { mood: 'tired', category: 'books', text: "📚 'Rest is not laziness; it is the soil in which inspiration grows.' — Virginia Woolf" },
-            { mood: 'ambitious', category: 'books', text: "📚 'Whatever you can do, or dream you can, begin it. Boldness has genius, power, and magic in it.' — Goethe" },
-
-            // Art
-            { mood: 'uninspired', category: 'art', text: "🎨 Visual Prompt: Try designing a dark 'Cyber Night' aesthetic with neon blue and soft violet gradients." },
-            { mood: 'anxious', category: 'art', text: "🎨 Aesthetic Prompt: Focus on minimalism—clean typography, soft sage green palettes, and wide breathing spaces." },
-            { mood: 'tired', category: 'art', text: "🎨 Visual Focus: Soft pastel warm tones, warm candlelight hues, and structured organic textures." },
-            { mood: 'ambitious', category: 'art', text: "🎨 Visual Prompt: High-contrast typography with metallic gold accents on deep obsidian background." },
-
-            // Tech / CS
-            { mood: 'uninspired', category: 'tech', text: "💻 'First, solve the problem. Then, write the code.' — John Johnson" },
-            { mood: 'anxious', category: 'tech', text: "💻 Break complex algorithms into simple sub-routines. Big problems are just smaller functions combined." },
-            { mood: 'tired', category: 'tech', text: "💻 Remember to debug your physical battery: hydrate, stretch, and step away from the monitor." },
-            { mood: 'ambitious', category: 'tech', text: "💻 'The computer was born to solve problems that did not exist before.' — Bill Gates" }
-        ];
-
-        document.getElementById('inspireBtn').addEventListener('click', function() {
-            const selectedMood = document.getElementById('moodSelect').value;
-            const selectedCategory = document.getElementById('categorySelect').value;
-
-            // Filter logic (Rule-based recommendation engine)
-            let filteredResults = data.filter(item => {
-                const moodMatch = item.mood === selectedMood;
-                const categoryMatch = selectedCategory === 'all' || item.category === selectedCategory;
-                return moodMatch && categoryMatch;
-            });
-
-            // Fallback if combination is empty
-            if (filteredResults.length === 0) {
-                filteredResults = data.filter(item => item.mood === selectedMood);
-            }
-
-            const randomIndex = Math.floor(Math.random() * filteredResults.length);
-            const recommendation = filteredResults[randomIndex];
-
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = `
-                <div>
-                    <span class="tag">${recommendation.category.toUpperCase()} • ${selectedMood.toUpperCase()}</span>
-                    <div class="capsule-text">${recommendation.text}</div>
+    <!-- ========================================== -->
+    <!-- TAB 1: KOREAN IMMERSION & MIN-JUN CHATBOX -->
+    <!-- ========================================== -->
+    <section id="tab-korean" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left 2 Columns: Chat with Min-Jun -->
+        <div class="lg:col-span-2 bg-cardBg rounded-2xl border border-slate-800 p-4 md:p-6 flex flex-col h-[650px] shadow-xl">
+          <!-- Chat Header -->
+          <div class="flex justify-between items-center pb-4 mb-4 border-b border-slate-800">
+            <div class="flex items-center space-x-3">
+              <div class="relative">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-cyberViolet to-neonTeal p-0.5">
+                  <div class="w-full h-full bg-cardBg rounded-full flex items-center justify-center text-xl">
+                    🤖
+                  </div>
                 </div>
-            `;
-        });
-    </script>
+                <span class="w-3.5 h-3.5 bg-emerald-500 border-2 border-cardBg rounded-full absolute bottom-0 right-0"></span>
+              </div>
+              <div>
+                <h2 class="font-bold text-white flex items-center gap-2">
+                  Min-Jun (민준) <span class="text-xs font-normal text-neonTeal bg-neonTeal/10 px-2 py-0.5 rounded-full border border-neonTeal/20">AI Tutor & Friend</span>
+                </h2>
+                <p class="text-xs text-slate-400">Target: B1/B2 Fluency by 2028 | GKS Prep Coach</p>
+              </div>
+            </div>
+            <button onclick="playMinJunIntro()" class="text-xs bg-cyberViolet/20 hover:bg-cyberViolet/30 text-cyberViolet font-medium px-3 py-1.5 rounded-lg border border-cyberViolet/30 transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-volume-high"></i> Hear Intro
+            </button>
+          </div>
+
+          <!-- Chat Messages Area -->
+          <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 pr-2 mb-4 scrollbar-thin">
+            <!-- Min-Jun Welcome Message -->
+            <div class="flex items-start space-x-3">
+              <div class="w-8 h-8 rounded-full bg-cyberViolet/20 flex items-center justify-center text-sm shrink-0">🤖</div>
+              <div class="bg-slate-800/80 rounded-2xl p-4 max-w-[85%] text-slate-200 border border-slate-700/50 space-y-2">
+                <p class="font-medium text-neonTeal">안녕하세요! (Annyeonghaseyo!)</p>
+                <p class="text-sm">I'm Min-Jun! I'm here to help you master Korean for your GKS scholarship, practice speaking, and guide your STEM studies! ㅋㅋㅋ How are you feeling today?</p>
+                <div class="pt-2 flex gap-2">
+                  <button onclick="speakKorean('안녕하세요! 반갑습니다.')" class="text-xs text-cyberViolet hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-circle-play"></i> Listen
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Roleplay Scenario Buttons -->
+          <div class="flex gap-2 overflow-x-auto pb-2 mb-3 text-xs">
+            <button onclick="sendQuickPrompt('GKS interview practice')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
+              🎓 GKS Interview Practice
+            </button>
+            <button onclick="sendQuickPrompt('Tell me about your day in simple Korean')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
+              💬 Casual Daily Talk
+            </button>
+            <button onclick="sendQuickPrompt('Teach me song lyric vocabulary')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
+              🎵 Song Lyric Vocab
+            </button>
+          </div>
+
+          <!-- Input Area -->
+          <div class="flex gap-2">
+            <input type="text" id="chat-input" placeholder="Type in English or Korean..." onkeydown="if(event.key==='Enter') sendMessage()" class="flex-1 bg-obsidian border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-neonTeal" />
+            <button onclick="startVoiceInput()" class="bg-slate-800 hover:bg-slate-700 text-neonTeal px-4 rounded-xl border border-slate-700" title="Voice Input">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button onclick="sendMessage()" class="bg-gradient-to-r from-cyberViolet to-neonTeal text-white font-medium px-5 rounded-xl hover:opacity-90 transition-all">
+              Send
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 1 Column: Interactive Drills & Vocab -->
+        <div class="space-y-6">
+          
+          <!-- Interactive SOV Sentence Builder -->
+          <div class="bg-cardBg rounded-2xl border border-slate-800 p-5 shadow-xl">
+            <h3 class="font-bold text-white mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-cubes text-neonTeal"></i> SOV Sentence Builder
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Arrange blocks in Subject + Object + Verb order:</p>
+
+            <div id="sov-target" class="min-h-[50px] bg-obsidian rounded-xl p-2 border border-slate-800 mb-3 flex flex-wrap gap-2 items-center">
+              <span class="text-xs text-slate-500 italic">Tap blocks below to build sentence...</span>
+            </div>
+
+            <div id="sov-options" class="flex flex-wrap gap-2 mb-4">
+              <button onclick="addSOVBlock(this, '저는')" class="bg-slate-800 hover:bg-slate-700 text-cyberViolet text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium">
+                저는 (I - Subj)
+              </button>
+              <button onclick="addSOVBlock(this, '한국어를')" class="bg-slate-800 hover:bg-slate-700 text-neonTeal text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium">
+                한국어를 (Korean - Obj)
+              </button>
+              <button onclick="addSOVBlock(this, '공부해요')" class="bg-slate-800 hover:bg-slate-700 text-warmGold text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium">
+                공부해요 (Study - Verb)
+              </button>
+            </div>
+
+            <div class="flex gap-2">
+              <button onclick="checkSOV()" class="flex-1 bg-neonTeal/20 hover:bg-neonTeal/30 text-neonTeal border border-neonTeal/30 py-2 rounded-xl text-xs font-semibold">
+                Check Answer
+              </button>
+              <button onclick="resetSOV()" class="bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 rounded-xl text-xs">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- SRS Flashcard Notebook -->
+          <div class="bg-cardBg rounded-2xl border border-slate-800 p-5 shadow-xl">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-white flex items-center gap-2 text-sm">
+                <i class="fa-solid fa-layer-group text-warmGold"></i> Vocab Flashcards (SRS)
+              </h3>
+              <span id="vocab-count" class="text-xs bg-warmGold/10 text-warmGold border border-warmGold/30 px-2 py-0.5 rounded-full">4 cards</span>
+            </div>
+
+            <!-- Flashcard Display -->
+            <div id="flashcard-container" onclick="flipFlashcard()" class="bg-obsidian rounded-xl p-5 border border-slate-800 text-center cursor-pointer min-h-[110px] flex flex-col items-center justify-center transition-all hover:border-slate-700">
+              <p id="card-front" class="text-xl font-bold text-neonTeal">학교 (Hakgyo)</p>
+              <p id="card-back" class="text-xs text-slate-400 mt-2 hidden">School</p>
+            </div>
+
+            <div class="flex justify-between items-center mt-3 gap-2">
+              <button onclick="prevCard()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-arrow-left"></i></button>
+              <button onclick="speakCurrentCard()" class="text-xs bg-cyberViolet/20 text-cyberViolet px-3 py-1.5 rounded-lg border border-cyberViolet/30"><i class="fa-solid fa-volume-high"></i> Pronounce</button>
+              <button onclick="nextCard()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: STEM & COMPUTER SCIENCE COACH      -->
+    <!-- ========================================== -->
+    <section id="tab-stem" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left 2 Columns: Multi-Subject Explainer -->
+        <div class="lg:col-span-2 bg-cardBg rounded-2xl border border-slate-800 p-6 space-y-6 shadow-xl">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-graduation-cap text-neonTeal"></i> STEM & CS Tutor
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Get step-by-step English explanations for Math, Physics, and Computer Science concepts.</p>
+          </div>
+
+          <!-- Subject Topic Buttons -->
+          <div class="flex flex-wrap gap-2">
+            <button onclick="askSTEMTopic('Binomial Expansion')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700">
+              📐 Binomial Theorem
+            </button>
+            <button onclick="askSTEMTopic('Mass Spectrometry Chlorine')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700">
+              ⚛️ Mass Spectrometry
+            </button>
+            <button onclick="askSTEMTopic('HTML CSS JS Basics')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700">
+              💻 Web Dev Architecture
+            </button>
+          </div>
+
+          <!-- STEM Response Display -->
+          <div id="stem-output" class="bg-obsidian rounded-xl p-5 border border-slate-800 text-sm space-y-3 leading-relaxed text-slate-300">
+            <p class="text-neonTeal font-semibold">Select a topic above or ask a custom question below!</p>
+            <p class="text-xs text-slate-500">I will break down complex formulas into intuitive logic without missing any step.</p>
+          </div>
+
+          <!-- STEM Query Input -->
+          <div class="flex gap-2">
+            <input type="text" id="stem-query" placeholder="Ask a question about Math, Physics, or Computer Science..." class="flex-1 bg-obsidian border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-neonTeal" onkeydown="if(event.key==='Enter') solveSTEMQuery()" />
+            <button onclick="solveSTEMQuery()" class="bg-cyberViolet text-white font-medium px-5 rounded-xl hover:opacity-90">
+              Explain
+            </button>
+          </div>
+        </div>
+
+        <!-- Right 1 Column: CS HTML/CSS/JS Live Sandbox -->
+        <div class="bg-cardBg rounded-2xl border border-slate-800 p-5 flex flex-col space-y-4 shadow-xl">
+          <h3 class="font-bold text-white text-sm flex items-center gap-2">
+            <i class="fa-solid fa-code text-cyberViolet"></i> CS Code Sandbox
+          </h3>
+          <p class="text-xs text-slate-400">Test live HTML/CSS code directly:</p>
+
+          <textarea id="cs-code-input" class="w-full h-40 bg-obsidian border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-cyberViolet leading-relaxed" spellcheck="false"><h1 style="color:#14b8a6; font-family:sans-serif;">Hello, World!</h1>
+<p style="color:#8b5cf6;">Writing code in Visual Studio Code!</p></textarea>
+
+          <button onclick="runCSCode()" class="bg-cyberViolet/20 hover:bg-cyberViolet/30 text-cyberViolet border border-cyberViolet/30 py-2 rounded-xl text-xs font-semibold transition-all">
+            <i class="fa-solid fa-play mr-1"></i> Run Live Preview
+          </button>
+
+          <!-- Render Output Window -->
+          <div class="flex-1 min-h-[160px] bg-white rounded-xl overflow-hidden border border-slate-700">
+            <iframe id="cs-preview-frame" class="w-full h-full border-none"></iframe>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: PRACTICE & SONG DRAFT STUDIO        -->
+    <!-- ========================================== -->
+    <section id="tab-drafts" class="space-y-6 hidden">
+      <div class="bg-cardBg rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-pen-nib text-cyberViolet"></i> Practice & Draft Studio
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Auto-saves your original song lyrics, French lead-ins, book notes, or study drafts to browser storage.</p>
+          </div>
+          <span id="save-status" class="text-xs text-emerald-400 font-medium bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">Auto-saved</span>
+        </div>
+
+        <textarea id="draft-editor" oninput="saveDraft()" placeholder="Write your song lyrics, French phrases (e.g. 'Regarde-moi bien, c'est mon moment'), book notes, or math formulas here..." class="w-full h-96 bg-obsidian border border-slate-800 rounded-xl p-4 text-sm font-sans text-slate-200 focus:outline-none focus:border-cyberViolet leading-relaxed resize-y" spellcheck="false"></textarea>
+
+        <div class="flex justify-between items-center">
+          <p class="text-xs text-slate-500">Persists offline using localStorage.</p>
+          <button onclick="copyDraft()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-4 py-2 rounded-xl border border-slate-700">
+            <i class="fa-solid fa-copy mr-1"></i> Copy All
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script>
+    // Global State
+    let isFullImmersion = false;
+    let sovWords = [];
+    let currentCardIndex = 0;
+
+    // Vocab Flashcards List
+    const vocabCards = [
+      { ko: '학교', rom: 'Hakgyo', en: 'School' },
+      { ko: '공부하다', rom: 'Gongbuhada', en: 'To Study' },
+      { ko: '장학금', rom: 'Janghakgeum', en: 'Scholarship' },
+      { ko: '친구', rom: 'Chingu', en: 'Friend' }
+    ];
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDraft();
+      updateFlashcard();
+      runCSCode();
+    });
+
+    // Tab Switcher Logic
+    function switchTab(tabName) {
+      ['korean', 'stem', 'drafts'].forEach(tab => {
+        document.getElementById(`tab-${tab}`).classList.add('hidden');
+        const btn = document.getElementById(`tab-btn-${tab}`);
+        btn.classList.remove('bg-cyberViolet', 'text-white', 'shadow-md');
+        btn.classList.add('text-slate-400');
+      });
+
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+      activeBtn.classList.add('bg-cyberViolet', 'text-white', 'shadow-md');
+      activeBtn.classList.remove('text-slate-400');
+    }
+
+    // Toggle Immersion Mode
+    function toggleImmersion() {
+      isFullImmersion = !isFullImmersion;
+      const dot = document.getElementById('immersion-dot');
+      const btn = document.getElementById('immersion-toggle');
+      
+      if (isFullImmersion) {
+        dot.classList.add('translate-x-5');
+        btn.classList.remove('bg-slate-700');
+        btn.classList.add('bg-neonTeal');
+      } else {
+        dot.classList.remove('translate-x-5');
+        btn.classList.remove('bg-neonTeal');
+        btn.classList.add('bg-slate-700');
+      }
+    }
+
+    // Web Speech API - Text to Speech Playback
+    function speakKorean(text) {
+      if (!('speechSynthesis' in window)) {
+        alert("Speech synthesis not supported in this browser.");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playMinJunIntro() {
+      speakKorean("안녕하세요! 저는 민준이에요. 함께 한국어와 공부를 시작해 봐요!");
+    }
+
+    // Voice Input Speech Recognition
+    function startVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech recognition is not supported in this browser.");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'ko-KR';
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('chat-input').value = transcript;
+      };
+      recognition.start();
+    }
+
+    // Chatbot Message Sender
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage('User', text, 'user');
+      input.value = '';
+
+      setTimeout(() => {
+        const response = generateMinJunResponse(text);
+        appendMessage('Min-Jun', response, 'minjun');
+        speakKorean(response.ko);
+      }, 500);
+    }
+
+    function sendQuickPrompt(promptText) {
+      document.getElementById('chat-input').value = promptText;
+      sendMessage();
+    }
+
+    function appendMessage(sender, msgObj, type) {
+      const chatBox = document.getElementById('chat-box');
+      const div = document.createElement('div');
+      div.className = "flex items-start space-x-3";
+
+      if (type === 'user') {
+        div.innerHTML = `
+          <div class="flex-1 flex justify-end">
+            <div class="bg-cyberViolet text-white rounded-2xl p-4 max-w-[85%] text-sm shadow-md">
+              <p>${msgObj}</p>
+            </div>
+          </div>`;
+      } else {
+        div.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-cyberViolet/20 flex items-center justify-center text-sm shrink-0">🤖</div>
+          <div class="bg-slate-800/80 rounded-2xl p-4 max-w-[85%] text-slate-200 border border-slate-700/50 space-y-2">
+            <p class="font-medium text-neonTeal">${msgObj.ko}</p>
+            ${!isFullImmersion ? `<p class="text-xs text-slate-400 italic">${msgObj.rom}</p><p class="text-sm">${msgObj.en}</p>` : ''}
+            <button onclick="speakKorean('${msgObj.ko}')" class="text-xs text-cyberViolet hover:underline flex items-center gap-1 pt-1">
+              <i class="fa-solid fa-circle-play"></i> Listen
+            </button>
+          </div>`;
+      }
+
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function generateMinJunResponse(input) {
+      const lower = input.toLowerCase();
+      if (lower.includes('gks') || lower.includes('interview')) {
+        return {
+          ko: "GKS 면접 준비 정말 중요해요! ㅋㅋㅋ 왜 한국에서 컴퓨터 공학을 공부하고 싶은지 이야기해 볼까요?",
+          rom: "GKS meonjeop junbi jeongmal jungyohaeyo! ㅋㅋㅋ Wae Hanguk-eoseo keompyuteo gonghak-eul gongbuhago sipseumnikka?",
+          en: "GKS interview prep is super important! ㅋㅋㅋ Shall we talk about why you want to study Computer Engineering in Korea?"
+        };
+      }
+      return {
+        ko: "대박! 오늘 공부도 정말 잘하고 있어요! ㅋㅋㅋ 천천히 같이 해봐요!",
+        rom: "Daebak! Oneul gongbudo jeongmal jalhago isseoyo! ㅋㅋㅋ Cheoncheonhi gachi haebwayo!",
+        en: "Awesome! You are doing great with your study today! ㅋㅋㅋ Let's go slowly together!"
+      };
+    }
+
+    // SOV Sentence Builder
+    function addSOVBlock(btn, word) {
+      sovWords.push(word);
+      updateSOVDisplay();
+    }
+
+    function updateSOVDisplay() {
+      const target = document.getElementById('sov-target');
+      if (sovWords.length === 0) {
+        target.innerHTML = `<span class="text-xs text-slate-500 italic">Tap blocks below to build sentence...</span>`;
+        return;
+      }
+      target.innerHTML = sovWords.map(w => `<span class="bg-cyberViolet/20 text-cyberViolet border border-cyberViolet/30 text-xs px-2.5 py-1 rounded-lg font-medium">${w}</span>`).join(' ');
+    }
+
+    function checkSOV() {
+      if (sovWords.join(' ') === '저는 한국어를 공부해요') {
+        alert("Correct! 🎉 Korean SOV structure: Subject + Object + Verb");
+        speakKorean("저는 한국어를 공부해요");
+      } else {
+        alert("Try again! Order should be: Subject (저는) -> Object (한국어를) -> Verb (공부해요)");
+      }
+    }
+
+    function resetSOV() {
+      sovWords = [];
+      updateSOVDisplay();
+    }
+
+    // Flashcard SRS logic
+    function updateFlashcard() {
+      const card = vocabCards[currentCardIndex];
+      document.getElementById('card-front').innerText = `${card.ko} (${card.rom})`;
+      document.getElementById('card-back').innerText = card.en;
+      document.getElementById('card-back').classList.add('hidden');
+    }
+
+    function flipFlashcard() {
+      document.getElementById('card-back').classList.toggle('hidden');
+    }
+
+    function nextCard() {
+      currentCardIndex = (currentCardIndex + 1) % vocabCards.length;
+      updateFlashcard();
+    }
+
+    function prevCard() {
+      currentCardIndex = (currentCardIndex - 1 + vocabCards.length) % vocabCards.length;
+      updateFlashcard();
+    }
+
+    function speakCurrentCard() {
+      speakKorean(vocabCards[currentCardIndex].ko);
+    }
+
+    // STEM Query Handler
+    function askSTEMTopic(topic) {
+      const output = document.getElementById('stem-output');
+      if (topic === 'Binomial Expansion') {
+        output.innerHTML = `
+          <p class="font-bold text-cyberViolet">📐 Binomial Expansion Theorem</p>
+          <p>For any expression <code>(a + b)^n</code>, the expansion uses combinations <code>nCr = n! / (r!(n-r)!)</code>.</p>
+          <p class="text-xs font-mono bg-obsidian p-2 rounded border border-slate-800 text-neonTeal mt-2">(a + b)^2 = a^2 + 2ab + b^2</p>`;
+      } else if (topic === 'Mass Spectrometry Chlorine') {
+        output.innerHTML = `
+          <p class="font-bold text-cyberViolet">⚛️ Mass Spectrometry of Chlorine</p>
+          <p>Chlorine naturally exists as two isotopes: <strong>Cl-35 (~75%)</strong> and <strong>Cl-37 (~25%)</strong>, yielding a 3:1 ratio and an average atomic mass of ~35.5.</p>`;
+      } else {
+        output.innerHTML = `
+          <p class="font-bold text-cyberViolet">💻 Web Development Architecture</p>
+          <p>HTML structures content, CSS handles styling/layouts, and JavaScript powers interactive client-side logic.</p>`;
+      }
+    }
+
+    function solveSTEMQuery() {
+      const query = document.getElementById('stem-query').value.trim();
+      if (!query) return;
+      const output = document.getElementById('stem-output');
+      output.innerHTML = `
+        <p class="font-bold text-cyberViolet">🔍 STEM Analysis for: "${query}"</p>
+        <p>1. Identify the given variables and target objective.</p>
+        <p>2. Break down the core mathematical or physical formula.</p>
+        <p>3. Execute step-by-step substitution and verify dimensions.</p>`;
+    }
+
+    // CS Code Sandbox Runner
+    function runCSCode() {
+      const code = document.getElementById('cs-code-input').value;
+      const frame = document.getElementById('cs-preview-frame');
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+    }
+
+    // Practice Draft Studio Storage
+    function saveDraft() {
+      const content = document.getElementById('draft-editor').value;
+      localStorage.setItem('skillpulse_draft', content);
+      const status = document.getElementById('save-status');
+      status.innerText = "Saved";
+      setTimeout(() => { status.innerText = "Auto-saved"; }, 1000);
+    }
+
+    function loadDraft() {
+      const saved = localStorage.getItem('skillpulse_draft');
+      if (saved) {
+        document.getElementById('draft-editor').value = saved;
+      }
+    }
+
+    function copyDraft() {
+      const editor = document.getElementById('draft-editor');
+      editor.select();
+      navigator.clipboard.writeText(editor.value);
+      alert("Draft copied to clipboard!");
+    }
+  </script>
 </body>
 </html>
