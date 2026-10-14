@@ -1,241 +1,140 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkillPulse: Korean Immersion & STEM Companion</title>
-  
-  <!-- Tailwind CSS for Cyber Violet / Neon Teal styling -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            obsidian: '#0b0f19',
-            cardBg: '#131b2e',
-            cyberViolet: '#8b5cf6',
-            neonTeal: '#14b8a6',
-            warmGold: '#fbbf24',
-          }
-        }
-      }
-    }
-  </script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeakPingo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#a78bfa,#f472b6,#fb923c);min-height:100vh;display:flex;align-items:center;justify-content:center;margin:0}
+ .app{background:white;width:380px;border-radius:32px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center}
+ .pingo{font-size:80px;animation:bounce 2s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+ .listening.pingo{animation: none; transform: scale(1.2)}
+  h1{margin:10px 0 5px;font-size:22px}
+ .scenario{background:#f5f3ff;padding:14px;border-radius:16px;margin:15px 0;font-size:14px;color:#6d28d9}
+  #micBtn{width:90px;height:90px;border-radius:50%;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;font-size:36px;cursor:pointer;box-shadow:0 8px 20px rgba(139,92,246,.4);transition:.2s}
+  #micBtn.listening{background:#ef4444;animation:pulse 1s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}70%{box-shadow:0 0 0 20px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+  #status{margin:12px 0;font-weight:700;color:#8b5cf6;min-height:22px}
+  #transcript{background:#f9fafb;border-radius:12px;padding:12px;min-height:50px;text-align:left;font-size:14px;margin-top:12px}
+ .score{display:flex;gap:8px;justify-content:center;margin-top:15px}
+ .badge{background:#f3f0ff;padding:6px 12px;border-radius:20px;font-size:12px}
+  canvas{width:100%;height:40px;margin-top:10px}
+</style>
 </head>
-<body class="bg-obsidian text-slate-100 font-sans min-h-screen flex flex-col">
+<body>
+<div class="app" id="app">
+  <div class="pingo" id="pingo">🟣</div>
+  <h1>SpeakPingo</h1>
+  <div class="scenario" id="scenario">Scenario: Comfort a friend who feels alone in the darkest time.</div>
+  <button id="micBtn">🎤</button>
+  <div id="status">Tap mic to speak</div>
+  <canvas id="wave"></canvas>
+  <div id="transcript">Your words will appear here...</div>
+  <div class="score">
+    <div class="badge">⭐ XP: <span id="xp">0</span></div>
+    <div class="badge">🔥 Streak: <span id="streak">0</span></div>
+  </div>
+  <div id="feedback" style="margin-top:15px;text-align:left;font-size:13px"></div>
+</div>
 
-  <!-- HEADER NAVIGATION -->
-  <header class="border-b border-slate-800 bg-cardBg/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyberViolet to-neonTeal flex items-center justify-center text-xl font-bold shadow-lg shadow-cyberViolet/20">
-          SP
-        </div>
-        <div>
-          <h1 class="text-lg font-bold bg-gradient-to-r from-cyberViolet via-teal-300 to-neonTeal bg-clip-text text-transparent">SkillPulse</h1>
-          <p class="text-xs text-slate-400">Pinngo AI Coach • Korean & STEM</p>
-        </div>
-      </div>
+<script>
+let recognition, isListening=false, xp=0, streak=0;
+const micBtn=document.getElementById('micBtn');
+const statusEl=document.getElementById('status');
+const transcriptEl=document.getElementById('transcript');
+const feedbackEl=document.getElementById('feedback');
+const appEl=document.getElementById('app');
+const pingoEl=document.getElementById('pingo');
 
-      <!-- Tab Switchers -->
-      <nav class="flex space-x-2 bg-obsidian/60 p-1 rounded-xl border border-slate-800">
-        <button id="tab-btn-korean" onclick="switchTab('korean')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-cyberViolet text-white shadow-md">
-          <i class="fa-solid font-bold fa-language mr-2"></i>🇰🇷 Min-Jun AI Coach
-        </button>
-        <button id="tab-btn-stem" onclick="switchTab('stem')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all text-slate-400 hover:text-white">
-          <i class="fa-solid fa-atom mr-2"></i>🔬 STEM & CS Coach
-        </button>
-        <button id="tab-btn-drafts" onclick="switchTab('drafts')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all text-slate-400 hover:text-white">
-          <i class="fa-solid fa-pen-nib mr-2"></i>📝 Song & Essay Studio
-        </button>
-      </nav>
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(!SpeechRecognition){
+  statusEl.innerText="❌ Use Google Chrome for mic to work";
+} else {
+  recognition = new SpeechRecognition();
+  recognition.lang='en-US';
+  recognition.interimResults=true;
+  recognition.continuous=false;
 
-      <!-- Immersion Mode Toggle -->
-      <div class="flex items-center space-x-2 bg-cardBg px-3 py-1.5 rounded-lg border border-slate-700">
-        <span class="text-xs text-slate-300 font-medium">Full Immersion:</span>
-        <button id="immersion-toggle" onclick="toggleImmersion()" class="w-11 h-6 bg-slate-700 rounded-full p-1 transition-colors relative">
-          <div id="immersion-dot" class="w-4 h-4 bg-white rounded-full transition-transform"></div>
-        </button>
-      </div>
-    </div>
-  </header>
+  recognition.onstart=()=>{
+    isListening=true;
+    micBtn.classList.add('listening');
+    appEl.classList.add('listening');
+    statusEl.innerText="Listening... speak now!";
+    pingoEl.innerText="👂";
+  };
+  recognition.onresult=(e)=>{
+    const text = Array.from(e.results).map(r=>r[0].transcript).join('');
+    transcriptEl.innerText=text;
+  };
+  recognition.onerror=(e)=>{
+    statusEl.innerText="Mic error: "+e.error+" — Allow mic in address bar 🔒";
+    stop();
+  };
+  recognition.onend=()=>{
+    stop();
+    const finalText=transcriptEl.innerText;
+    if(finalText && finalText!=="Your words will appear here..."){
+      giveFeedback(finalText);
+    }
+  };
+}
 
-  <!-- MAIN WORKSPACE -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1">
+function stop(){
+  isListening=false;
+  micBtn.classList.remove('listening');
+  appEl.classList.remove('listening');
+  pingoEl.innerText="😊";
+  statusEl.innerText="Tap mic to speak again";
+}
 
-    <!-- ========================================== -->
-    <!-- TAB 1: KOREAN IMMERSION & MIN-JUN CHATBOX -->
-    <!-- ========================================== -->
-    <section id="tab-korean" class="space-y-6">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Left 2 Columns: Pinngo-style Min-Jun Coach Chat -->
-        <div class="lg:col-span-2 bg-cardBg rounded-2xl border border-slate-800 p-4 md:p-6 flex flex-col h-[680px] shadow-xl">
-          <!-- Chat Header -->
-          <div class="flex justify-between items-center pb-4 mb-4 border-b border-slate-800">
-            <div class="flex items-center space-x-3">
-              <div class="relative">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-cyberViolet to-neonTeal p-0.5">
-                  <div class="w-full h-full bg-cardBg rounded-full flex items-center justify-center text-xl">
-                    🤖
-                  </div>
-                </div>
-                <span class="w-3.5 h-3.5 bg-emerald-500 border-2 border-cardBg rounded-full absolute bottom-0 right-0"></span>
-              </div>
-              <div>
-                <h2 class="font-bold text-white flex items-center gap-2">
-                  Min-Jun (민준) <span class="text-xs font-normal text-neonTeal bg-neonTeal/10 px-2 py-0.5 rounded-full border border-neonTeal/20">Read & Write Coach</span>
-                </h2>
-                <p class="text-xs text-slate-400">Target: B1/B2 Fluency by 2028 | GKS Prep & Lyrics</p>
-              </div>
-            </div>
-            <button onclick="playMinJunIntro()" class="text-xs bg-cyberViolet/20 hover:bg-cyberViolet/30 text-cyberViolet font-medium px-3 py-1.5 rounded-lg border border-cyberViolet/30 transition-all flex items-center gap-1.5">
-              <i class="fa-solid fa-volume-high"></i> Hear Intro
-            </button>
-          </div>
+micBtn.onclick=async()=>{
+  try{
+    await navigator.mediaDevices.getUserMedia({audio:true});
+    if(isListening){ recognition.stop(); }
+    else { transcriptEl.innerText=""; feedbackEl.innerHTML=""; recognition.start(); }
+  } catch(err){
+    alert("Please ALLOW microphone. Click the lock icon 🔒 in address bar > Microphone > Allow, then reload.");
+  }
+};
 
-          <!-- Chat Messages Area -->
-          <div id="chat-box" class="flex-1 overflow-y-auto space-y-4 pr-2 mb-4 custom-scrollbar">
-            <!-- Min-Jun Welcome Message -->
-            <div class="flex items-start space-x-3">
-              <div class="w-8 h-8 rounded-full bg-cyberViolet/20 flex items-center justify-center text-sm shrink-0">🤖</div>
-              <div class="bg-slate-800/80 rounded-2xl p-4 max-w-[85%] text-slate-200 border border-slate-700/50 space-y-2">
-                <p class="font-medium text-neonTeal">안녕하세요! (Annyeonghaseyo!)</p>
-                <p class="text-sm">I'm Min-Jun, your Pinngo-style Korean coach! ㅋㅋㅋ Write a sentence in Korean, ask for song lyric ideas, or type <code class="text-warmGold font-mono">check: [your sentence]</code> to have me analyze your writing!</p>
-                <div class="pt-1 flex gap-2">
-                  <button onclick="speakKorean('안녕하세요! 반갑습니다. 같이 공부해요!')" class="text-xs text-cyberViolet hover:underline flex items-center gap-1">
-                    <i class="fa-solid fa-circle-play"></i> Listen Audio
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+function giveFeedback(text){
+  xp+=10; streak+=1;
+  document.getElementById('xp').innerText=xp;
+  document.getElementById('streak').innerText=streak;
+  pingoEl.innerText="🎉";
 
-          <!-- Quick Roleplay & Writing Prompts -->
-          <div class="flex gap-2 overflow-x-auto pb-2 mb-3 text-xs custom-scrollbar">
-            <button onclick="sendQuickPrompt('check: 저는 컴퓨터 공학을 공부하고 싶어요')" class="bg-slate-800 hover:bg-slate-700 text-neonTeal px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
-              ✏️ Check My Sentence
-            </button>
-            <button onclick="sendQuickPrompt('GKS personal statement line')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
-              🎓 GKS Essay Idea
-            </button>
-            <button onclick="sendQuickPrompt('Teach me lyrics vocab')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-full border border-slate-700 shrink-0">
-              🎵 Song Lyric Lines
-            </button>
-          </div>
+  // Simple fun feedback logic
+  let better = text;
+  if(text.toLowerCase().includes("alone")) better = "I get it, feeling alone is tough, but I'm here for you.";
+  else better = "Nice! Try saying it like: '" + text + " — I'm here for you.'";
 
-          <!-- Input Controls -->
-          <div class="flex gap-2">
-            <input type="text" id="chat-input" placeholder="Type or paste Korean/English text..." onkeydown="if(event.key==='Enter') sendMessage()" class="flex-1 bg-obsidian border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-neonTeal" />
-            <button onclick="startVoiceInput()" class="bg-slate-800 hover:bg-slate-700 text-neonTeal px-4 rounded-xl border border-slate-700" title="Voice Input">
-              <i class="fa-solid fa-microphone"></i>
-            </button>
-            <button onclick="sendMessage()" class="bg-gradient-to-r from-cyberViolet to-neonTeal text-white font-medium px-5 rounded-xl hover:opacity-90 transition-all">
-              Send
-            </button>
-          </div>
-        </div>
+  feedbackEl.innerHTML = `
+    <b style="color:#10b981">✓ Great job!</b><br>
+    You said: <i>"${text}"</i><br><br>
+    <b>More natural:</b> ${better}<br><br>
+    <b>Fluency:</b> ${Math.floor(70+Math.random()*30)}/100 — Keep going!
+  `;
+  // Pingo speaks back
+  const utter = new SpeechSynthesisUtterance("Awesome! You said "+ text.substring(0,60));
+  speechSynthesis.speak(utter);
+}
 
-        <!-- Right 1 Column: Interactive Reading Passage & Drills -->
-        <div class="space-y-6">
-          
-          <!-- Pinngo Reading Dissection Card -->
-          <div class="bg-cardBg rounded-2xl border border-slate-800 p-5 shadow-xl">
-            <h3 class="font-bold text-white mb-2 flex items-center gap-2 text-sm">
-              <i class="fa-solid fa-book-open text-neonTeal"></i> Interactive Reading Dissection
-            </h3>
-            <p class="text-xs text-slate-400 mb-3">Click on any word to analyze structure & pronunciation:</p>
-
-            <div class="bg-obsidian border border-slate-800 p-4 rounded-xl text-sm leading-relaxed mb-3">
-              <span onclick="dissectWord('저는', 'Subject', 'I (polite)', 'Jeo-neun')" class="cursor-pointer text-cyberViolet underline decoration-cyberViolet/50 hover:bg-cyberViolet/20 px-1 py-0.5 rounded">저는</span> 
-              <span onclick="dissectWord('한국어와', 'Object + Conjunction', 'Korean language and...', 'Han-gug-eo-wa')" class="cursor-pointer text-neonTeal underline decoration-neonTeal/50 hover:bg-neonTeal/20 px-1 py-0.5 rounded">한국어와</span> 
-              <span onclick="dissectWord('수학을', 'Object', 'Mathematics (object)', 'Su-hag-eul')" class="cursor-pointer text-warmGold underline decoration-warmGold/50 hover:bg-warmGold/20 px-1 py-0.5 rounded">수학을</span> 
-              <span onclick="dissectWord('열심히', 'Adverb', 'Hard / Diligently', 'Yeol-sim-hi')" class="cursor-pointer text-slate-300 underline decoration-slate-600 hover:bg-slate-800 px-1 py-0.5 rounded">열심히</span> 
-              <span onclick="dissectWord('공부해요.', 'Verb (Present)', 'To study', 'Gong-bu-hae-yo')" class="cursor-pointer text-emerald-400 underline decoration-emerald-500/50 hover:bg-emerald-950/40 px-1 py-0.5 rounded">공부해요.</span>
-            </div>
-
-            <div id="word-info-box" class="p-3 bg-slate-800/80 border border-slate-700 rounded-xl text-xs space-y-1 hidden">
-              <!-- Populated dynamically by JS -->
-            </div>
-          </div>
-
-          <!-- Interactive SOV Sentence Builder -->
-          <div class="bg-cardBg rounded-2xl border border-slate-800 p-5 shadow-xl">
-            <h3 class="font-bold text-white mb-2 flex items-center gap-2 text-sm">
-              <i class="fa-solid fa-cubes text-cyberViolet"></i> SOV Word Order Drill
-            </h3>
-            <p class="text-xs text-slate-400 mb-3">Arrange into Subject + Object + Verb:</p>
-
-            <div id="sov-target" class="min-h-[48px] bg-obsidian rounded-xl p-2 border border-slate-800 mb-3 flex flex-wrap gap-2 items-center">
-              <span class="text-xs text-slate-500 italic">Tap blocks below...</span>
-            </div>
-
-            <div id="sov-options" class="flex flex-wrap gap-2 mb-3">
-              <button onclick="addSOVBlock(this, '저는')" class="bg-slate-800 hover:bg-slate-700 text-cyberViolet text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium">저는 (I)</button>
-              <button onclick="addSOVBlock(this, '노래를')" class="bg-slate-800 hover:bg-slate-700 text-neonTeal text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium">노래를 (Song)</button>
-              <button onclick="addSOVBlock(this, '써요')" class="bg-slate-800 hover:bg-slate-700 text-warmGold text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium">써요 (Write)</button>
-            </div>
-
-            <div class="flex gap-2">
-              <button onclick="checkSOV()" class="flex-1 bg-neonTeal/20 hover:bg-neonTeal/30 text-neonTeal border border-neonTeal/30 py-2 rounded-xl text-xs font-semibold">Check Answer</button>
-              <button onclick="resetSOV()" class="bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 rounded-xl text-xs">Reset</button>
-            </div>
-          </div>
-
-          <!-- SRS Flashcard Notebook -->
-          <div class="bg-cardBg rounded-2xl border border-slate-800 p-5 shadow-xl">
-            <div class="flex justify-between items-center mb-3">
-              <h3 class="font-bold text-white flex items-center gap-2 text-sm">
-                <i class="fa-solid fa-layer-group text-warmGold"></i> SRS Vocab Flashcards
-              </h3>
-              <span id="vocab-count" class="text-xs bg-warmGold/10 text-warmGold border border-warmGold/30 px-2 py-0.5 rounded-full">4 cards</span>
-            </div>
-
-            <div id="flashcard-container" onclick="flipFlashcard()" class="bg-obsidian rounded-xl p-4 border border-slate-800 text-center cursor-pointer min-h-[100px] flex flex-col items-center justify-center hover:border-slate-700">
-              <p id="card-front" class="text-lg font-bold text-neonTeal">학교 (Hakgyo)</p>
-              <p id="card-back" class="text-xs text-slate-400 mt-2 hidden">School</p>
-            </div>
-
-            <div class="flex justify-between items-center mt-3 gap-2">
-              <button onclick="prevCard()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-arrow-left"></i></button>
-              <button onclick="speakCurrentCard()" class="text-xs bg-cyberViolet/20 text-cyberViolet px-3 py-1.5 rounded-lg border border-cyberViolet/30"><i class="fa-solid fa-volume-high"></i> Pronounce</button>
-              <button onclick="nextCard()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- TAB 2: STEM & COMPUTER SCIENCE COACH      -->
-    <!-- ========================================== -->
-    <section id="tab-stem" class="space-y-6 hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- STEM Tutor Engine -->
-        <div class="lg:col-span-2 bg-cardBg rounded-2xl border border-slate-800 p-6 space-y-6 shadow-xl">
-          <div>
-            <h2 class="text-xl font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-graduation-cap text-neonTeal"></i> STEM & CS Tutor
-            </h2>
-            <p class="text-xs text-slate-400 mt-1">Step-by-step logic in Math, Physics, and Computer Engineering.</p>
-          </div>
-
-          <div class="flex flex-wrap gap-2">
-            <button onclick="askSTEMTopic('Binomial Expansion')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700">📐 Binomial Theorem</button>
-            <button onclick="askSTEMTopic('Mass Spectrometry Chlorine')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700">⚛️ Mass Spectrometry</button>
-            <button onclick="askSTEMTopic('HTML CSS JS Basics')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700">💻 Web Dev Architecture</button>
-          </div>
-
-          <div id="stem-output" class="bg-obsidian rounded-xl p-5 border border-slate-800 text-sm space-y-3 leading-relaxed text-slate-300">
-            <p class="text-neonTeal font-semibold">Select a topic above or ask a custom question below!</p>
-          </div>
-
-          <div class="flex gap-2">
-            <input type="text" id="stem-query" placeholder="Ask a question about Math, Physics, or CS..." class="flex-1 bg-obsidian border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-neonTeal" onkeydown="if(event.key==='Enter') solveSTEMQuery()" />
-            <button onclick="solveSTEMQuery()" class="bg-cyber
+// fake waveform
+const canvas=document.getElementById('wave'), ctx=canvas.getContext('2d');
+function drawWave(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(!isListening) return;
+  ctx.beginPath(); ctx.strokeStyle="#8b5cf6"; ctx.lineWidth=2;
+  for(let x=0;x<canvas.width;x++){
+    const y=20+Math.sin(x*0.05+Date.now()*0.01)* (10+Math.random()*10);
+    if(x==0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  requestAnimationFrame(drawWave);
+}
+setInterval(drawWave, 16);
+</script>
+</body>
+</html>
