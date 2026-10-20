@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Study Tracker + AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:sans-serif; max-width:420px; margin:auto; padding:20px; background:#f8f9ff}
+.card{background:white; padding:14px; border-radius:12px; margin:10px 0; box-shadow:0 2px 5px #ddd}
+button{padding:12px; border:none; background:#0A2A5E; color:white; border-radius:10px; width:100%; margin-top:5px}
+input{width:100%; padding:11px; margin:5px 0; border:1px solid #ddd; border-radius:8px; box-sizing:border-box}
+.progress{height:12px; background:#eee; border-radius:6px; margin-top:10px}
+.bar{height:12px; background:#4CAF50; border-radius:6px; width:0%; transition:0.3s}
+.ai{border-left:4px solid #0A2A5E; background:#eef3ff}
+</style>
+</head>
+<body>
+<h2>📚 My GKS Study Tracker</h2>
+<div class="card" id="motivation">💡 Loading...</div>
+<div class="card ai" id="aiBox" style="display:none"></div>
+
+<input id="task" placeholder="What are you studying? or type 'I feel lazy'">
+<input id="mins" type="number" placeholder="Minutes - e.g. 25">
+<button onclick="add()">Add Study Session</button>
+<button onclick="clearAll()" style="background:#ddd; color:#333">Reset Today</button>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p id="total">Total today: 0 mins</p>
+<div id="list"></div>
+
+<script>
+let total = parseInt(localStorage.getItem('total')||0);
+let tasks = JSON.parse(localStorage.getItem('tasks')||'[]');
+
+const quotes = [
+ "Small progress is still progress! You earned your AI badge, keep going!",
+ "GKS is waiting for you in Korea! 🇰🇷 Just 25 mins today.",
+ "Don't break the chain. 1% better today.",
+ "Future you in Korea will thank you.",
+ "You don't need motivation, you need 5 mins to start."
+];
+
+function save(){ localStorage.setItem('total', total); localStorage.setItem('tasks', JSON.stringify(tasks)); }
+
+function render(){
+ document.getElementById('total').innerText = "Total today: " + total + " mins";
+ document.getElementById('bar').style.width = Math.min(total, 120) + "%";
+ document.getElementById('list').innerHTML = tasks.map(t=>`<div class='card'>${t}</div>`).join('');
+}
+
+function showQuote(){
+ document.getElementById('motivation').innerHTML = "💡 " + quotes[Math.floor(Math.random()*quotes.length)];
+}
+
+function aiPlan(){
+ const plans = [
+  "🔋 LAZY MODE (15 mins only): 1) 5 mins - Review AI Fundamentals notes 2) 5 mins - One quiz question 3) 5 mins - Write 1 sentence what you learned. Done!",
+  "🧠 TIRED MODE: Forget hard topics. Watch 1 short AI video (10 mins), write 3 bullet points. That's a win.",
+  "🚀 NO MOTIVATION PLAN: Set timer 25 mins. Study GKS essay OR AI vocab. After, reward yourself with music. Start now, motivation comes after.",
+  "🇰🇷 KOREA DREAM PLAN: 10 mins Korean word + 10 mins AI term + 5 mins imagine your life in Korea. Quick and inspiring!"
+ ];
+ const p = plans[Math.floor(Math.random()*plans.length)];
+ const box = document.getElementById('aiBox');
+ box.style.display = 'block';
+ box.innerHTML = "<b>AI Coach says:</b><br><br>" + p;
+}
+
+function add(){
+ let t = document.getElementById('task').value.trim();
+ let m = parseInt(document.getElementById('mins').value)||0;
+ if(!t) return alert("Type what you want to study");
+ 
+ // Check if user feels lazy
+ if(t.toLowerCase().includes('lazy') || t.toLowerCase().includes('tired') || t.toLowerCase().includes('motivation') || t.toLowerCase().includes('boring')){
+   aiPlan();
+   if(m==0) m=15;
+ }
+
+ if(m==0) m=25; // default 25 mins
+ total += m;
+ const entry = `✅ ${t} - ${m} mins - ${new Date().toLocaleTimeString()}`;
+ tasks.unshift(entry);
+ save(); render(); showQuote();
+ document.getElementById('task').value = ""; document.getElementById('mins').value = "";
+}
+
+function clearAll(){
+ if(confirm("Reset today?")){
+  total=0; tasks=[]; save(); render(); document.getElementById('aiBox').style.display='none';
+ }
+}
+
+render(); showQuote();
+</script>
+</body>
+</html>

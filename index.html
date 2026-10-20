@@ -1,542 +1,135 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min Jun (민준) - AI Korean Speaking Coach</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Canvas Confetti CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at top left, #1e1b4b, #0f172a, #020617);
-        }
-        .glow-button {
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
-        }
-        .glow-button:hover {
-            box-shadow: 0 0 35px rgba(129, 140, 248, 0.8);
-        }
-        .bar {
-            transition: height 0.08s ease;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GKS Super App - Study Tracker + Min Jun</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Plus Jakarta Sans',sans-serif; background: radial-gradient(circle at top left, #1e1b4b, #0f172a, #020617);}
+.glass-card{background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08);}
+.bar{transition: height 0.08s ease;}
+.tab-active{background:#4f46e5; color:white}
+</style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col justify-between p-4 md:p-8">
+<body class="text-slate-100 min-h-screen p-4">
+<div class="max-w-5xl mx-auto">
+<header class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-slate-800">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center font-black text-xl">민</div>
+<div><h1 class="font-extrabold text-lg">GKS Super App</h1><p class="text-xs text-slate-400">Tracker + Min Jun AI Coach</p></div>
+</div>
+<div class="flex gap-2">
+<div class="bg-slate-900 px-3 py-2 rounded-2xl border border-amber-500/20 text-center"><span class="text-[10px] block text-slate-400">STREAK</span><span id="streak-val" class="text-sm font-black text-amber-400">1 Day</span></div>
+<div class="bg-slate-900 px-3 py-2 rounded-2xl border border-indigo-500/20 text-center"><span class="text-[10px] block text-slate-400">XP / MINS</span><span id="xp-val" class="text-sm font-black text-indigo-300">0 XP</span></div>
+</div>
+</header>
 
-    <!-- Top Navigation & Gamification Bar -->
-    <header class="max-w-5xl w-full mx-auto flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800">
-        <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center font-black text-2xl shadow-lg ring-2 ring-indigo-400/30">
-                민
-            </div>
-            <div>
-                <h1 class="font-extrabold text-xl tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-200 to-pink-300">
-                    Min Jun (민준)
-                </h1>
-                <p class="text-xs text-slate-400 font-medium">AI Speech & GKS Fluency Companion</p>
-            </div>
-        </div>
-        
-        <!-- Gamification Widgets (Streak & XP) -->
-        <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2 bg-slate-900/90 px-3.5 py-2 rounded-2xl border border-amber-500/20 shadow-inner">
-                <i data-lucide="flame" class="w-5 h-5 text-amber-500 animate-bounce"></i>
-                <div>
-                    <span class="text-[10px] text-slate-400 uppercase font-bold block leading-none">Streak</span>
-                    <span id="streak-val" class="text-sm font-black text-amber-400">1 Day</span>
-                </div>
-            </div>
+<div class="flex gap-2 my-4">
+<button onclick="switchTab('study')" id="tab-study" class="tab-active px-5 py-2.5 rounded-xl text-sm font-bold">📚 Study Tracker</button>
+<button onclick="switchTab('speak')" id="tab-speak" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800">🗣️ Min Jun Coach</button>
+</div>
 
-            <div class="flex items-center gap-2 bg-slate-900/90 px-3.5 py-2 rounded-2xl border border-indigo-500/20 shadow-inner">
-                <i data-lucide="zap" class="w-5 h-5 text-indigo-400"></i>
-                <div>
-                    <span class="text-[10px] text-slate-400 uppercase font-bold block leading-none">Total XP</span>
-                    <span id="xp-val" class="text-sm font-black text-indigo-300">0 XP</span>
-                </div>
-            </div>
+<!-- STUDY TAB -->
+<div id="page-study" class="glass-card rounded-3xl p-5">
+<div class="card bg-indigo-500/10 p-3 rounded-xl border border-indigo-500/20 mb-3" id="motivation">💡 Loading motivation...</div>
+<div class="card bg-slate-950 p-3 rounded-xl border border-slate-800 hidden" id="aiBox"></div>
+<input id="task" class="w-full p-3 my-2 rounded-xl bg-slate-900 border border-slate-700 text-sm" placeholder="What are you studying? or type 'I feel lazy'">
+<input id="mins" type="number" class="w-full p-3 my-2 rounded-xl bg-slate-900 border border-slate-700 text-sm" placeholder="Minutes e.g. 25">
+<button onclick="addStudy()" class="w-full p-3 rounded-xl bg-indigo-600 font-bold mt-2">Add Session + Get XP</button>
+<div class="h-3 bg-slate-800 rounded-full mt-4"><div id="bar" class="h-3 bg-green-500 rounded-full" style="width:0%"></div></div>
+<p id="total" class="text-sm mt-2 text-slate-300">Total today: 0 mins</p>
+<div id="list" class="mt-3 space-y-2"></div>
+</div>
 
-            <!-- Language Switcher -->
-            <div class="flex items-center gap-1 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
-                <button id="lang-ko" onclick="setLanguage('ko')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow">
-                    🇰🇷 KO
-                </button>
-                <button id="lang-en" onclick="setLanguage('en')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white">
-                    🇺🇸 EN
-                </button>
-            </div>
-        </div>
-    </header>
+<!-- SPEAK TAB -->
+<div id="page-speak" class="hidden">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+<div class="lg:col-span-2 glass-card rounded-3xl p-5">
+<div class="flex justify-between"><div class="flex gap-3 items-center"><div id="avatar" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center text-2xl">😊</div><div><span id="status-badge" class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Ready</span><h2 id="greeting" class="text-sm font-bold mt-1">Ready to practice?</h2></div></div><button onclick="speakTarget()" class="p-3 bg-slate-800 rounded-xl"><i data-lucide="volume-2" class="w-5 h-5"></i></button></div>
+<div class="mt-4 bg-slate-950 p-4 rounded-2xl border border-slate-800"><p class="text-[10px] text-indigo-400 font-bold">TARGET</p><p id="target-text" class="text-xl font-black mt-1">안녕하세요! 저는 한국에서 컴퓨터 공학을 전공하고 싶습니다.</p><p id="target-roman" class="text-xs text-slate-400 mt-1">An-nyeong-ha-se-yo!...</p></div>
+<div class="mt-4 h-12 flex items-center justify-center gap-1 bg-slate-950/40 rounded-xl border border-slate-800" id="waveform"><div class="bar w-1 h-2 bg-indigo-500 rounded"></div><div class="bar w-1 h-2 bg-indigo-500 rounded"></div><div class="bar w-1 h-2 bg-purple-500 rounded"></div><div class="bar w-1 h-2 bg-pink-500 rounded"></div><div class="bar w-1 h-2 bg-indigo-500 rounded"></div></div>
 
-    <!-- Main Workspace Grid -->
-    <main class="max-w-5xl w-full mx-auto my-6 grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-        
-        <!-- Center/Left Interactive Stage -->
-        <section class="lg:col-span-2 flex flex-col gap-6">
-            
-            <!-- Min Jun Animated AI Character Card -->
-            <div class="glass-card rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between shadow-2xl">
-                
-                <!-- Character Expression Header -->
-                <div class="flex items-start justify-between z-10">
-                    <div class="flex items-center gap-4">
-                        <div id="avatar" class="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-3xl shadow-2xl transition-all duration-300 ring-4 ring-indigo-500/20">
-                            😊
-                        </div>
-                        <div>
-                            <span id="minjun-status-badge" class="px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                Ready to Practice
-                            </span>
-                            <h2 id="minjun-greeting" class="text-base md:text-lg font-bold mt-1 text-slate-100">
-                                "Ready to practice your GKS statement today?"
-                            </h2>
-                        </div>
-                    </div>
-                    <button onclick="speakTargetPhrase()" class="p-3.5 bg-slate-800/80 hover:bg-indigo-600/30 text-indigo-300 rounded-2xl border border-indigo-500/30 transition-all shadow-md active:scale-95" title="Listen to Native Pronunciation">
-                        <i data-lucide="volume-2" class="w-5 h-5"></i>
-                    </button>
-                </div>
+<!-- Universal Input Area -->
+<div class="mt-4 flex flex-col items-center gap-2">
+<button id="mic-btn" onclick="toggleRecording()" class="w-20 h-20 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center shadow-xl"><i data-lucide="mic" class="w-7 h-7"></i></button>
+<span id="rec-label" class="text-xs text-slate-400">Tap to speak (or type below if mic not supported)</span>
+<input id="typeInput" class="w-full p-3 mt-2 rounded-xl bg-slate-900 border border-slate-700 text-sm" placeholder="Type what you said here (works on iPhone)">
+<button onclick="submitTyped()" class="w-full p-2.5 rounded-xl bg-slate-800 text-sm font-bold">Submit Typed Answer</button>
+</div>
 
-                <!-- Target Practice Phrase Box -->
-                <div class="mt-6 bg-slate-950/80 p-5 rounded-2xl border border-slate-800/80 relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] uppercase tracking-widest text-indigo-400 font-extrabold block">Target Expression</span>
-                        <span id="scenario-category" class="text-[10px] bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-800">GKS Special</span>
-                    </div>
-                    <p id="target-text" class="text-lg md:text-2xl font-black text-white leading-relaxed tracking-wide">
-                        안녕하세요! 저는 한국에서 컴퓨터 공학을 전공하고 싶습니다.
-                    </p>
-                    <p id="target-romanization" class="text-xs text-indigo-300/70 mt-2 font-mono">
-                        An-nyeong-ha-se-yo! Jeo-neun keom-pyu-teo gong-hak-eul jeon-gong-ha-go sip-seub-ni-da.
-                    </p>
-                </div>
+<div class="mt-4 grid grid-cols-3 gap-2">
+<div class="bg-slate-950 p-3 rounded-xl text-center border border-slate-800"><span class="text-[10px] text-slate-400">Fluency</span><span id="score-val" class="block text-xl font-black text-indigo-400">--</span></div>
+<div class="bg-slate-950 p-3 rounded-xl text-center border border-slate-800"><span class="text-[10px] text-slate-400">Accuracy</span><span id="accuracy-val" class="block text-xl font-black text-emerald-400">--</span></div>
+<div class="bg-slate-950 p-3 rounded-xl text-center border border-slate-800"><span class="text-[10px] text-slate-400">XP</span><span id="xp-earned" class="block text-xl font-black text-amber-400">+0</span></div>
+</div>
+<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mt-3"><p class="text-xs text-slate-400 mb-1">Word Breakdown:</p><div id="word-break" class="flex flex-wrap gap-2 text-xs"><span class="text-slate-500">Start speaking or typing...</span></div></div>
+<p class="text-xs bg-slate-950/50 p-3 rounded-xl mt-2 border border-slate-800"><b>Heard:</b> <span id="transcript" class="italic text-slate-400">Nothing yet</span></p>
+</div>
+<div class="glass-card rounded-3xl p-5"><h3 class="text-xs font-bold text-indigo-400 mb-3">Practice Scenarios</h3><div id="scenario-list" class="space-y-2"></div><h3 class="text-xs font-bold text-indigo-400 mt-6 mb-2">History</h3><div id="history" class="space-y-2 text-xs max-h-60 overflow-auto"></div></div>
+</div>
+</div>
+</div>
 
-                <!-- Live Audio Visualizer -->
-                <div class="mt-6 h-12 flex items-center justify-center gap-1.5 px-4 bg-slate-950/40 rounded-xl border border-slate-800/50" id="waveform">
-                    <div class="bar w-1.5 h-2 bg-indigo-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-indigo-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-purple-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-indigo-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-pink-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-indigo-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-purple-500 rounded-full"></div>
-                    <div class="bar w-1.5 h-2 bg-indigo-500 rounded-full"></div>
-                </div>
+<script>
+lucide.createIcons();
+const SCENARIOS=[
+{cat:"GKS Special",title:"GKS Ambition",target:"안녕하세요! 저는 한국에서 컴퓨터 공학을 전공하고 싶습니다.",rom:"An-nyeong-ha-se-yo! Jeo-neun..."},
+{cat:"GKS Special",title:"Yonsei Dream",target:"연세대학교에서 인공지능 분야를 깊이 연구하겠습니다.",rom:"Yeon-se-dae..."},
+{cat:"Daily",title:"Coffee in Seoul",target:"따뜻한 아메리카노 한 잔 부탁드립니다.",rom:"Tta-tteut-han..."},
+{cat:"English",title:"Study Plan",target:"I am passionate about artificial intelligence and computer engineering.",rom:"English phrase"}
+];
+let curIdx=0, total=parseInt(localStorage.getItem('total')||0), tasks=JSON.parse(localStorage.getItem('tasks')||'[]'), totalXP=parseInt(localStorage.getItem('minjun_xp')||'0'), streak=1, hist=JSON.parse(localStorage.getItem('minjun_history')||'[]'), isRecording=false, recognition=null;
 
-                <!-- Record Button & Mic Controls -->
-                <div class="mt-6 flex flex-col items-center gap-3">
-                    <button id="mic-btn" onclick="toggleRecording()" class="w-20 h-20 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white flex items-center justify-center shadow-xl transition-all duration-300 glow-button hover:scale-105 active:scale-95">
-                        <i data-lucide="mic" class="w-8 h-8" id="mic-icon"></i>
-                    </button>
-                    <span id="recording-label" class="text-xs font-bold text-slate-400">Tap to start speaking</span>
-                </div>
-            </div>
+function switchTab(t){
+document.getElementById('page-study').classList.toggle('hidden', t!=='study');
+document.getElementById('page-speak').classList.toggle('hidden', t!=='speak');
+document.getElementById('tab-study').className = t==='study' ? 'tab-active px-5 py-2.5 rounded-xl text-sm font-bold' : 'px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800';
+document.getElementById('tab-speak').className = t==='speak' ? 'tab-active px-5 py-2.5 rounded-xl text-sm font-bold' : 'px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800';
+}
+function save(){localStorage.setItem('total',total); localStorage.setItem('tasks',JSON.stringify(tasks));}
+function renderStudy(){document.getElementById('total').innerText="Total today: "+total+" mins"; document.getElementById('bar').style.width=Math.min(total,120)+"%"; document.getElementById('list').innerHTML=tasks.map(t=>`<div class='bg-slate-900 p-3 rounded-xl border border-slate-800 text-sm'>${t}</div>`).join(''); document.getElementById('xp-val').innerText=total+" mins | "+totalXP+" XP"; document.getElementById('streak-val').innerText=streak+" Day";}
+function addStudy(){
+let t=document.getElementById('task').value.trim(); let m=parseInt(document.getElementById('mins').value)||25;
+if(!t) return alert("Add task");
+if(/lazy|tired|motivation|boring/i.test(t)){document.getElementById('aiBox').style.display='block'; document.getElementById('aiBox').innerHTML="🧠 <b>AI Coach:</b> Do 15 mins only: 5m review + 5m quiz + 5m write what you learned. You got this!"; if(!document.getElementById('mins').value) m=15;}
+total+=m; tasks.unshift(`✅ ${t} - ${m} mins`); save(); renderStudy(); document.getElementById('task').value='';
+}
+renderStudy();
+document.getElementById('motivation').innerText="💡 "+["Small progress is still progress!","GKS is waiting in Korea!","25 mins today > 0 mins","Future you in Korea will thank you"][Math.floor(Math.random()*4)];
 
-            <!-- Instant Speech Feedback Engine -->
-            <div class="glass-card rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                    Speech Analysis & Pronunciation Breakdown
-                </h3>
+// --- SPEAKING LOGIC UNIVERSAL ---
+function initRec(){
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){document.getElementById('rec-label').innerText="Mic not supported on this device - use typing below (works everywhere)"; return null;}
+let r=new SR(); r.continuous=false; r.interimResults=true; r.lang='ko-KR';
+r.onstart=()=>{isRecording=true; document.getElementById('rec-label').innerText="Listening..."; document.getElementById('avatar').innerText="🎙️";};
+r.onresult=(e)=>{let tr=''; for(let i=e.resultIndex;i<e.results.length;i++) tr+=e.results[i][0].transcript; document.getElementById('transcript').innerText=tr; if(e.results[0].isFinal) analyze(tr);};
+r.onend=()=>{isRecording=false; document.getElementById('rec-label').innerText="Tap to speak or type below";};
+return r;
+}
+recognition=initRec();
+function toggleRecording(){if(!recognition){alert("Use typing mode - it works on all phones"); return;} if(isRecording) recognition.stop(); else {recognition.lang=SCENARIOS[curIdx].target.match(/[가-힣]/) ? 'ko-KR' : 'en-US'; recognition.start();}}
+function submitTyped(){let v=document.getElementById('typeInput').value; if(!v) return alert("Type something"); document.getElementById('transcript').innerText=v; analyze(v);}
 
-                <!-- Score Counters -->
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-center">
-                        <span class="text-[10px] text-slate-400 font-bold uppercase block">Fluency Score</span>
-                        <span id="score-val" class="text-2xl md:text-3xl font-black text-indigo-400 mt-1 block">--</span>
-                    </div>
-                    <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-center">
-                        <span class="text-[10px] text-slate-400 font-bold uppercase block">Accuracy</span>
-                        <span id="accuracy-val" class="text-2xl md:text-3xl font-black text-emerald-400 mt-1 block">--</span>
-                    </div>
-                    <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 text-center">
-                        <span class="text-[10px] text-slate-400 font-bold uppercase block">XP Earned</span>
-                        <span id="xp-earned-val" class="text-2xl md:text-3xl font-black text-amber-400 mt-1 block">+0</span>
-                    </div>
-                </div>
-
-                <!-- Word-by-Word Color Breakdown -->
-                <div class="bg-slate-950/70 p-4 rounded-2xl border border-slate-800">
-                    <span class="text-xs text-slate-400 font-semibold block mb-2">Word Matching Breakdown:</span>
-                    <div id="word-breakdown" class="flex flex-wrap gap-2 text-sm">
-                        <span class="text-slate-500 italic">Press the microphone to analyze your pronunciation...</span>
-                    </div>
-                </div>
-
-                <!-- Recognized Speech Transcript -->
-                <div class="text-xs bg-slate-950/40 p-3.5 rounded-xl border border-slate-800">
-                    <strong class="text-slate-300">Min Jun Heard:</strong> 
-                    <span id="transcript-text" class="italic text-slate-400 ml-1">"No voice input recorded yet."</span>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- Right Side: Scenarios & Log -->
-        <section class="flex flex-col gap-6">
-            
-            <!-- GKS Scenarios Selector -->
-            <div class="glass-card rounded-3xl p-6 shadow-2xl">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-4 flex items-center gap-2">
-                    <i data-lucide="compass" class="w-4 h-4"></i>
-                    Practice Scenarios
-                </h3>
-
-                <div id="scenario-list" class="flex flex-col gap-2.5">
-                    <!-- Scenario items generated dynamically -->
-                </div>
-            </div>
-
-            <!-- Session Log -->
-            <div class="glass-card rounded-3xl p-6 shadow-2xl flex-1 flex flex-col">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-4 flex items-center gap-2">
-                    <i data-lucide="history" class="w-4 h-4"></i>
-                    Practice History
-                </h3>
-                <div id="history-list" class="flex flex-col gap-2 overflow-y-auto max-h-56 text-xs text-slate-400">
-                    <p class="text-slate-500 italic">No practice sessions logged yet.</p>
-                </div>
-            </div>
-
-        </section>
-    </main>
-
-    <footer class="max-w-5xl w-full mx-auto text-center text-xs text-slate-500 pt-4 border-t border-slate-800/60">
-        Min Jun (민준) AI Coach • Tailored for Korean & English Speaking Confidence
-    </footer>
-
-    <!-- App JavaScript Logic -->
-    <script>
-        // Preset Practice Scenarios
-        const SCENARIOS = {
-            ko: [
-                {
-                    cat: "GKS Special",
-                    title: "GKS Ambition Statement",
-                    target: "안녕하세요! 저는 한국에서 컴퓨터 공학을 전공하고 싶습니다.",
-                    rom: "An-nyeong-ha-se-yo! Jeo-neun keom-pyu-teo gong-hak-eul jeon-gong-ha-go sip-seub-ni-da."
-                },
-                {
-                    cat: "GKS Special",
-                    title: "Yonsei Aspirations",
-                    target: "연세대학교에서 인공지능 분야를 깊이 연구하겠습니다.",
-                    rom: "Yeon-se-dae-hak-gyo-e-seo in-gong-ji-neung bun-ya-reul gip-i yeon-gu-ha-get-seub-ni-da."
-                },
-                {
-                    cat: "Daily Casual",
-                    title: "Ordering Coffee in Seoul",
-                    target: "따뜻한 아메리카노 한 잔 부탁드립니다.",
-                    rom: "Tta-tteut-han a-me-ri-ka-no han jan bu-tak-deu-rim-ni-da."
-                },
-                {
-                    cat: "Daily Casual",
-                    title: "Meeting New Classmates",
-                    target: "처음 뵙겠습니다! 잘 부탁드립니다.",
-                    rom: "Cheo-eum boep-get-seub-ni-da! Jal bu-tak-deu-rim-ni-da."
-                }
-            ],
-            en: [
-                {
-                    cat: "GKS Special",
-                    title: "Study Plan Focus",
-                    target: "I am deeply passionate about artificial intelligence and computer engineering.",
-                    rom: "English Practice Phrase"
-                },
-                {
-                    cat: "GKS Special",
-                    title: "Personal Goal",
-                    target: "My primary goal is to contribute to innovative software solutions in Korea.",
-                    rom: "English Practice Phrase"
-                },
-                {
-                    cat: "Casual English",
-                    title: "Introducing Yourself",
-                    target: "Hey there! It is great to meet you today.",
-                    rom: "English Practice Phrase"
-                }
-            ]
-        };
-
-        // App State
-        let currentLang = 'ko';
-        let currentScenarioIndex = 0;
-        let isRecording = false;
-        let recognition = null;
-        let audioContext = null;
-        let microphoneStream = null;
-        let analyser = null;
-        let animFrameId = null;
-        let totalXP = parseInt(localStorage.getItem('minjun_xp') || '0');
-        let streak = parseInt(localStorage.getItem('minjun_streak') || '1');
-        let sessionHistory = JSON.parse(localStorage.getItem('minjun_history') || '[]');
-
-        // DOM References
-        const targetTextEl = document.getElementById('target-text');
-        const targetRomEl = document.getElementById('target-romanization');
-        const scenarioCategoryEl = document.getElementById('scenario-category');
-        const micBtn = document.getElementById('mic-btn');
-        const recordingLabel = document.getElementById('recording-label');
-        const avatarEl = document.getElementById('avatar');
-        const greetingEl = document.getElementById('minjun-greeting');
-        const statusBadge = document.getElementById('minjun-status-badge');
-        const transcriptTextEl = document.getElementById('transcript-text');
-        const scoreValEl = document.getElementById('score-val');
-        const accuracyValEl = document.getElementById('accuracy-val');
-        const xpEarnedValEl = document.getElementById('xp-earned-val');
-        const wordBreakdownEl = document.getElementById('word-breakdown');
-        const scenarioListEl = document.getElementById('scenario-list');
-        const historyListEl = document.getElementById('history-list');
-        const streakValEl = document.getElementById('streak-val');
-        const xpValEl = document.getElementById('xp-val');
-
-        // Initialize App
-        window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            updateGamificationUI();
-            initSpeechRecognition();
-            renderScenarios();
-            loadScenario(0);
-            renderHistoryUI();
-        });
-
-        // Speech Recognition Setup
-        function initSpeechRecognition() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                alert("Web Speech API is not supported in this browser. Please open in Google Chrome or Microsoft Edge.");
-                return;
-            }
-
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = true;
-            recognition.lang = currentLang === 'ko' ? 'ko-KR' : 'en-US';
-
-            recognition.onstart = () => {
-                isRecording = true;
-                recordingLabel.innerText = "Listening... Speak clearly into your mic!";
-                recordingLabel.className = "text-xs font-bold text-indigo-400 animate-pulse";
-                avatarEl.innerText = "🎙️";
-                statusBadge.innerText = "Listening...";
-                statusBadge.className = "px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
-                startWaveform();
-            };
-
-            recognition.onresult = (event) => {
-                let transcript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    transcript += event.results[i][0].transcript;
-                }
-                transcriptTextEl.innerText = `"${transcript}"`;
-                if (event.results[0].isFinal) {
-                    analyzeSpeech(transcript);
-                }
-            };
-
-            recognition.onerror = (event) => {
-                console.error("Speech Recognition Error:", event.error);
-                stopRecordingState();
-            };
-
-            recognition.onend = () => {
-                stopRecordingState();
-            };
-        }
-
-        function toggleRecording() {
-            if (!recognition) initSpeechRecognition();
-            if (isRecording) {
-                recognition.stop();
-            } else {
-                recognition.lang = currentLang === 'ko' ? 'ko-KR' : 'en-US';
-                recognition.start();
-            }
-        }
-
-        function stopRecordingState() {
-            isRecording = false;
-            recordingLabel.innerText = "Tap to start speaking";
-            recordingLabel.className = "text-xs font-bold text-slate-400";
-            stopWaveform();
-        }
-
-        // Audio Waveform Animation
-        async function startWaveform() {
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const source = audioContext.createMediaStreamSource(microphoneStream);
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 32;
-                source.connect(analyser);
-
-                const dataArray = new Uint8Array(analyser.frequencyBinCount);
-                const bars = document.querySelectorAll('#waveform .bar');
-
-                function animate() {
-                    analyser.getByteFrequencyData(dataArray);
-                    bars.forEach((bar, index) => {
-                        const val = dataArray[index] || 10;
-                        const height = Math.max(8, (val / 255) * 40);
-                        bar.style.height = `${height}px`;
-                    });
-                    animFrameId = requestAnimationFrame(animate);
-                }
-                animate();
-            } catch (err) {
-                console.warn("Visualizer audio context note:", err);
-            }
-        }
-
-        function stopWaveform() {
-            if (animFrameId) cancelAnimationFrame(animFrameId);
-            if (microphoneStream) microphoneStream.getTracks().forEach(t => t.stop());
-            if (audioContext) audioContext.close();
-            document.querySelectorAll('#waveform .bar').forEach(b => b.style.height = '8px');
-        }
-
-        // Speech Analysis & Word Alignment Algorithm
-        function analyzeSpeech(spokenText) {
-            const target = SCENARIOS[currentLang][currentScenarioIndex].target;
-            const targetWords = cleanText(target).split(' ');
-            const spokenWords = cleanText(spokenText).split(' ');
-
-            let correctCount = 0;
-            const breakdownHTML = targetWords.map(word => {
-                const match = spokenWords.includes(word);
-                if (match) correctCount++;
-                return `<span class="px-2.5 py-1 rounded-xl font-bold text-xs ${match ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'}">${word}</span>`;
-            }).join('');
-
-            const accuracy = Math.round((correctCount / targetWords.length) * 100);
-            const fluencyScore = Math.min(100, Math.round(accuracy * 0.9 + Math.random() * 10));
-            const xpGained = Math.round(fluencyScore * 0.5);
-
-            // Update Metrics
-            scoreValEl.innerText = `${fluencyScore}%`;
-            accuracyValEl.innerText = `${accuracy}%`;
-            xpEarnedValEl.innerText = `+${xpGained}`;
-            wordBreakdownEl.innerHTML = breakdownHTML;
-
-            // Gamification Update
-            totalXP += xpGained;
-            localStorage.setItem('minjun_xp', totalXP);
-            updateGamificationUI();
-
-            // Avatar Expressions & Celebrations
-            if (accuracy >= 80) {
-                avatarEl.innerText = "🌟";
-                greetingEl.innerText = currentLang === 'ko' ? '"대단해요! 아주 훌륭한 발음입니다!"' : '"Fantastic delivery! Perfect pronunciation!"';
-                statusBadge.innerText = "Excellent!";
-                statusBadge.className = "px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
-                }
-            } else {
-                avatarEl.innerText = "💪";
-                greetingEl.innerText = currentLang === 'ko' ? '"좋은 시도예요! 한번 더 도전해볼까요?"' : '"Good attempt! Let\'s try it one more time."';
-                statusBadge.innerText = "Keep Trying!";
-                statusBadge.className = "px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30";
-            }
-
-            // Save to Local History
-            logHistory(target, fluencyScore);
-        }
-
-        function cleanText(str) {
-            return str.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").toLowerCase().trim();
-        }
-
-        // Native Text-To-Speech Pronunciation Preview
-        function speakTargetPhrase() {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const text = SCENARIOS[currentLang][currentScenarioIndex].target;
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = currentLang === 'ko' ? 'ko-KR' : 'en-US';
-            utterance.rate = 0.88;
-            
-            avatarEl.innerText = "🗣️";
-            utterance.onend = () => { avatarEl.innerText = "😊"; };
-            window.speechSynthesis.speak(utterance);
-        }
-
-        // Language Switcher
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.getElementById('lang-ko').className = lang === 'ko' ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow' : 'px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white';
-            document.getElementById('lang-en').className = lang === 'en' ? 'px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow' : 'px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white';
-            renderScenarios();
-            loadScenario(0);
-        }
-
-        // Scenario Loader
-        function renderScenarios() {
-            scenarioListEl.innerHTML = SCENARIOS[currentLang].map((sc, idx) => `
-                <button onclick="loadScenario(${idx})" class="w-full text-left p-3.5 rounded-2xl border transition-all ${idx === currentScenarioIndex ? 'bg-indigo-600/20 border-indigo-500/80 text-white shadow-lg' : 'bg-slate-950/40 border-slate-800/80 text-slate-400 hover:bg-slate-800/40'}">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400 block">${sc.cat} • ${sc.title}</span>
-                    <span class="text-xs font-bold truncate block mt-1 text-slate-200">${sc.target}</span>
-                </button>
-            `).join('');
-        }
-
-        function loadScenario(index) {
-            currentScenarioIndex = index;
-            renderScenarios();
-            const current = SCENARIOS[currentLang][index];
-            targetTextEl.innerText = current.target;
-            targetRomEl.innerText = current.rom;
-            scenarioCategoryEl.innerText = current.cat;
-            
-            // Reset Displays
-            scoreValEl.innerText = "--";
-            accuracyValEl.innerText = "--";
-            xpEarnedValEl.innerText = "+0";
-            wordBreakdownEl.innerHTML = `<span class="text-slate-500 italic">Press the microphone to analyze your pronunciation...</span>`;
-            transcriptTextEl.innerText = `"No voice input recorded yet."`;
-            avatarEl.innerText = "😊";
-            greetingEl.innerText = currentLang === 'ko' ? '"준비되셨나요? 소리 내어 문장을 읽어보세요!"' : '"Ready? Speak the target phrase out loud!"';
-        }
-
-        function updateGamificationUI() {
-            streakValEl.innerText = `${streak} ${streak === 1 ? 'Day' : 'Days'}`;
-            xpValEl.innerText = `${totalXP} XP`;
-        }
-
-        function logHistory(phrase, score) {
-            sessionHistory.unshift({
-                phrase,
-                score,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
-            if (sessionHistory.length > 6) sessionHistory.pop();
-            localStorage.setItem('minjun_history', JSON.stringify(sessionHistory));
-            renderHistoryUI();
-        }
-
-        function renderHistoryUI() {
-            if (sessionHistory.length === 0) return;
-            historyListEl.innerHTML = sessionHistory.map(item => `
-                <div class="p-2.5 bg-slate-950/70 rounded-xl border border-slate-800 flex justify-between items-center">
-                    <div class="truncate mr-2">
-                        <span class="block text-slate-200 font-bold truncate">${item.phrase}</span>
-                        <span class="text-[10px] text-slate-500">${item.time}</span>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-black ${item.score >= 80 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${item.score}%</span>
-                </div>
-            `).join('');
-        }
-    </script>
+function clean(s){return s.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g,"").toLowerCase().trim();}
+function analyze(spoken){
+let target=SCENARIOS[curIdx].target; let tw=clean(target).split(' '); let sw=clean(spoken).split(' '); let correct=0;
+let html=tw.map(w=>{let ok=sw.includes(w); if(ok) correct++; return `<span class="px-2 py-1 rounded-lg text-xs ${ok?'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30':'bg-rose-500/20 text-rose-300 border border-rose-500/30'}">${w}</span>`;}).join('');
+let acc=Math.round((correct/tw.length)*100); let flu=Math.min(100, Math.round(acc*0.9+Math.random()*10)); let xp=Math.round(flu*0.5);
+document.getElementById('score-val').innerText=flu+"%"; document.getElementById('accuracy-val').innerText=acc+"%"; document.getElementById('xp-earned').innerText="+"+xp; document.getElementById('word-break').innerHTML=html;
+totalXP+=xp; localStorage.setItem('minjun_xp',totalXP); renderStudy();
+if(acc>=80){document.getElementById('avatar').innerText="🌟"; if(window.confetti) confetti({particleCount:60, spread:70, origin:{y:0.7}});}
+hist.unshift({phrase:target,score:flu,time:new Date().toLocaleTimeString()}); if(hist.length>6) hist.pop(); localStorage.setItem('minjun_history',JSON.stringify(hist)); renderHist();
+}
+function speakTarget(){let u=new SpeechSynthesisUtterance(SCENARIOS[curIdx].target); u.lang= /[가-힣]/.test(SCENARIOS[curIdx].target)?'ko-KR':'en-US'; speechSynthesis.speak(u);}
+function loadScenario(i){curIdx=i; document.getElementById('target-text').innerText=SCENARIOS[i].target; document.getElementById('target-roman').innerText=SCENARIOS[i].rom; renderScenarios();}
+function renderScenarios(){document.getElementById('scenario-list').innerHTML=SCENARIOS.map((s,i)=>`<button onclick="loadScenario(${i})" class="w-full text-left p-3 rounded-xl border ${i===curIdx?'bg-indigo-600/20 border-indigo-500 text-white':'bg-slate-950/40 border-slate-800 text-slate-400'}"><span class="text-[10px] font-bold text-indigo-400 block">${s.cat}</span><span class="text-xs font-bold block truncate">${s.target}</span></button>`).join('');}
+function renderHist(){document.getElementById('history').innerHTML=hist.map(h=>`<div class="p-2 bg-slate-950 rounded-xl border border-slate-800 flex justify-between"><span class="truncate">${h.phrase}</span><span class="text-[10px] px-2 py-1 rounded bg-emerald-500/20">${h.score}%</span></div>`).join('');}
+renderScenarios(); renderHist(); loadScenario(0);
+</script>
 </body>
 </html>
