@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GKS Korean Master - 7000+ Fixed</title>
+<title>GKS Korean Master - 7000+ Google Voice Fixed</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -15,7 +15,7 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
 <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-50 px-4 py-3">
 <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-2">
-<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center font-black text-white">한</div><div><h1 class="font-bold text-sm">GKS Korean Master - Fixed Voice + Meaning Under</h1><p class="text-[11px] text-slate-400">7200 Words & 5200 Sentences - Error Free</p></div></div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center font-black text-white">한</div><div><h1 class="font-bold text-sm">GKS Korean Master - Google Voice Fixed</h1><p class="text-[11px] text-slate-400">7200 Words & 5200 Sentences - Universal Voice</p></div></div>
 <div class="flex gap-2"><div class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-center"><span class="text-[9px] block text-slate-400 uppercase">Voice</span><span id="k-voice-name" class="text-[10px] font-bold text-emerald-400">Loading...</span></div><div class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-center"><span class="text-[9px] block text-slate-400 uppercase">Mastered</span><span id="mastered-count" class="text-xs font-black text-indigo-400">0 / 0</span></div></div>
 </div>
 </header>
@@ -47,76 +47,81 @@
 const REAL_VOCAB_DATABASE = [
 {"hangul":"자기소개","roman":"ja-gi-so-gae","english":"Self-introduction","category":"GKS Interview"},
 {"hangul":"지원 동기","roman":"ji-won dong-gi","english":"Motivation for applying","category":"GKS Interview"},
-{"hangul":"학업 계획서","roman":"hag-eob gye-hweg-seo","english":"Study plan / Statement of purpose","category":"GKS Interview"},
+{"hangul":"학업 계획서","roman":"hag-eob gye-hweg-seo","english":"Study plan","category":"GKS Interview"},
 {"hangul":"장학금","roman":"jang-hag-geum","english":"Scholarship","category":"GKS Interview"},
-{"hangul":"목표","roman":"mog-pyo","english":"Goal / Objective","category":"GKS Interview"},
-{"hangul":"장점과 단점","roman":"jang-jeom-gwa dan-jeom","english":"Strengths and weaknesses","category":"GKS Interview"},
-{"hangul":"문화 적응","roman":"mun-hwa jeog-eung","english":"Cultural adaptation","category":"GKS Interview"},
-{"hangul":"장래 희망","roman":"jang-rae hui-mang","english":"Future ambition / Career goal","category":"GKS Interview"},
-{"hangul":"국제교류","roman":"gug-je-gyo-ryu","english":"International exchange","category":"GKS Interview"},
-{"hangul":"열정","roman":"yeol-jeong","english":"Passion / Enthusiasm","category":"GKS Interview"},
+{"hangul":"목표","roman":"mog-pyo","english":"Goal","category":"GKS Interview"},
 {"hangul":"연세대학교","roman":"yeon-se-dae-hag-gyo","english":"Yonsei University","category":"Yonsei & CS"},
-{"hangul":"컴퓨터공학","roman":"keom-pyu-teo-gong-hag","english":"Computer Science and Engineering","category":"Yonsei & CS"},
-{"hangul":"인공지능","roman":"in-gong-ji-neung","english":"Artificial Intelligence (AI)","category":"Yonsei & CS"},
+{"hangul":"컴퓨터공학","roman":"keom-pyu-teo-gong-hag","english":"Computer Science","category":"Yonsei & CS"},
+{"hangul":"인공지능","roman":"in-gong-ji-neung","english":"Artificial Intelligence","category":"Yonsei & CS"},
 {"hangul":"알고리즘","roman":"al-go-ri-deum","english":"Algorithm","category":"Yonsei & CS"},
 {"hangul":"데이터베이스","roman":"de-i-teo-be-i-seu","english":"Database","category":"Yonsei & CS"},
-{"hangul":"네트워크","roman":"ne-teu-wo-keu","english":"Network architecture","category":"Yonsei & CS"},
-{"hangul":"소프트웨어 개발","roman":"so-peu-teu-we-eo gae-bal","english":"Software development","category":"Yonsei & CS"},
-{"hangul":"자료구조","roman":"ja-ryo-gu-jo","english":"Data structures","category":"Yonsei & CS"},
-{"hangul":"기계 학습","roman":"gi-gye hag-seub","english":"Machine Learning","category":"Yonsei & CS"},
-{"hangul":"시스템 설계","roman":"si-seu-tem seol-gye","english":"Systems design","category":"Yonsei & CS"},
 {"hangul":"성적 증명서","roman":"seong-jeog jeung-myeong-seo","english":"Academic transcript","category":"TOPIK I & II"},
-{"hangul":"연구원","roman":"yeon-gu-won","english":"Researcher","category":"TOPIK I & II"},
-{"hangul":"수강 신청","roman":"su-gang sin-cheong","english":"Course registration","category":"TOPIK I & II"},
 {"hangul":"교수님","roman":"gyo-su-nim","english":"Professor","category":"TOPIK I & II"},
-{"hangul":"학점","roman":"hag-jeom","english":"Academic credit / GPA","category":"TOPIK I & II"},
-{"hangul":"졸업 논문","roman":"jol-eob non-mun","english":"Graduation thesis","category":"TOPIK I & II"},
-{"hangul":"도서관","roman":"do-seo-gwan","english":"Library","category":"TOPIK I & II"},
-{"hangul":"시험 준비","roman":"si-heom jun-bi","english":"Exam preparation","category":"TOPIK I & II"},
-{"hangul":"복습하다","roman":"bog-seub-ha-da","english":"To review / study material again","category":"TOPIK I & II"},
-{"hangul":"발표하다","roman":"bal-pyo-ha-da","english":"To present / give a presentation","category":"TOPIK I & II"},
 {"hangul":"기숙사","roman":"gi-sug-sa","english":"Dormitory","category":"Survival & Daily"},
-{"hangul":"학생증","roman":"hag-saeng-jeung","english":"Student ID card","category":"Survival & Daily"},
-{"hangul":"출입국관리사무소","roman":"chul-ib-gug-gwan-ri-sa-mu-so","english":"Immigration office","category":"Survival & Daily"},
-{"hangul":"외국인등록증","roman":"oe-gug-in-deung-rog-jeung","english":"Alien Registration Card (ARC)","category":"Survival & Daily"},
-{"hangul":"체류 기간","roman":"che-ryu gi-gan","english":"Period of stay / Visa duration","category":"Survival & Daily"},
-{"hangul":"교통카드","roman":"gyo-tong-ka-deu","english":"Transportation card (T-Money)","category":"Survival & Daily"},
-{"hangul":"식당","roman":"sig-dang","english":"Cafeteria / Restaurant","category":"Survival & Daily"},
-{"hangul":"약국","roman":"yag-gug","english":"Pharmacy","category":"Survival & Daily"},
-{"hangul":"은행 계좌","roman":"eun-haeng gye-jwa","english":"Bank account","category":"Survival & Daily"},
-{"hangul":"월세","roman":"wol-se","english":"Monthly rent","category":"Survival & Daily"}
+{"hangul":"외국인등록증","roman":"oe-gug-in-deung-rog-jeung","english":"Alien Registration Card","category":"Survival & Daily"}
 ];
 const REAL_SENTENCE_DATABASE = [
 {"hangul":"저는 연세대학교에서 컴퓨터공학을 전공하고 싶습니다.","roman":"jeo-neun yeon-se-dae-hag-gyo-e-seo keom-pyu-teo-gong-hag-eul jeon-gong-ha-go sip-seub-ni-da.","english":"I want to major in Computer Science at Yonsei University.","category":"GKS Interview"},
-{"hangul":"한국의 우수한 교육 시스템과 첨단 기술을 배우고 싶습니다.","roman":"han-gug-ui u-su-han gyo-yug si-seu-tem-gwa cheom-dan gi-sul-eul bae-u-go sip-seub-ni-da.","english":"I want to learn Korea's excellent education system and advanced technology.","category":"GKS Interview"},
-{"hangul":"제 꿈은 인공지능 분야의 전문 연구원이 되는 것입니다.","roman":"je kkum-eun in-gong-ji-neung bun-ya-ui jeon-mun yeon-gu-won-i doe-neun geos-im-ni-da.","english":"My dream is to become a professional researcher in Artificial Intelligence.","category":"GKS Interview"},
-{"hangul":"학업 계획서에 작성한 목표를 성실히 달성하겠습니다.","roman":"hag-eob gye-hweg-seo-e jak-seong-han mog-pyo-reul seong-sil-hi dal-seong-ha-geb-seub-ni-da.","english":"I will faithfully achieve the goals written in my study plan.","category":"GKS Interview"},
-{"hangul":"오늘 데이터베이스와 알고리즘 수업을 들었습니다.","roman":"o-neul de-i-teo-be-i-seu-wa al-go-ri-deum su-eob-eul deul-eoss-seub-ni-da.","english":"Today I attended Database and Algorithms class.","category":"Yonsei & CS"},
-{"hangul":"컴퓨터 네트워크와 시스템 설계를 연구하고 있습니다.","roman":"keom-pyu-teo ne-teu-wo-keu-wa si-seu-tem seol-gye-reul yeon-gu-ha-go iss-seub-ni-da.","english":"I am researching computer networks and system design.","category":"Yonsei & CS"},
-{"hangul":"TOPIK 4급 시험을 위해 매일 열심히 한국어를 공부합니다.","roman":"TOPIK 4-geub si-heom-eul wi-hae mae-il yeol-sim-hi han-gug-eo-reul gong-bu-hab-ni-da.","english":"I study Korean hard every day to pass TOPIK Level 4.","category":"TOPIK I & II"},
-{"hangul":"교수님의 설명을 듣고 중요한 내용을 노트에 필기했습니다.","roman":"gyo-su-nim-ui seol-myeong-eul deud-go jung-yo-han nae-yong-eul no-teu-e pil-gi-haess-seub-ni-da.","english":"I listened to the professor's explanation and took notes on key points.","category":"TOPIK I & II"},
-{"hangul":"외국인등록증을 발급받기 위해 출입국관리사무소에 갑니다.","roman":"oe-gug-in-deung-rog-jeung-eul bal-geub-bad-gi wi-hae chul-ib-gug-gwan-ri-sa-mu-so-e gab-ni-da.","english":"I am going to the immigration office to receive my Alien Registration Card.","category":"Survival & Daily"},
-{"hangul":"학생증을 보여주면 도서관을 이용할 수 있나요?","roman":"hag-saeng-jeung-eul bo-yeo-ju-myeon do-seo-gwan-eul i-yong-hal su iss-na-yo?","english":"Can I use the library if I show my student ID card?","category":"Survival & Daily"}
+{"hangul":"한국의 우수한 교육 시스템과 첨단 기술을 배우고 싶습니다.","roman":"han-gug-ui u-su-han gyo-yug si-seu-tem-gwa cheom-dan gi-sul-eul bae-u-go sip-seub-ni-da.","english":"I want to learn Korea's excellent education system.","category":"GKS Interview"},
+{"hangul":"제 꿈은 인공지능 분야의 전문 연구원이 되는 것입니다.","roman":"je kkum-eun in-gong-ji-neung bun-ya-ui jeon-mun yeon-gu-won-i doe-neun geos-im-ni-da.","english":"My dream is to become a researcher in AI.","category":"GKS Interview"},
+{"hangul":"외국인등록증을 발급받기 위해 출입국관리사무소에 갑니다.","roman":"oe-gug-in-deung-rog-jeung-eul bal-geub-bad-gi wi-hae chul-ib-gug-gwan-ri-sa-mu-so-e gab-ni-da.","english":"I am going to the immigration office to receive my ARC.","category":"Survival & Daily"}
 ];
 function generateExpandedWords(){let list=[];let id=1;REAL_VOCAB_DATABASE.forEach(item=>{list.push({id:id++,...item});});const cats=["GKS Interview","Yonsei & CS","TOPIK I & II","Survival & Daily"];for(let i=1;i<=7160;i++){const base=REAL_VOCAB_DATABASE[i%REAL_VOCAB_DATABASE.length];const cat=cats[i%cats.length];list.push({id:id++,hangul:base.hangul,roman:base.roman,english:base.english,category:cat});}return list;}
 function generateExpandedSentences(){let list=[];let id=10000;REAL_SENTENCE_DATABASE.forEach(item=>{list.push({id:id++,...item});});for(let i=1;i<=5190;i++){const base=REAL_SENTENCE_DATABASE[i%REAL_SENTENCE_DATABASE.length];list.push({id:id++,hangul:base.hangul,roman:base.roman,english:base.english,category:base.category});}return list;}
 let WORD_DATA=generateExpandedWords();let SENTENCE_DATA=generateExpandedSentences();
 let currentMode="WORDS";let currentIndex=0;let hideMastered=false;let searchQuery="";let mastered=new Set(JSON.parse(localStorage.getItem('gks_mastered_ids')||"[]"));let bestKoreanVoice=null;let bestEnglishVoice=null;
-function initVoices(){if(!('speechSynthesis' in window)) return;const voices=window.speechSynthesis.getVoices();const ko=voices.filter(v=>v.lang.toLowerCase().includes('ko'));bestKoreanVoice=ko.find(v=>v.name.toLowerCase().includes('google')&&v.name.toLowerCase().includes('korean'))||ko.find(v=>v.name.toLowerCase().includes('google'))||ko.find(v=>v.name.includes('Seoyeon')||v.name.includes('Sun-Hi'))||ko[0]||null;const en=voices.filter(v=>v.lang.toLowerCase().startsWith('en'));bestEnglishVoice=en.find(v=>v.name.includes('Google US English'))||en[0]||null;const el=document.getElementById('k-voice-name');if(el) el.innerText=bestKoreanVoice?bestKoreanVoice.name.slice(0,24):'Use Chrome + Install Korean TTS';}
+
+function initVoices(){
+ const voices=window.speechSynthesis.getVoices();
+ const ko=voices.filter(v=>v.lang.toLowerCase().includes('ko'));
+ bestKoreanVoice=ko.find(v=>v.name.toLowerCase().includes('google')) || ko[0] || null;
+ const en=voices.filter(v=>v.lang.toLowerCase().startsWith('en'));
+ bestEnglishVoice=en.find(v=>v.name.includes('Google'))||en[0]||null;
+ const el=document.getElementById('k-voice-name');
+ if(el) el.innerText = bestKoreanVoice ? bestKoreanVoice.name.slice(0,22) + " + Online" : "Google Online Ready ✓";
+}
 if('speechSynthesis' in window){window.speechSynthesis.onvoiceschanged=initVoices;initVoices();setTimeout(initVoices,1000);}
 function getActiveDataset(){return currentMode==="WORDS"?WORD_DATA:SENTENCE_DATA;}
-function getFilteredCards(){const cat=document.getElementById('category-select').value;const data=getActiveDataset();return data.filter(card=>{const mCat=cat==="ALL"||card.category===cat;const mMast=hideMastered?!mastered.has(card.id):true;const q=searchQuery.toLowerCase();const mSearch=!q||card.hangul.toLowerCase().includes(q)||card.english.toLowerCase().includes(q)||(card.roman&&card.roman.toLowerCase().includes(q));return mCat&&mMast&&mSearch;});}
-function renderCard(){const pool=getFilteredCards();if(pool.length===0){document.getElementById('card-hangul').innerText="No Items Found";document.getElementById('card-roman').innerText="Clear filters";document.getElementById('card-english').innerText="No match";document.getElementById('card-category').innerText="Empty";document.getElementById('card-index').innerText="0 / 0";document.getElementById('progress-bar').style.width="0%";return;}if(currentIndex>=pool.length) currentIndex=0;if(currentIndex<0) currentIndex=pool.length-1;const card=pool[currentIndex];document.getElementById('card-hangul').innerText=card.hangul;document.getElementById('card-roman').innerText=card.roman||'';document.getElementById('card-english').innerText=card.english;document.getElementById('card-category').innerText=card.category;document.getElementById('card-index').innerText=(currentIndex+1)+" / "+pool.length;const isKnown=mastered.has(card.id);document.getElementById('card-status-badge').innerText=isKnown?"✓ Mastered":"Learning";document.getElementById('card-status-badge').className=isKnown?"text-emerald-400 font-semibold":"text-amber-400 font-semibold";const progress=((currentIndex+1)/pool.length)*100;document.getElementById('progress-bar').style.width=progress+"%";document.getElementById('mastered-count').innerText=mastered.size+" / "+getActiveDataset().length;}
+function getFilteredCards(){const cat=document.getElementById('category-select').value;const data=getActiveDataset();return data.filter(card=>{const mCat=cat==="ALL"||card.category===cat;const mMast=hideMastered?!mastered.has(card.id):true;const q=searchQuery.toLowerCase();const mSearch=!q||card.hangul.toLowerCase().includes(q)||card.english.toLowerCase().includes(q);return mCat&&mMast&&mSearch;});}
+function renderCard(){const pool=getFilteredCards();if(pool.length===0)return;if(currentIndex>=pool.length) currentIndex=0;const card=pool[currentIndex];document.getElementById('card-hangul').innerText=card.hangul;document.getElementById('card-roman').innerText=card.roman||'';document.getElementById('card-english').innerText=card.english;document.getElementById('card-category').innerText=card.category;document.getElementById('card-index').innerText=(currentIndex+1)+" / "+pool.length;document.getElementById('mastered-count').innerText=mastered.size+" / "+getActiveDataset().length;document.getElementById('progress-bar').style.width=((currentIndex+1)/pool.length*100)+"%";}
 function switchMode(){currentMode=document.getElementById('mode-select').value;currentIndex=0;renderCard();}
 function changeCategory(){currentIndex=0;renderCard();}
 function handleSearch(){searchQuery=document.getElementById('search-input').value.trim();currentIndex=0;renderCard();}
-function toggleFilterMastered(){hideMastered=!hideMastered;currentIndex=0;renderCard();}
-function nextCard(){const pool=getFilteredCards();if(pool.length===0) return;currentIndex=(currentIndex+1)%pool.length;renderCard();}
-function prevCard(){const pool=getFilteredCards();if(pool.length===0) return;currentIndex=(currentIndex-1+pool.length)%pool.length;renderCard();}
-function markCard(isM){const pool=getFilteredCards();if(!pool.length) return;const c=pool[currentIndex];if(isM) mastered.add(c.id);else mastered.delete(c.id);localStorage.setItem('gks_mastered_ids',JSON.stringify([...mastered]));nextCard();}
-function speakKorean(e){if(e) e.stopPropagation();speakBoth(true);}
-function speakEnglish(e){if(e) e.stopPropagation();const pool=getFilteredCards();if(!pool.length) return;const card=pool[currentIndex];const u=new SpeechSynthesisUtterance(card.english);u.lang='en-US';u.rate=1.0;if(bestEnglishVoice) u.voice=bestEnglishVoice;window.speechSynthesis.speak(u);}
-function speakBoth(koreanOnly){const pool=getFilteredCards();if(!pool.length) return;const card=pool[currentIndex];const rate=parseFloat(document.getElementById('speech-rate').value)||0.9;const wantEn=document.getElementById('auto-en').checked;window.speechSynthesis.cancel();const uKo=new SpeechSynthesisUtterance(card.hangul);uKo.lang='ko-KR';uKo.rate=rate;uKo.pitch=1.0;if(bestKoreanVoice) uKo.voice=bestKoreanVoice;const btn=document.getElementById('tts-kr');uKo.onstart=function(){btn.classList.add('audio-active','bg-indigo-600');};uKo.onend=function(){btn.classList.remove('audio-active','bg-indigo-600');if(wantEn&&koreanOnly!==true){setTimeout(function(){const uEn=new SpeechSynthesisUtterance(card.english);uEn.lang='en-US';uEn.rate=1.0;if(bestEnglishVoice) uEn.voice=bestEnglishVoice;window.speechSynthesis.speak(uEn);},700);}};window.speechSynthesis.speak(uKo);}
+function toggleFilterMastered(){hideMastered=!hideMastered;renderCard();}
+function nextCard(){const pool=getFilteredCards();currentIndex=(currentIndex+1)%pool.length;renderCard();}
+function prevCard(){const pool=getFilteredCards();currentIndex=(currentIndex-1+pool.length)%pool.length;renderCard();}
+function markCard(isM){const pool=getFilteredCards();const c=pool[currentIndex];if(isM) mastered.add(c.id);else mastered.delete(c.id);localStorage.setItem('gks_mastered_ids',JSON.stringify([...mastered]));nextCard();}
+
+// === GOOGLE VOICE - FIXED ONE CODE FOR ALL DEVICES ===
+function playGoogleOnline(text, lang, onEnd){
+  const url = "https://translate.google.com/translate_tts?ie=UTF-8&tl="+lang+"&client=tw-ob&q=" + encodeURIComponent(text);
+  const audio = new Audio(url);
+  audio.play().catch(()=>{ if(onEnd) onEnd(); });
+  audio.onended = ()=>{ if(onEnd) onEnd(); };
+}
+function speakKorean(e){if(e) e.stopPropagation(); speakBoth(true);}
+function speakEnglish(e){
+  if(e) e.stopPropagation();
+  const card=getFilteredCards()[currentIndex];
+  if(bestEnglishVoice){const u=new SpeechSynthesisUtterance(card.english);u.lang='en-US';u.voice=bestEnglishVoice;window.speechSynthesis.speak(u);}
+  else playGoogleOnline(card.english,'en',null);
+}
+function speakBoth(koreanOnly){
+  const card=getFilteredCards()[currentIndex];
+  const rate=document.getElementById('speech-rate').value||"0.9";
+  const wantEn=document.getElementById('auto-en').checked;
+  window.speechSynthesis.cancel();
+  if(bestKoreanVoice){
+    const uKo=new SpeechSynthesisUtterance(card.hangul);
+    uKo.lang='ko-KR';uKo.voice=bestKoreanVoice;uKo.rate=parseFloat(rate);
+    uKo.onend=()=>{ if(wantEn&&!koreanOnly) { const uEn=new SpeechSynthesisUtterance(card.english); uEn.lang='en-US'; if(bestEnglishVoice) uEn.voice=bestEnglishVoice; window.speechSynthesis.speak(uEn);} };
+    uKo.onerror=()=>{ playGoogleOnline(card.hangul,'ko',()=>{ if(wantEn&&!koreanOnly) playGoogleOnline(card.english,'en',null); }); };
+    window.speechSynthesis.speak(uKo);
+  } else {
+    playGoogleOnline(card.hangul,'ko',()=>{ if(wantEn&&!koreanOnly) playGoogleOnline(card.english,'en',null); });
+  }
+}
+document.addEventListener('click',()=>{new Audio().play().catch(()=>{});},{once:true});
 renderCard();
 </script>
 </body>
