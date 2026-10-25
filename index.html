@@ -7,202 +7,288 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-.glass-card { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
-.pulse-ring { animation: pulse 1.5s infinite; }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
-.minjun-bubble { background: linear-gradient(135deg, #3b82f6, #1e40af); }
-.correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.1); }
-.wrong { border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); }
+.glass-panel { background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+.minjun-avatar { background: linear-gradient(135deg, #6366f1, #3b82f6, #ec4899); }
+.pulse-mic { animation: mic-pulse 1.4s infinite ease-in-out; }
+@keyframes mic-pulse { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 16px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
+.badge-grammar { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color: #c084fc; }
+.badge-verb { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
+.badge-adj { background: rgba(236, 72, 153, 0.15); border: 1px solid rgba(236, 72, 153, 0.3); color: #f472b6; }
+.badge-conj { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; }
+.badge-adv { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; }
 </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
-<header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 px-4 py-3">
-<div class="max-w-5xl mx-auto flex justify-between items-center">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+<!-- Header -->
+<header class="border-b border-slate-800/80 bg-slate-900/90 sticky top-0 z-50 px-4 py-3 backdrop-blur-md">
+<div class="max-w-4xl mx-auto flex justify-between items-center">
 <div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-xl minjun-bubble flex items-center justify-center font-black text-white text-lg">민</div>
+<div class="relative">
+<div class="w-11 h-11 rounded-2xl minjun-avatar flex items-center justify-center font-black text-white text-xl shadow-lg shadow-indigo-500/20">민</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-950 rounded-full"></span>
+</div>
 <div>
-<h1 class="font-bold text-sm">Min Jun - Unlimited - 민준</h1>
-<p class="text-[10px] text-emerald-400" id="source-label">Live from Internet - Unlimited like Teuida</p>
+<div class="flex items-center gap-2">
+<h1 class="font-extrabold text-sm sm:text-base text-white tracking-wide">Min Jun Teuida Master</h1>
+<span class="text-[9px] font-black uppercase tracking-widest bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full">Interactive AI</span>
+</div>
+<p class="text-[11px] text-slate-400" id="source-label">Grammar • Verbs • Adjectives • Speaking</p>
 </div>
 </div>
-<span id="progress" class="text-[11px] text-slate-400">0 cards</span>
+<div class="flex items-center gap-3">
+<div class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-right">
+<span class="text-[9px] block text-slate-400 font-bold uppercase">Lesson Stack</span>
+<span id="progress-text" class="text-xs font-black text-indigo-400">0 / 0</span>
+</div>
+</div>
 </div>
 </header>
 
-<main class="max-w-5xl mx-auto px-4 py-4 w-full flex-1 flex flex-col gap-4">
-<div class="flex gap-2 max-w-lg mx-auto w-full">
-<button onclick="setMode('reading')" id="m-reading" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600">📖 Reading</button>
-<button onclick="setMode('writing')" id="m-writing" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800">✍️ Writing</button>
-<button onclick="setMode('speaking')" id="m-speaking" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800">🎤 Speaking</button>
-</div>
+<!-- Main Container -->
+<main class="max-w-4xl mx-auto px-4 py-5 w-full flex-1 flex flex-col gap-5">
 
-<div class="flex flex-wrap gap-2 max-w-lg mx-auto w-full">
-<select id="category-select" onchange="filterCategory()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold flex-1 text-slate-200">
-<option value="ALL">ALL - Unlimited Live</option>
-<option value="People">People - 사람 (Auto detect)</option>
-<option value="Age">Age - 나이, 살 (Auto detect)</option>
-<option value="Greeting">Greeting - 인사</option>
-<option value="GKS">GKS & University</option>
-<option value="Food">Food - 음식</option>
-</select>
-<button onclick="fetchMore()" class="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 transition">🔄 Fetch 80 More</button>
-</div>
-
-<div class="w-full max-w-lg mx-auto">
-<div class="glass-card rounded-3xl p-5 min-h-[550px] flex flex-col justify-between shadow-2xl">
-<div class="flex justify-between items-center">
-<span id="minjun-say" class="text-[11px] bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-blue-300">민준: Live from Internet!</span>
-<div class="flex gap-2">
-<button onclick="speakSlow()" class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition"><i class="fa-solid fa-ear-listen text-xs text-slate-300"></i></button>
-<button onclick="speakKorean()" class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center hover:bg-blue-500 transition"><i class="fa-solid fa-volume-high text-xs text-white"></i></button>
-</div>
-</div>
-
-<div class="text-center my-4">
-<div id="reading-ui">
-<h2 id="card-hangul" class="text-[28px] font-black text-white mb-2 leading-snug">Min Jun fetching unlimited from Internet...</h2>
-<h3 id="card-english" class="text-sm text-emerald-300 font-bold">Please wait - Live sentences</h3>
-<div class="mt-4 p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-left">
-<p class="text-[10px] font-bold text-yellow-400">민준 auto-teaching:</p>
-<p id="breakdown" class="text-xs text-slate-300 mt-1 leading-relaxed">Analyzing live Korean grammar...</p>
-</div>
-</div>
-
-<div id="writing-ui" class="hidden">
-<p class="text-[11px] text-slate-400 mb-2">Min Jun: Write the Korean you see/hear:</p>
-<h3 id="write-english" class="text-sm font-bold text-emerald-300 mb-2">English</h3>
-<p class="text-xs mb-2 text-slate-400">Target: <span id="write-target" class="text-white font-bold"></span></p>
-<input id="write-input" type="text" placeholder="Type Korean here..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500">
-<button onclick="checkWriting()" class="mt-3 w-full py-3 rounded-xl bg-blue-600 font-bold text-xs hover:bg-blue-500 transition">Check Writing</button>
-<p id="write-feedback" class="text-xs mt-2"></p>
-</div>
-
-<div id="speaking-ui" class="hidden">
-<p id="speak-question" class="text-sm font-bold text-white bg-blue-950/50 p-3 rounded-xl border border-blue-800/30 mb-3">Min Jun asks: 따라해 보세요!</p>
-<h2 id="speak-target" class="text-2xl font-black text-white mb-1"></h2>
-<p class="text-[10px] text-slate-400 mb-3">Speak this Korean - Min Jun will score you</p>
-</div>
-</div>
-
-<div id="score-box" class="hidden p-3 rounded-xl border text-center">
-<p id="score-text" class="text-sm font-bold"></p>
-<p id="score-feedback" class="text-[11px] text-slate-400 mt-1"></p>
-</div>
-
-<div class="flex flex-col gap-3 mt-4">
-<button id="mic-btn" onclick="startListening()" class="hidden w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 font-bold text-sm flex items-center justify-center gap-2 hover:from-blue-500 hover:to-indigo-500 transition">
-<i class="fa-solid fa-microphone"></i> <span id="mic-label">Press to Speak with Min Jun</span>
+<!-- Mode Selectors -->
+<div class="grid grid-cols-3 gap-2 max-w-md mx-auto w-full">
+<button onclick="setMode('reading')" id="m-reading" class="py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+<i class="fa-solid fa-book-open"></i> Reading & Grammar
 </button>
-<div class="flex justify-between items-center">
-<button onclick="prevCard()" class="px-4 py-2 text-slate-400 text-xs hover:text-white transition">← Prev</button>
-<span id="card-index" class="text-[11px] text-slate-500">0 / 0</span>
-<button onclick="nextCard()" class="px-4 py-2 bg-slate-800 rounded-full text-xs font-bold hover:bg-slate-700 transition">Next →</button>
+<button onclick="setMode('writing')" id="m-writing" class="py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+<i class="fa-solid fa-pen-to-square"></i> Writing
+</button>
+<button onclick="setMode('speaking')" id="m-speaking" class="py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
+<i class="fa-solid fa-microphone"></i> Speaking
+</button>
+</div>
+
+<!-- Controls & Category Selection -->
+<div class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto w-full">
+<select id="category-select" onchange="filterCategory()" class="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold flex-1 text-indigo-300 focus:outline-none focus:border-indigo-500 shadow-sm">
+<option value="ALL">All Topics (Full Curriculum)</option>
+<option value="Greeting">1. Greetings & Politeness (인사)</option>
+<option value="GKS">2. GKS Interview & University (학업)</option>
+<option value="People">3. People & Honorifics (사람)</option>
+<option value="Age">Age & Numbers (나이)</option>
+<option value="Food">Food & Daily Life (음식)</option>
+</select>
+<button onclick="fetchMore()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20">
+<i class="fa-solid fa-arrows-rotate"></i> Load Live Sentences
+</button>
+</div>
+
+<!-- Teuida Interactive Screen Card -->
+<div class="w-full max-w-md mx-auto">
+<div class="glass-panel rounded-3xl p-6 min-h-[580px] flex flex-col justify-between shadow-2xl relative overflow-hidden border border-slate-800/80">
+
+<!-- Min Jun Live Coach Top Bubble -->
+<div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl minjun-avatar flex items-center justify-center font-bold text-white text-xs">민</div>
+<div>
+<p id="minjun-say" class="text-xs font-bold text-indigo-300">민준: Let's master Korean together!</p>
+<p class="text-[10px] text-slate-400">Interactive Tutor • Audio & Speech Active</p>
+</div>
+</div>
+<div class="flex gap-1.5">
+<button onclick="speakSlow()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition flex items-center justify-center" title="Listen Slowly">
+<i class="fa-solid fa-person-walking text-xs"></i>
+</button>
+<button onclick="speakKorean()" class="w-9 h-9 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center justify-center shadow-md shadow-indigo-600/30" title="Listen Standard">
+<i class="fa-solid fa-volume-high text-xs"></i>
+</button>
+</div>
+</div>
+
+<!-- Dynamic Learning Body -->
+<div class="my-auto py-3">
+
+<!-- Reading UI -->
+<div id="reading-ui" class="space-y-4">
+<div class="text-center py-2">
+<span id="topic-tag" class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full inline-block mb-3">Topic</span>
+<h2 id="card-hangul" class="text-2xl sm:text-3xl font-black text-white tracking-wide leading-snug">Loading lesson...</h2>
+<p id="card-roman" class="text-xs text-indigo-300/90 font-medium italic mt-1">romanization...</p>
+<h3 id="card-english" class="text-base font-bold text-emerald-300 mt-2">English Translation</h3>
+</div>
+
+<!-- Detailed Grammar & Linguistic Breakdown Section -->
+<div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800/80 space-y-2.5 text-left shadow-inner">
+<div class="flex items-center justify-between border-b border-slate-800/80 pb-1.5">
+<span class="text-[11px] font-bold text-yellow-400 flex items-center gap-1">
+<i class="fa-solid fa-graduation-cap"></i> 민준 Grammar & Vocabulary Breakdown
+</span>
+<span class="text-[10px] text-slate-400">Linguistic Analysis</span>
+</div>
+
+<div id="grammar-tags" class="flex flex-wrap gap-1.5 pt-1">
+<!-- Dynamic tags inserted here -->
+</div>
+
+<div id="breakdown-details" class="text-xs text-slate-300 space-y-1.5 pt-1 leading-relaxed">
+<!-- Extended explanation inserted here -->
+</div>
+</div>
+</div>
+
+<!-- Writing UI -->
+<div id="writing-ui" class="hidden space-y-4 text-center">
+<span class="text-[10px] uppercase font-bold tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full inline-block">Writing Challenge</span>
+<h3 id="write-english" class="text-lg font-bold text-emerald-300">English prompt</h3>
+<p class="text-xs text-slate-400">Target Hangul: <span id="write-target" class="text-white font-bold">...</span></p>
+
+<div class="pt-2">
+<input id="write-input" type="text" placeholder="Type the Korean sentence here..." class="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 text-center font-medium">
+<button onclick="checkWriting()" class="mt-3 w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 font-bold text-xs text-white transition shadow-lg shadow-indigo-600/30">
+Check Answer
+</button>
+<p id="write-feedback" class="text-xs mt-2 font-bold min-h-[20px]"></p>
+</div>
+</div>
+
+<!-- Speaking UI -->
+<div id="speaking-ui" class="hidden space-y-4 text-center">
+<span class="text-[10px] uppercase font-bold tracking-widest text-pink-400 bg-pink-500/10 border border-pink-500/20 px-3 py-1 rounded-full inline-block">Speech Pronunciation</span>
+<div class="bg-indigo-950/40 border border-indigo-800/40 p-4 rounded-2xl">
+<p id="speak-question" class="text-xs text-indigo-300 font-semibold mb-1">Min Jun: Repeat after me!</p>
+<h2 id="speak-target" class="text-2xl font-black text-white"></h2>
+<p id="speak-target-roman" class="text-xs text-indigo-300/80 italic mt-1"></p>
+</div>
+<p class="text-xs text-slate-400">Press the microphone below and speak out loud clearly in Korean.</p>
+</div>
+
+</div>
+
+<!-- Score Output Box -->
+<div id="score-box" class="hidden p-3.5 rounded-2xl border text-center my-2">
+<p id="score-text" class="text-sm font-bold"></p>
+<p id="score-feedback" class="text-xs text-slate-400 mt-1"></p>
+</div>
+
+<!-- Bottom Navigation & Controls -->
+<div class="pt-2 space-y-3">
+<button id="mic-btn" onclick="startListening()" class="hidden w-full py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 font-bold text-xs text-white flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition">
+<i class="fa-solid fa-microphone text-sm"></i> <span id="mic-label">Press to Speak with Min Jun</span>
+</button>
+
+<div class="flex justify-between items-center border-t border-slate-800/60 pt-3">
+<button onclick="prevCard()" class="px-4 py-2 text-slate-400 hover:text-white text-xs font-bold transition flex items-center gap-1">
+<i class="fa-solid fa-chevron-left"></i> Previous
+</button>
+<span id="card-index" class="text-[11px] font-bold text-slate-500">0 / 0</span>
+<button onclick="nextCard()" class="px-5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-white text-xs font-bold transition flex items-center gap-1 shadow-sm">
+Next <i class="fa-solid fa-chevron-right"></i>
+</button>
 </div>
 </div>
 
 </div>
 </div>
 
-<div class="max-w-lg mx-auto mt-3 text-[10px] text-slate-500 text-center">
-Min Jun Unlimited = Dynamic Live Sentences Engine. All fetched live from Tatoeba API. Click "Fetch 80 More" = unlimited new lessons forever, like Teuida.
-</div>
 </main>
 
 <script>
-let WORD_DATA = [], FILTERED = [], currentIndex = 0, mode = 'reading', bestKoreanVoice = null;
-
-const FALLBACK_DATA = [
-    { korean: "안녕하세요! 저는 민준입니다.", english: "Hello! I am Min Jun.", category: "Greeting", breakdown: "안녕하세요 = Hello, 저는 = I am, 입니다 = formal verb to be", question: "Min Jun: Say hello in Korean!" },
-    { korean: "저는 가나 사람입니다.", english: "I am a Ghanaian person.", category: "People", breakdown: "가나 = Ghana, 사람 = person, 입니다 = am/is", question: "Min Jun: Tell me your nationality!" },
-    { korean: "저는 스무 살입니다.", english: "I am twenty years old.", category: "Age", breakdown: "스무 = 20, 살 = counter for age, 입니다 = am", question: "Min Jun: How old are you?" },
-    { korean: "연세대학교에서 공부하고 싶습니다.", english: "I want to study at Yonsei University.", category: "GKS", breakdown: "에서 = at/in, 공부하고 싶다 = want to study", question: "Min Jun: What do you want to study in Korea?" },
-    { korean: "한국 음식을 좋아합니다.", english: "I like Korean food.", category: "Food", breakdown: "한국 = Korea, 음식 = food, 좋아합니다 = like", question: "Min Jun: Do you like Korean food?" }
+// Comprehensive Curriculum with Detailed Linguistic Breakdown
+const CURRICULUM = [
+    {
+        korean: "안녕하세요! 저는 연세대학교 지원자입니다.",
+        roman: "an-nyeong-ha-se-yo! jeo-neun yeon-se-dae-hag-gyo ji-won-ja-im-ni-da.",
+        english: "Hello! I am an applicant for Yonsei University.",
+        category: "GKS",
+        tags: [
+            { text: "Greeting: 안녕하세요", type: "badge-grammar" },
+            { text: "Topic Marker: 는", type: "badge-grammar" },
+            { text: "Noun: 지원자 (Applicant)", type: "badge-verb" },
+            { text: "Verb: 입니다 (am/is)", type: "badge-verb" }
+        ],
+        grammarNotes: "<b>• Grammar:</b> <i>~입니다</i> is the formal polite ending for 'to be'.<br><b>• Vocabulary:</b> 지원자 = applicant, 연세대학교 = Yonsei University.",
+        question: "Min Jun: Introduce yourself as a Yonsei applicant!"
+    },
+    {
+        korean: "저는 한국에서 인공지능을 열심히 공부하고 싶습니다.",
+        roman: "jeo-neun han-gug-e-seo in-gong-ji-neung-eul yeol-sim-hi gong-bu-ha-go sip-seub-ni-da.",
+        english: "I want to study artificial intelligence hard in Korea.",
+        category: "GKS",
+        tags: [
+            { text: "Location: 에서 (in/at)", type: "badge-grammar" },
+            { text: "Object Marker: 을", type: "badge-grammar" },
+            { text: "Adverb: 열심히 (hard/diligently)", type: "badge-adv" },
+            { text: "Verb Pattern: ~고 싶습니다 (want to)", type: "badge-verb" }
+        ],
+        grammarNotes: "<b>• Adverb:</b> <i>열심히</i> modifies the verb to describe diligent effort.<br><b>• Verb Conjugation:</b> Verb Stem + <i>~고 싶다</i> expresses personal ambition.",
+        question: "Min Jun: Express your study goals in Korea!"
+    },
+    {
+        korean: "한국 문화는 아주 흥미롭고 아름답습니다.",
+        roman: "han-gug mun-hwa-neun a-ju heung-mi-rob-go a-reum-dab-seub-ni-da.",
+        english: "Korean culture is very interesting and beautiful.",
+        category: "Greeting",
+        tags: [
+            { text: "Adjective: 흥미롭다 (Interesting)", type: "badge-adj" },
+            { text: "Adjective: 아름답다 (Beautiful)", type: "badge-adj" },
+            { text: "Adverb: 아주 (Very)", type: "badge-adv" },
+            { text: "Conjunction: ~고 (and)", type: "badge-conj" }
+        ],
+        grammarNotes: "<b>• Conjunction:</b> <i>~고</i> connects two adjectives (흥미롭다 + 아름답다).<br><b>• Adverb:</b> <i>아주</i> intensifies the degree of the adjectives.",
+        question: "Min Jun: Describe Korean culture using adjectives!"
+    },
+    {
+        korean: "선생님께서 친절하게 설명해 주셨습니다.",
+        roman: "seon-saeng-nim-kke-seo chin-jeol-ha-ge seol-myeong-hae ju-syeoss-seub-ni-da.",
+        english: "The teacher explained kindly for us.",
+        category: "People",
+        tags: [
+            { text: "Honorific Subject: 께서", type: "badge-grammar" },
+            { text: "Adverbial Suffix: ~게 (kindly)", type: "badge-adv" },
+            { text: "Honorific Verb: 주셨습니다", type: "badge-verb" }
+        ],
+        grammarNotes: "<b>• Honorific Particle:</b> <i>께서</i> replaces <i>이/가</i> when showing respect to teachers.<br><b>• Adverbial Form:</b> Adjective Stem + <i>게</i> turns 친절하다 (kind) into kindly.",
+        question: "Min Jun: Speak respectfully about a teacher!"
+    },
+    {
+        korean: "하지만 한국어 문법은 조금 어렵지만 재미있습니다.",
+        roman: "ha-ji-man han-gug-eo mun-bbeob-eun jo-geum eo-ryeob-ji-man jae-mi-iss-seub-ni-da.",
+        english: "However, Korean grammar is a bit difficult, but it is fun.",
+        category: "GKS",
+        tags: [
+            { text: "Conjunction: 하지만 (However)", type: "badge-conj" },
+            { text: "Conjunction: ~지만 (but)", type: "badge-conj" },
+            { text: "Adverb: 조금 (A little/bit)", type: "badge-adv" },
+            { text: "Adjective: 어렵다 (Difficult)", type: "badge-adj" }
+        ],
+        grammarNotes: "<b>• Conjunctions:</b> <i>하지만</i> links separate sentences; <i>~지만</i> joins contrasting clauses in one sentence.",
+        question: "Min Jun: Connect contrasting ideas with ~지만!"
+    },
+    {
+        korean: "저는 스무 살이고 컴퓨터공학을 전공합니다.",
+        roman: "jeo-neun seu-mu sal-i-go keom-pyu-teo-gong-hag-eul jeon-gong-hab-ni-da.",
+        english: "I am twenty years old and major in Computer Science.",
+        category: "Age",
+        tags: [
+            { text: "Native Number: 스무 (20)", type: "badge-grammar" },
+            { text: "Age Counter: 살", type: "badge-grammar" },
+            { text: "Conjunction: ~이고 (and)", type: "badge-conj" },
+            { text: "Verb: 전공하다 (to major)", type: "badge-verb" }
+        ],
+        grammarNotes: "<b>• Native Korean Numbers:</b> Used with the age counter <i>살</i>.<br><b>• Connecting Nouns:</b> Noun + <i>~이고</i> links '20 years old' and your major.",
+        question: "Min Jun: State your age and major!"
+    },
+    {
+        korean: "맛있는 비빔밥을 맛있게 먹었습니다.",
+        roman: "mas-iss-neun bi-bim-bbab-eul mas-iss-ge meog-eoss-seub-ni-da.",
+        english: "I ate delicious bibimbap deliciously.",
+        category: "Food",
+        tags: [
+            { text: "Adjective Noun Modifier: ~는", type: "badge-adj" },
+            { text: "Noun: 비빔밥", type: "badge-grammar" },
+            { text: "Adverbial: 맛있게 (deliciously)", type: "badge-adv" },
+            { text: "Past Verb: 먹었습니다 (ate)", type: "badge-verb" }
+        ],
+        grammarNotes: "<b>• Noun Modifier:</b> <i>맛있는</i> modifies the noun 'bibimbap'.<br><b>• Past Tense Verb:</b> <i>먹다</i> conjugates to <i>먹었습니다</i> in formal past tense.",
+        question: "Min Jun: Talk about eating Korean food!"
+    }
 ];
 
-function autoTeach(kor, eng) {
-    let b = [];
-    if (kor.includes("사람") || /person|father|mother|friend/i.test(eng)) b.push("사람 = person, Country + 사람 = nationality (e.g., 가나 사람)");
-    if (kor.includes("살") || /age|years old|몇 살/i.test(eng)) b.push("🔢 살 = years old counter (스무 살 = 20 years old)");
-    if (kor.includes("저는")) b.push("저는 = I (formal), 는 = topic marker");
-    if (kor.includes("입니다") || kor.includes("이에요") || kor.includes("예요")) b.push("입니다/이에요 = am/is/are (formal/polite ending)");
-    if (kor.includes("에서")) b.push("에서 = from / at / in (location marker)");
-    if (kor.includes("을") || kor.includes("를")) b.push("을/를 = object marker");
-    if (kor.includes("고 싶")) b.push("고 싶다 = want to (e.g., 공부하고 싶다 = want to study)");
-    if (b.length === 0) b.push("Order: Subject + Object + Verb. Formal endings are standard in GKS interviews.");
-    return b.join("<br>• ");
-}
-
-function classify(kor, eng) {
-    const e = eng.toLowerCase();
-    if (/father|mother|friend|person|people|family|man|woman|child/i.test(e) || kor.includes("사람") || kor.includes("아버지") || kor.includes("어머니")) return "People";
-    if (/age|years old|how old|몇 살|살/i.test(e) || kor.includes("살")) return "Age";
-    if (/hello|thank|good morning|goodbye|sorry|nice to meet/i.test(e) || kor.includes("안녕")) return "Greeting";
-    if (/university|scholarship|gks|study in korea|professor/i.test(e) || kor.includes("장학금") || kor.includes("학교")) return "GKS";
-    if (/food|eat|drink|rice|kimchi|water/i.test(e) || kor.includes("음식") || kor.includes("먹")) return "Food";
-    return "People";
-}
-
-async function fetchLive() {
-    const page = Math.floor(Math.random() * 20) + 1;
-    const url = `https://tatoeba.org/en/api_v0/search?from=kor&to=eng&limit=80&page=${page}&sort=random`;
-    const res = await fetch(url);
-    const json = await res.json();
-    let newList = [];
-    if (json && json.results) {
-        json.results.forEach(row => {
-            if (row.text && row.translations && row.translations[0] && row.translations[0][0] && row.translations[0][0].text) {
-                const kor = row.text.trim();
-                const eng = row.translations[0][0].text.trim();
-                if (kor.length > 1 && eng.length > 1) {
-                    newList.push({
-                        korean: kor,
-                        english: eng,
-                        category: classify(kor, eng),
-                        breakdown: autoTeach(kor, eng),
-                        question: `민준: 따라해 보세요! (${eng})`
-                    });
-                }
-            }
-        });
-    }
-    return newList;
-}
-
-async function loadFromInternet() {
-    document.getElementById('card-hangul').innerText = "Min Jun fetching live sentences...";
-    document.getElementById('source-label').innerText = "Fetching live from internet...";
-    try {
-        const list = await fetchLive();
-        if (list.length > 0) {
-            WORD_DATA = list;
-            document.getElementById('source-label').innerText = `Min Jun Live: ${list.length} unlimited cards`;
-        } else {
-            WORD_DATA = FALLBACK_DATA;
-            document.getElementById('source-label').innerText = "Min Jun Live (Fallback Dataset Active)";
-        }
-    } catch (e) {
-        console.warn("Live fetch error, using built-in engine:", e);
-        WORD_DATA = FALLBACK_DATA;
-        document.getElementById('source-label').innerText = "Min Jun Live (Fallback Dataset Active)";
-    }
-    applyFilter();
-    renderCard();
-}
-
-async function fetchMore() {
-    document.getElementById('source-label').innerText = "Fetching 80 more...";
-    try {
-        const more = await fetchLive();
-        if (more.length > 0) {
-            WORD_DATA = [...WORD_DATA, ...more];
-            applyFilter();
-            document.getElementById('source-label').innerText = `Min Jun Unlimited: ${WORD_DATA.length} total cards`;
-            document.getElementById('progress').innerText = `${WORD_DATA.length} live`;
-        }
-    } catch (e) {
-        console.warn("Could not fetch more cards right now:", e);
-    }
-}
+let WORD_DATA = [...CURRICULUM], FILTERED = [...CURRICULUM], currentIndex = 0, mode = 'reading', bestKoreanVoice = null;
 
 function applyFilter() {
     const cat = document.getElementById('category-select').value;
@@ -217,35 +303,53 @@ function filterCategory() {
 }
 
 function renderCard() {
-    if (FILTERED.length === 0) {
-        document.getElementById('card-hangul').innerText = "No cards available. Fetching more...";
-        return;
-    }
+    if (FILTERED.length === 0) return;
     if (currentIndex >= FILTERED.length) currentIndex = 0;
     const c = FILTERED[currentIndex];
+
+    document.getElementById('topic-tag').innerText = c.category || "Lesson";
     document.getElementById('card-hangul').innerText = c.korean;
+    document.getElementById('card-roman').innerText = c.roman || '';
     document.getElementById('card-english').innerText = c.english;
-    document.getElementById('breakdown').innerHTML = "• " + c.breakdown;
+
+    // Render Tags
+    const tagsContainer = document.getElementById('grammar-tags');
+    tagsContainer.innerHTML = '';
+    if (c.tags && c.tags.length > 0) {
+        c.tags.forEach(t => {
+            const span = document.createElement('span');
+            span.className = `text-[10px] font-bold px-2 py-0.5 rounded-md ${t.type}`;
+            span.innerText = t.text;
+            tagsContainer.appendChild(span);
+        });
+    }
+
+    document.getElementById('breakdown-details').innerHTML = c.grammarNotes || "Linguistic analysis loaded.";
     document.getElementById('write-english').innerText = c.english;
     document.getElementById('write-target').innerText = c.korean;
     document.getElementById('speak-target').innerText = c.korean;
-    document.getElementById('speak-question').innerText = c.question || `Min Jun: ${c.english}`;
-    document.getElementById('card-index').innerText = (currentIndex + 1) + " / " + FILTERED.length;
-    document.getElementById('progress').innerText = `${FILTERED.length} / ${WORD_DATA.length} live`;
-    
+    document.getElementById('speak-target-roman').innerText = c.roman || '';
+    document.getElementById('speak-question').innerText = c.question || `Min Jun: Speak out loud!`;
+
+    document.getElementById('card-index').innerText = `${currentIndex + 1} / ${FILTERED.length}`;
+    document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${FILTERED.length}`;
+
     document.getElementById('write-input').value = "";
-    document.getElementById('write-input').className = "w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500";
+    document.getElementById('write-input').className = "w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 text-center font-medium";
     document.getElementById('write-feedback').innerText = "";
     document.getElementById('score-box').classList.add('hidden');
-    
+
     updateModeUI();
 }
 
 function setMode(m) {
     mode = m;
-    document.getElementById('m-reading').className = m === 'reading' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800';
-    document.getElementById('m-writing').className = m === 'writing' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800';
-    document.getElementById('m-speaking').className = m === 'speaking' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800';
+    const activeBtnClass = "py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30";
+    const inactiveBtnClass = "py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white";
+
+    document.getElementById('m-reading').className = m === 'reading' ? activeBtnClass : inactiveBtnClass;
+    document.getElementById('m-writing').className = m === 'writing' ? activeBtnClass : inactiveBtnClass;
+    document.getElementById('m-speaking').className = m === 'speaking' ? activeBtnClass : inactiveBtnClass;
     updateModeUI();
 }
 
@@ -254,11 +358,11 @@ function updateModeUI() {
     document.getElementById('writing-ui').classList.toggle('hidden', mode !== 'writing');
     document.getElementById('speaking-ui').classList.toggle('hidden', mode !== 'speaking');
     document.getElementById('mic-btn').classList.toggle('hidden', mode !== 'speaking');
-    
+
     const say = document.getElementById('minjun-say');
-    if (mode === 'reading') say.innerText = "민준: 읽어 보세요! Read aloud - Min Jun will speak";
-    if (mode === 'writing') say.innerText = "민준: 써 보세요! Type the Korean!";
-    if (mode === 'speaking') say.innerText = "민준: 말해 보세요! Speak Korean!";
+    if (mode === 'reading') say.innerText = "민준: Read the grammar breakdown & listen!";
+    if (mode === 'writing') say.innerText = "민준: Type the Korean sentence accurately!";
+    if (mode === 'speaking') say.innerText = "민준: Speak out loud clearly in Korean!";
 }
 
 function checkWriting() {
@@ -266,16 +370,16 @@ function checkWriting() {
     const target = FILTERED[currentIndex].korean.trim();
     const fb = document.getElementById('write-feedback');
     const inp = document.getElementById('write-input');
-    
+
     if (input === target) {
-        inp.className = "w-full bg-emerald-500/10 border border-emerald-500 rounded-xl px-4 py-3 text-sm text-white";
-        fb.innerHTML = `<span class="text-emerald-400 font-bold">✅ 잘했어요! Perfect!</span>`;
+        inp.className = "w-full bg-emerald-500/10 border border-emerald-500 rounded-2xl px-4 py-3 text-sm text-white text-center font-medium";
+        fb.innerHTML = `<span class="text-emerald-400">✅ 잘했어요! Perfect Korean writing!</span>`;
         setTimeout(() => nextCard(), 1200);
-    } else if (target.includes(input) && input.length > 1) {
-        inp.className = "w-full bg-yellow-500/10 border border-yellow-500 rounded-xl px-4 py-3 text-sm text-white";
-        fb.innerHTML = `<span class="text-yellow-400">⚠️ Close! Target: ${target}</span>`;
+    } else if (target.includes(input) && input.length > 2) {
+        inp.className = "w-full bg-yellow-500/10 border border-yellow-500 rounded-2xl px-4 py-3 text-sm text-white text-center font-medium";
+        fb.innerHTML = `<span class="text-yellow-400">⚠️ Almost there! Target: ${target}</span>`;
     } else {
-        inp.className = "w-full bg-rose-500/10 border border-rose-500 rounded-xl px-4 py-3 text-sm text-white";
+        inp.className = "w-full bg-rose-500/10 border border-rose-500 rounded-2xl px-4 py-3 text-sm text-white text-center font-medium";
         fb.innerHTML = `<span class="text-rose-400">❌ Target: ${target}</span>`;
     }
 }
@@ -283,7 +387,6 @@ function checkWriting() {
 function nextCard() {
     if (FILTERED.length === 0) return;
     currentIndex = (currentIndex + 1) % FILTERED.length;
-    if (currentIndex === 0 && FILTERED.length < 200) fetchMore();
     renderCard();
 }
 
@@ -296,7 +399,7 @@ function prevCard() {
 function initVoices() {
     if (!('speechSynthesis' in window)) return;
     const v = speechSynthesis.getVoices();
-    bestKoreanVoice = v.filter(x => x.lang.toLowerCase().includes('ko')).find(x => x.name.includes('Google') || x.name.includes('Natural')) || v.find(x => x.lang.includes('ko'));
+    bestKoreanVoice = v.filter(x => x.lang.toLowerCase().includes('ko')).find(x => x.name.includes('Google') || x.name.includes('Natural') || x.name.includes('Seoyeon')) || v.find(x => x.lang.includes('ko'));
 }
 
 if ('speechSynthesis' in window) {
@@ -311,7 +414,7 @@ function speakKorean() {
     const u = new SpeechSynthesisUtterance(c.korean);
     u.lang = 'ko-KR';
     if (bestKoreanVoice) u.voice = bestKoreanVoice;
-    u.rate = 0.9;
+    u.rate = 0.85;
     speechSynthesis.speak(u);
 }
 
@@ -322,13 +425,54 @@ function speakSlow() {
     const u = new SpeechSynthesisUtterance(c.korean);
     u.lang = 'ko-KR';
     if (bestKoreanVoice) u.voice = bestKoreanVoice;
-    u.rate = 0.5;
+    u.rate = 0.55;
     speechSynthesis.speak(u);
+}
+
+async function fetchMore() {
+    const label = document.getElementById('source-label');
+    label.innerText = "Loading external live sentences...";
+    try {
+        const page = Math.floor(Math.random() * 15) + 1;
+        const res = await fetch(`https://tatoeba.org/en/api_v0/search?from=kor&to=eng&limit=50&page=${page}`);
+        const json = await res.json();
+        let newList = [];
+        if (json && json.results) {
+            json.results.forEach(row => {
+                if (row.text && row.translations && row.translations[0] && row.translations[0][0]) {
+                    const kor = row.text.trim();
+                    const eng = row.translations[0][0].text.trim();
+                    if (kor.length > 3 && eng.length > 3) {
+                        newList.push({
+                            korean: kor,
+                            roman: "live-sentence",
+                            english: eng,
+                            category: "GKS",
+                            tags: [
+                                { text: "Live Practice", type: "badge-grammar" },
+                                { text: "Real Korean", type: "badge-verb" }
+                            ],
+                            grammarNotes: "<b>• Live Sentence:</b> Practice real-world Korean conversation structure.",
+                            question: `Min Jun: Practice this live sentence!`
+                        });
+                    }
+                }
+            });
+        }
+        if (newList.length > 0) {
+            WORD_DATA = [...WORD_DATA, ...newList];
+            applyFilter();
+            renderCard();
+            label.innerText = `Active: ${WORD_DATA.length} Total Lessons`;
+        }
+    } catch (e) {
+        label.innerText = "Loaded Curated Master Lessons";
+    }
 }
 
 function startListening() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert("Speech Recognition requires Google Chrome or a modern browser!");
+        alert("Speech Recognition requires Google Chrome or a modern compatible browser!");
         return;
     }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -336,15 +480,15 @@ function startListening() {
     rec.lang = 'ko-KR';
     const btn = document.getElementById('mic-btn');
     const label = document.getElementById('mic-label');
-    
-    btn.classList.add('pulse-ring');
-    label.innerText = "Min Jun listening...";
+
+    btn.classList.add('pulse-mic');
+    label.innerText = "Min Jun is listening to your Korean...";
     rec.start();
 
     rec.onresult = (e) => {
         const spoken = e.results[0][0].transcript;
         const target = FILTERED[currentIndex].korean;
-        
+
         const score = (() => {
             const s = spoken.replace(/\s/g, "");
             const t = target.replace(/\s/g, "");
@@ -352,37 +496,33 @@ function startListening() {
             if (t.includes(s) || s.includes(t)) return 85;
             let m = 0;
             for (let ch of t) if (s.includes(ch)) m++;
-            return Math.min(95, Math.max(20, Math.round((m / t.length) * 100)));
+            return Math.min(95, Math.max(25, Math.round((m / t.length) * 100)));
         })();
 
         const box = document.getElementById('score-box');
         const txt = document.getElementById('score-text');
         const feed = document.getElementById('score-feedback');
-        
+
         box.classList.remove('hidden');
-        if (score >= 85) {
-            box.className = "mt-2 p-3 rounded-xl border text-center bg-emerald-500/10 border-emerald-500/30";
-            txt.innerHTML = `✅ ${score}% - 잘했어요! "${spoken}"`;
-            feed.innerText = `Target: ${target}`;
-            if (score >= 90) setTimeout(() => nextCard(), 1200);
-        } else if (score >= 60) {
-            box.className = "mt-2 p-3 rounded-xl border text-center bg-yellow-500/10 border-yellow-500/30";
-            txt.innerHTML = `⚠️ ${score}% - "${spoken}"`;
-            feed.innerText = `Target: ${target}`;
+        if (score >= 80) {
+            box.className = "mt-2 p-3.5 rounded-2xl border text-center bg-emerald-500/10 border-emerald-500/30";
+            txt.innerHTML = `<span class="text-emerald-400 font-bold">✅ Great Job! Score: ${score}%</span>`;
+            feed.innerHTML = `You said: "${spoken}"`;
+            if (score >= 90) setTimeout(() => nextCard(), 1400);
         } else {
-            box.className = "mt-2 p-3 rounded-xl border text-center bg-rose-500/10 border-rose-500/30";
-            txt.innerHTML = `❌ ${score}% - "${spoken}"`;
-            feed.innerText = `Target: ${target}`;
+            box.className = "mt-2 p-3.5 rounded-2xl border text-center bg-rose-500/10 border-rose-500/30";
+            txt.innerHTML = `<span class="text-rose-400 font-bold">❌ Keep Practicing! Score: ${score}%</span>`;
+            feed.innerHTML = `You said: "${spoken}" | Target: "${target}"`;
         }
-        btn.classList.remove('pulse-ring');
-        label.innerText = "Press to Speak Again";
+        btn.classList.remove('pulse-mic');
+        label.innerText = "Press to Speak Again with Min Jun";
     };
 
-    rec.onerror = () => { btn.classList.remove('pulse-ring'); label.innerText = "Press to Speak with Min Jun"; };
-    rec.onend = () => { btn.classList.remove('pulse-ring'); label.innerText = "Press to Speak with Min Jun"; };
+    rec.onerror = () => { btn.classList.remove('pulse-mic'); label.innerText = "Press to Speak with Min Jun"; };
+    rec.onend = () => { btn.classList.remove('pulse-mic'); label.innerText = "Press to Speak with Min Jun"; };
 }
 
-loadFromInternet();
+renderCard();
 </script>
 </body>
 </html>
