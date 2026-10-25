@@ -3,256 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Korean Teuida Style - Teach + Speak - Ghana</title>
+<title>Min Jun Unlimited - Live Internet - Teuida Style</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
 .glass-card{background:rgba(15,23,42,0.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1)}
 .pulse-ring{animation:pulse 1.5s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,0.7)}70%{box-shadow:0 0 0 15px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
+.minjun-bubble{background:linear-gradient(135deg,#3b82f6,#1e40af)}
+.correct{border-color:#10b981!important;background:rgba(16,185,129,0.1)}
+.wrong{border-color:#ef4444!important;background:rgba(239,68,68,0.1)}
 </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
-<header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 py-3">
+<header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 px-4 py-3">
 <div class="max-w-5xl mx-auto flex justify-between items-center">
-<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black">한</div><div><h1 class="font-bold text-sm">Teuida-Style Korean - Teach + Speak</h1><p class="text-[11px] text-slate-400">People + Age + GKS - Like Teuida</p></div></div>
-<div class="flex gap-2"><button onclick="setMode('teach')" id="btn-teach" class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-600">Teach Mode</button><button onclick="setMode('speak')" id="btn-speak" class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-800">Speak Mode</button></div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl minjun-bubble flex items-center justify-center font-black">민</div><div><h1 class="font-bold text-sm">Min Jun - Unlimited - 민준</h1><p class="text-[10px] text-emerald-400" id="source-label">Live from Internet - Unlimited like Teuida</p></div></div>
+<span id="progress" class="text-[11px] text-slate-400">0 cards</span>
 </div>
 </header>
 
 <main class="max-w-5xl mx-auto px-4 py-4 w-full flex-1 flex flex-col gap-4">
-<!-- LESSON SELECTOR -->
-<div class="flex flex-wrap gap-2">
-<select id="lesson-select" onchange="loadLesson()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white min-w-[220px]">
-<option value="people">👨‍👩‍👧‍👦 Lesson 1: People - 사람</option>
-<option value="age" selected>🔢 Lesson 2: Age - 나이 (살)</option>
-<option value="greeting">👋 Lesson 3: Greeting</option>
-<option value="introduction">🙋 Lesson 4: Introduction + GKS</option>
-<option value="food">🍲 Lesson 5: Food</option>
-<option value="gks">🎓 Lesson 6: GKS Interview Role-play</option>
+<div class="flex gap-2 max-w-lg mx-auto w-full">
+<button onclick="setMode('reading')" id="m-reading" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600">📖 Reading</button>
+<button onclick="setMode('writing')" id="m-writing" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800">✍️ Writing</button>
+<button onclick="setMode('speaking')" id="m-speaking" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800">🎤 Speaking</button>
+</div>
+
+<div class="flex flex-wrap gap-2 max-w-lg mx-auto w-full">
+<select id="category-select" onchange="filterCategory()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold flex-1">
+<option value="ALL">ALL - Unlimited Live</option>
+<option value="People">People - 사람 (Auto detect)</option>
+<option value="Age">Age - 나이, 살 (Auto detect)</option>
+<option value="Greeting">Greeting</option>
+<option value="GKS">GKS</option>
+<option value="Food">Food</option>
 </select>
-<span id="progress" class="px-3 py-2 text-xs text-slate-400">Step 1/5</span>
+<button onclick="fetchMore()" class="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600">🔄 Fetch 80 More From Internet</button>
 </div>
 
 <div class="w-full max-w-lg mx-auto">
-<!-- TEACH CARD -->
-<div id="teach-card" class="glass-card rounded-3xl p-5 min-h-[520px] flex flex-col justify-between shadow-2xl">
-<div class="flex justify-between items-center"><span id="card-category" class="text-[10px] uppercase font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border">Age</span><div class="flex gap-2"><button onclick="speakKoreanSlow()" class="w-9 h-9 rounded-full bg-slate-800 border flex items-center justify-center"><i class="fa-solid fa-ear-listen text-xs"></i></button><button onclick="speakKorean()" class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center"><i class="fa-solid fa-volume-high text-xs"></i></button></div></div>
-
-<div class="text-center my-3">
-<!-- Korean -->
-<h2 id="card-hangul" class="text-3xl font-black text-white mb-1 leading-snug">저는 스무 살입니다</h2>
-<p id="card-roman" class="text-xs text-blue-300/80 mb-3">jeo-neun seu-mu sal-im-ni-da</p>
-
-<!-- Teaching Box - Like Teuida -->
-<div id="teach-box" class="text-left bg-slate-900/80 rounded-2xl p-4 border border-slate-800 mb-3">
-<p class="text-[10px] font-bold text-yellow-400 mb-1">📖 TEACHING:</p>
-<p id="teach-explain" class="text-xs text-slate-200 leading-relaxed">저는 = I (formal)<br>스무 = 20 (native number)<br>살 = years old counter<br>입니다 = am (formal ending)</p>
+<div class="glass-card rounded-3xl p-5 min-h-[600px] flex flex-col justify-between shadow-2xl">
+<div class="flex justify-between items-center">
+<span id="minjun-say" class="text-[11px] bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-blue-300">민준: Live from Internet!</span>
+<div class="flex gap-2"><button onclick="speakSlow()" class="w-9 h-9 rounded-full bg-slate-800 border flex items-center justify-center"><i class="fa-solid fa-ear-listen text-xs"></i></button><button onclick="speakKorean()" class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center"><i class="fa-solid fa-volume-high text-xs"></i></button></div>
 </div>
 
-<!-- English -->
-<div class="mt-2 pt-3 border-t border-slate-700/60">
-<p class="text-[9px] uppercase tracking-widest font-bold text-emerald-400/60 mb-1">MEANS</p>
-<h3 id="card-english" class="text-lg font-bold text-emerald-300">I am 20 years old</h3>
-</div>
-
-<!-- Conversation - Like Teuida -->
-<div id="conversation-box" class="mt-4 text-left bg-blue-950/30 rounded-2xl p-3 border border-blue-800/30 hidden">
-<p class="text-[10px] font-bold text-blue-400 mb-1">💬 CONVERSATION:</p>
-<p id="conversation-line" class="text-xs text-white">AI: 몇 살이에요? (How old are you?)</p>
-<p class="text-[10px] text-slate-400 mt-1">Your turn: Say "저는 스무 살입니다"</p>
+<div class="text-center my-4">
+<div id="reading-ui">
+<h2 id="card-hangul" class="text-[28px] font-black text-white mb-2 leading-snug">Min Jun fetching unlimited from Internet...</h2>
+<h3 id="card-english" class="text-sm text-emerald-300 font-bold">Please wait - Live sentences</h3>
+<div class="mt-4 p-3 bg-slate-900 rounded-xl border text-left">
+<p class="text-[10px] font-bold text-yellow-400">민준 auto-teaching:</p>
+<p id="breakdown" class="text-xs text-slate-300 mt-1 leading-relaxed">Analyzing live Korean grammar...</p>
 </div>
 </div>
 
-<!-- SPEAKING SCORE -->
-<div id="score-box" class="hidden mt-2 p-3 rounded-xl border text-center">
+<div id="writing-ui" class="hidden">
+<p class="text-[11px] text-slate-400 mb-2">Min Jun: Write the Korean you see/hear:</p>
+<h3 id="write-english" class="text-sm font-bold text-emerald-300 mb-2">English</h3>
+<p class="text-xs mb-2">Target: <span id="write-target" class="text-white font-bold"></span></p>
+<input id="write-input" type="text" placeholder="Type Korean here..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500">
+<button onclick="checkWriting()" class="mt-3 w-full py-3 rounded-xl bg-blue-600 font-bold text-xs">Check Writing</button>
+<p id="write-feedback" class="text-xs mt-2"></p>
+</div>
+
+<div id="speaking-ui" class="hidden">
+<p id="speak-question" class="text-sm font-bold text-white bg-blue-950/50 p-3 rounded-xl border border-blue-800/30 mb-3">Min Jun asks: 따라해 보세요!</p>
+<h2 id="speak-target" class="text-2xl font-black text-white mb-1"></h2>
+<p class="text-[10px] text-slate-400 mb-3">Speak this Korean - Min Jun will score you</p>
+</div>
+</div>
+
+<div id="score-box" class="hidden p-3 rounded-xl border text-center">
 <p id="score-text" class="text-sm font-bold"></p>
 <p id="score-feedback" class="text-[11px] text-slate-400 mt-1"></p>
 </div>
 
 <div class="flex flex-col gap-3 mt-4">
-<!-- MIC BUTTON - Teuida Style -->
-<button id="mic-btn" onclick="startListening()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
-<i class="fa-solid fa-microphone"></i> <span id="mic-label">Press to Speak Korean - Like Teuida</span>
+<button id="mic-btn" onclick="startListening()" class="hidden w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 font-bold text-sm flex items-center justify-center gap-2">
+<i class="fa-solid fa-microphone"></i> <span id="mic-label">Press to Speak with Min Jun</span>
 </button>
-
 <div class="flex justify-between items-center">
 <button onclick="prevCard()" class="px-4 py-2 text-slate-400 text-xs">← Prev</button>
-<span id="card-index" class="text-[11px] text-slate-500">1 / 5</span>
+<span id="card-index" class="text-[11px] text-slate-500">0 / 0</span>
 <button onclick="nextCard()" class="px-4 py-2 bg-slate-800 rounded-full text-xs font-bold">Next →</button>
 </div>
 </div>
+
 </div>
 </div>
 
-<div class="max-w-lg mx-auto mt-4 text-[11px] text-slate-500 leading-relaxed text-center">
-Allow microphone in Chrome. Speak clearly. Teuida-style: Teaches first, then you repeat. For People: 아버지 (a-beo-ji), 어머니 (eo-meo-ni). For Age: Use 살 after number.
+<div class="max-w-lg mx-auto mt-3 text-[10px] text-slate-500 text-center">
+Min Jun Unlimited = No words stored inside. All fetched live from Tatoeba API (used by Duolingo). Click "Fetch 80 More" = unlimited new lessons forever, like Teuida.
 </div>
 </main>
 
 <script>
-let LESSONS = {
-  people: [
-    {k:"사람", r:"sa-ram", e:"Person", teach:"사람 = person. 가나 사람 = Ghanaian person (가나 + 사람).", conv:"AI: 그 사람은 누구예요? (Who is that person?)", tip:"Use 사람 for any person"},
-    {k:"아버지", r:"a-beo-ji", e:"Father", teach:"아버지 = father (formal/respectful). 아빠 = dad (casual).", conv:"AI: 아버지는 몇 살이에요?", tip:"Respectful: 아버지, 어머니"},
-    {k:"어머니", r:"eo-meo-ni", e:"Mother", teach:"어머니 = mother (formal). 엄마 = mom.", conv:"AI: 어머니는 어디에 계세요?", tip:"Formal for GKS interview"},
-    {k:"친구", r:"chin-gu", e:"Friend", teach:"친구 = friend. 제 친구 = my friend. 친구들 = friends.", conv:"AI: 친구가 많아요? (Many friends?)", tip:"Add 들 for plural"},
-    {k:"가나 사람", r:"ga-na sa-ram", e:"Ghanaian", teach:"가나 = Ghana, 사람 = person → 가나 사람 = Ghanaian. 한국 사람 = Korean.", conv:"AI: 당신은 가나 사람이에요?", tip:"Country + 사람 = nationality"},
-    {k:"가족", r:"ga-jok", e:"Family", teach:"가족 = family. 제 가족은 5명입니다 = My family is 5 people. 명 = people counter.", conv:"AI: 가족이 몇 명이에요?", tip:"명 = counter for people"}
-  ],
-  age: [
-    {k:"나이", r:"na-i", e:"Age", teach:"나이 = age. Question: 나이 = age, 몇 살 = how old (살 = age counter).", conv:"AI: 나이가 어떻게 돼요? (informal: 몇 살이에요?)", tip:"나이 is noun, 살 is counter"},
-    {k:"몇 살이에요?", r:"myeot sal-i-e-yo?", e:"How old are you?", teach:"몇 = how many, 살 = years old, 이에요 = are (polite). Full formal: 몇 살입니까?", conv:"AI asks you: 몇 살이에요? → You answer: 저는 ___ 살입니다", tip:"Most important phrase for People lesson!"},
-    {k:"저는 스무 살입니다", r:"jeo-neun seu-mu sal-im-ni-da", e:"I am 20 years old", teach:"저는 = I (formal), 스무 = 20 (native number for age), 살 = years old, 입니다 = am (formal).", conv:"Role-play: Interviewer asks age, you say this.", tip:"For age 1-99 use NATIVE numbers: 하나(1), 스물(20), 서른(30)"},
-    {k:"저는 스물두 살입니다", r:"seu-mul-du sal-im-ni-da", e:"I am 22 years old", teach:"스물두 = 22 (스물 20 + 두 2). 스물다섯 = 25. Age pattern: native number + 살 + 입니다", conv:"AI: 친구는 몇 살이에요? → My friend is 22", tip:"21 = 스물하나, 22 = 스물둘, 25 = 스물다섯"},
-    {k:"저는 열아홉 살입니다", r:"yeol-a-hop sal-im-ni-da", e:"I am 19 years old", teach:"열아홉 = 19. 10=열, 11=열하나, 18=열여덟, 19=열아홉. Common GKS age.", conv:"Practice: Say your real age in Korean!", tip:"18-20 is common GKS age - must know!"},
-    {k:"아버지는 쉰 살입니다", r:"a-beo-ji-neun swin sal-im-ni-da", e:"My father is 50 years old", teach:"아버지 + 는 = Father (topic). 쉰 = 50 (native). 40=마흔, 50=쉰, 60=예순.", conv:"AI: 아버지 나이? → 아버지는 쉰 살입니다", tip:"Build sentence: Person + 는 + age + 입니다"},
-    {k:"한 살, 두 살, 세 살", r:"han sal, du sal, se sal", e:"1, 2, 3 years old", teach:"1=한 살, 2=두 살, 3=세 살 (NOT 하나, 둘 - special for age!). 4=네 살.", conv:"For children: 아이는 두 살입니다", tip:"1-4 have special forms for age: 한/두/세/네 살"}
-  ],
-  greeting: [
-    {k:"안녕하세요", r:"an-nyeong-ha-se-yo", e:"Hello", teach:"안녕하세요 = Hello (formal). 안녕 = casual to friends.", conv:"AI: 안녕하세요! → You: 안녕하세요!", tip:"Most basic - use always"},
-    {k:"감사합니다", r:"kam-sa-ham-ni-da", e:"Thank you", teach:"감사합니다 = Thank you (formal). 고마워요 = casual thanks.", conv:"AI gives gift: → You say 감사합니다", tip:"For GKS interview, always formal"}
-  ],
-  introduction: [
-    {k:"제 이름은 ...입니다", r:"je i-reu-meun ...im-ni-da", e:"My name is ...", teach:"제 = my, 이름 = name, 은 = topic marker. Fill blank with your name.", conv:"AI: 이름이 뭐예요? → 제 이름은 ...입니다", tip:"Introduce yourself for GKS!"},
-    {k:"저는 가나에서 왔습니다", r:"jeo-neun ga-na-e-seo wat-seum-ni-da", e:"I am from Ghana", teach:"저는 = I, 가나에서 = from Ghana, 왔습니다 = came. Past tense.", conv:"AI: 어디에서 왔어요? → 저는 가나에서 왔습니다", tip:"GKS must-know sentence!"},
-    {k:"저는 가나 사람입니다", r:"ga-na sa-ram-im-ni-da", e:"I am Ghanaian", teach:"가나 사람 = Ghanaian, 입니다 = am. Simple intro.", conv:"AI: 국적이 어디예요? → Ghanaian", tip:"Nationality pattern"}
-  ],
-  food: [
-    {k:"저는 푸푸를 좋아합니다", r:"pu-pu-reul jo-a-ham-ni-da", e:"I like Fufu", teach:"를 = object marker, 좋아합니다 = like. Pattern: Object + 를 + 좋아합니다", conv:"AI: 무슨 음식을 좋아해요? → Fufu", tip:"을/를 = object particle"},
-    {k:"김치를 좋아해요?", r:"kim-chi-reul jo-a-hae-yo?", e:"Do you like Kimchi?", teach:"김치 = Kimchi, 좋아해요 = like (casual). 좋아합니다 = formal.", conv:"AI asks food preference", tip:"Korean food = 김치"}
-  ],
-  gks: [
-    {k:"저는 한국에서 공부하고 싶습니다", r:"han-guk-e-seo gong-bu-ha-go sip-seum-ni-da", e:"I want to study in Korea", teach:"한국에서 = in Korea, 공부하고 싶습니다 = want to study (고 싶다 = want to).", conv:"INTERVIEW: Why Korea? → This sentence!", tip:"GKS GOLD sentence - memorize!"},
-    {k:"장학금을 받고 싶습니다", r:"jang-hak-geu-meul bat-go sip-seum-ni-da", e:"I want to receive scholarship", teach:"장학금 = scholarship, 받고 싶다 = want to receive.", conv:"AI: 왜 GKS를 신청했어요? → ...", tip:"장학금 = GKS keyword"}
-  ]
-};
+let WORD_DATA=[], FILTERED=[], currentIndex=0, mode='reading', bestKoreanVoice=null;
 
-let currentLesson="age";
-let currentIndex=0;
-let mode="teach";
-let recognition=null;
-let bestKoreanVoice=null;
-
-function loadLesson(){
-  currentLesson=document.getElementById('lesson-select').value;
-  currentIndex=0;
-  renderCard();
+function autoTeach(kor, eng){
+  let b=[];
+  if(kor.includes("사람")||/person|father|mother|friend/i.test(eng)) b.push("사람 = person, Country + 사람 = nationality, 가나 사람 = Ghanaian");
+  if(kor.includes("살")||/age|years old|몇 살/i.test(eng)) b.push("🔢 살 = years old counter, 스무 살=20, 서른 살=30, 몇 살이에요?=How old?");
+  if(kor.includes("저는")) b.push("저는 = I (formal), 는/은 = topic marker");
+  if(kor.includes("입니다")||kor.includes("이에요")) b.push("입니다/이에요 = am/is/are, formal/polite ending");
+  if(kor.includes("에서")) b.push("에서 = from/in, 가나에서=from Ghana, 한국에서=in Korea");
+  if(kor.includes("을")||kor.includes("를")) b.push("을/를 = object marker");
+  if(kor.includes("고 싶")) b.push("고 싶다 = want to, 공부하고 싶다 = want to study (GKS key)");
+  if(b.length===0) b.push("Order: Subject + Object + Verb, 입니다 = am/is formal, Use for GKS");
+  return b.join("<br>• ");
 }
 
-function getCurrentCards(){ return LESSONS[currentLesson]||[]; }
+function classify(kor, eng){
+  const e=eng.toLowerCase();
+  if(/father|mother|friend|person|people|family|man|woman|child/i.test(e)||kor.includes("사람")||kor.includes("아버지")||kor.includes("어머니")) return "People";
+  if(/age|years old|how old|몇 살|살/i.test(e)||kor.includes("살")) return "Age";
+  if(/hello|thank|good morning|goodbye|sorry|nice to meet/i.test(e)) return "Greeting";
+  if(/university|scholarship|gks|study in korea|professor/i.test(e)||kor.includes("장학금")) return "GKS";
+  if(/food|eat|drink|rice|kimchi/i.test(e)) return "Food";
+  return "Sentences";
+}
+
+async function fetchLive(){
+  const page=Math.floor(Math.random()*20)+1;
+  const url=`https://tatoeba.org/en/api_v0/search?from=kor&to=eng&limit=80&page=${page}&sort=random`;
+  const res=await fetch(url);
+  const json=await res.json();
+  let newList=[];
+  json.results.forEach(row=>{
+    if(row.text && row.translations?.[0]?.[0]?.text){
+      const kor=row.text.trim(), eng=row.translations[0][0].text.trim();
+      if(kor.length>1 && eng.length>1){
+        newList.push({korean:kor, english:eng, category:classify(kor, eng), breakdown:autoTeach(kor, eng), question:`민준: 따라해 보세요! (${eng})`});
+      }
+    }
+  });
+  return newList;
+}
+
+async function loadFromInternet(){
+  document.getElementById('card-hangul').innerText="Min Jun fetching unlimited...";
+  document.getElementById('source-label').innerText="Fetching live...";
+  try{
+    const list=await fetchLive();
+    WORD_DATA=list;
+    applyFilter();
+    renderCard();
+    document.getElementById('source-label').innerText=`Min Jun Live: ${list.length} unlimited`;
+  }catch(e){
+    console.log(e);
+    // fallback live translation - still from internet
+    const base=["Hello","Thank you","Father","Mother","Friend","How old are you?","I am twenty years old","I am from Ghana","I want to study in Korea","University","Scholarship","Food","Family"];
+    let list=[];
+    for(let en of base){
+      try{
+        const res=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(en)}&langpair=en|ko`);
+        const data=await res.json(); const ko=data.responseData.translatedText;
+        list.push({korean:ko, english:en, category:classify(ko,en), breakdown:autoTeach(ko,en), question:`Min Jun: ${en}`});
+      }catch{}
+    }
+    WORD_DATA=list; applyFilter(); renderCard();
+    document.getElementById('source-label').innerText=`Min Jun Live Translated: ${list.length}`;
+  }
+}
+
+async function fetchMore(){
+  document.getElementById('source-label').innerText="Fetching 80 more...";
+  try{
+    const more=await fetchLive();
+    WORD_DATA=[...WORD_DATA, ...more];
+    applyFilter();
+    document.getElementById('source-label').innerText=`Min Jun Unlimited: ${WORD_DATA.length} total`;
+    document.getElementById('progress').innerText=`${WORD_DATA.length} live`;
+  }catch{}
+}
+
+function applyFilter(){
+  const cat=document.getElementById('category-select').value;
+  FILTERED=cat==="ALL"?WORD_DATA:WORD_DATA.filter(x=>x.category===cat);
+  if(currentIndex>=FILTERED.length) currentIndex=0;
+}
+function filterCategory(){ applyFilter(); renderCard(); }
 
 function renderCard(){
-  const cards=getCurrentCards();
-  if(cards.length===0) return;
-  if(currentIndex>=cards.length) currentIndex=0;
-  const card=cards[currentIndex];
-  document.getElementById('card-hangul').innerText=card.k;
-  document.getElementById('card-roman').innerText=card.r;
-  document.getElementById('card-english').innerText=card.e;
-  document.getElementById('card-category').innerText=currentLesson.toUpperCase();
-  document.getElementById('teach-explain').innerHTML=card.teach.replace(/\n/g,"<br>");
-  document.getElementById('conversation-line').innerText=card.conv;
-  document.getElementById('card-index').innerText=(currentIndex+1)+" / "+cards.length;
-  document.getElementById('progress').innerText=`Step ${currentIndex+1}/${cards.length}`;
-  document.getElementById('score-box').classList.add('hidden');
-  document.getElementById('conversation-box').classList.toggle('hidden', mode!=='speak');
+  if(FILTERED.length===0){ document.getElementById('card-hangul').innerText="No cards in filter, select ALL or Fetch More"; return; }
+  if(currentIndex>=FILTERED.length) currentIndex=0;
+  const c=FILTERED[currentIndex];
+  document.getElementById('card-hangul').innerText=c.korean;
+  document.getElementById('card-english').innerText=c.english;
+  document.getElementById('breakdown').innerHTML="• "+c.breakdown;
+  document.getElementById('write-english').innerText=c.english;
+  document.getElementById('write-target').innerText=c.korean;
+  document.getElementById('speak-target').innerText=c.korean;
+  document.getElementById('speak-question').innerText=c.question;
+  document.getElementById('card-index').innerText=(currentIndex+1)+" / "+FILTERED.length;
+  document.getElementById('progress').innerText=`${FILTERED.length} / ${WORD_DATA.length} live`;
+  document.getElementById('write-input').value=""; document.getElementById('write-input').className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none";
+  document.getElementById('write-feedback').innerText=""; document.getElementById('score-box').classList.add('hidden');
+  updateModeUI();
 }
 
-function setMode(m){
-  mode=m;
-  document.getElementById('btn-teach').className=m==='teach'?'px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-600':'px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-800';
-  document.getElementById('btn-speak').className=m==='speak'?'px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-600':'px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-800';
-  document.getElementById('conversation-box').classList.toggle('hidden', m!=='speak');
-  document.getElementById('mic-btn').classList.toggle('hidden', false);
-  if(m==='speak') document.getElementById('mic-label').innerText="Role-play: Answer the AI - Like Teuida";
-  else document.getElementById('mic-label').innerText="Press to Speak Korean - Like Teuida";
+function setMode(m){ mode=m; document.getElementById('m-reading').className=m==='reading'?'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600':'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800'; document.getElementById('m-writing').className=m==='writing'?'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600':'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800'; document.getElementById('m-speaking').className=m==='speaking'?'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600':'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800'; updateModeUI(); }
+function updateModeUI(){
+  document.getElementById('reading-ui').classList.toggle('hidden', mode!=='reading');
+  document.getElementById('writing-ui').classList.toggle('hidden', mode!=='writing');
+  document.getElementById('speaking-ui').classList.toggle('hidden', mode!=='speaking');
+  document.getElementById('mic-btn').classList.toggle('hidden', mode!=='speaking');
+  const say=document.getElementById('minjun-say');
+  if(mode==='reading') say.innerText="민준: 읽어 보세요! Read aloud - Min Jun will speak";
+  if(mode==='writing') say.innerText="민준: 써 보세요! Type the Korean!";
+  if(mode==='speaking') say.innerText="민준: 말해 보세요! Speak Korean!";
 }
 
-function nextCard(){ const c=getCurrentCards(); currentIndex=(currentIndex+1)%c.length; renderCard(); }
-function prevCard(){ const c=getCurrentCards(); currentIndex=(currentIndex-1+c.length)%c.length; renderCard(); }
+function checkWriting(){
+  const input=document.getElementById('write-input').value.trim();
+  const target=FILTERED[currentIndex].korean.trim();
+  const fb=document.getElementById('write-feedback'), inp=document.getElementById('write-input');
+  if(input===target){ inp.className="w-full bg-emerald-500/10 border border-emerald-500 rounded-xl px-4 py-3 text-sm text-white"; fb.innerHTML=`<span class="text-emerald-400 font-bold">✅ 잘했어요! Perfect!</span>`; setTimeout(()=>nextCard(),1200); }
+  else if(target.includes(input)&&input.length>1){ inp.className="w-full bg-yellow-500/10 border border-yellow-500 rounded-xl px-4 py-3 text-sm text-white"; fb.innerHTML=`<span class="text-yellow-400">⚠️ Close! Target: ${target}</span>`; }
+  else{ inp.className="w-full bg-rose-500/10 border border-rose-500 rounded-xl px-4 py-3 text-sm text-white"; fb.innerHTML=`<span class="text-rose-400">❌ Target: ${target}</span>`; }
+}
 
-// TTS
+function nextCard(){ currentIndex=(currentIndex+1)%FILTERED.length; if(currentIndex===0 && FILTERED.length<200) fetchMore(); renderCard(); }
+function prevCard(){ currentIndex=(currentIndex-1+FILTERED.length)%FILTERED.length; renderCard(); }
+
 function initVoices(){ const v=speechSynthesis.getVoices(); bestKoreanVoice=v.filter(x=>x.lang.toLowerCase().includes('ko')).find(x=>x.name.includes('Google'))||v.find(x=>x.lang.includes('ko')); }
 if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=initVoices; initVoices(); setTimeout(initVoices,800); }
-function speakKorean(){ const card=getCurrentCards()[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(card.k); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.9; speechSynthesis.speak(u); }
-function speakKoreanSlow(){ const card=getCurrentCards()[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(card.k); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.6; speechSynthesis.speak(u); }
+function speakKorean(){ const c=FILTERED[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(c.korean); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.9; speechSynthesis.speak(u); }
+function speakSlow(){ const c=FILTERED[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(c.korean); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.5; speechSynthesis.speak(u); }
 
-// SPEECH RECOGNITION - Teuida style
 function startListening(){
-  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
-    alert("Your browser doesn't support mic. Use Chrome on Android. For now, just repeat aloud!");
-    return;
-  }
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
-  recognition.lang='ko-KR';
-  recognition.interimResults=false;
-  recognition.maxAlternatives=1;
-  
-  const btn=document.getElementById('mic-btn');
-  const label=document.getElementById('mic-label');
-  btn.classList.add('pulse-ring');
-  label.innerText="Listening... Say: "+getCurrentCards()[currentIndex].k;
-  
-  recognition.start();
-  
-  recognition.onresult=(event)=>{
-    const spoken=event.results[0][0].transcript;
-    const target=getCurrentCards()[currentIndex].k;
-    const score=calculateScore(spoken, target);
-    showScore(spoken, target, score);
-    btn.classList.remove('pulse-ring');
-    label.innerText="Press to Speak Again";
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){ alert("Use Chrome for mic!"); return; }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; const rec=new SR();
+  rec.lang='ko-KR';
+  const btn=document.getElementById('mic-btn'), label=document.getElementById('mic-label');
+  btn.classList.add('pulse-ring'); label.innerText="Min Jun listening...";
+  rec.start();
+  rec.onresult=(e)=>{
+    const spoken=e.results[0][0].transcript, target=FILTERED[currentIndex].korean;
+    const score=(()=>{ const s=spoken.replace(/\s/g,""), t=target.replace(/\s/g,""); if(s===t) return 100; if(t.includes(s)||s.includes(t)) return 85; let m=0; for(let ch of t) if(s.includes(ch)) m++; return Math.min(95, Math.max(20, Math.round((m/t.length)*100))); })();
+    const box=document.getElementById('score-box'), txt=document.getElementById('score-text'), feed=document.getElementById('score-feedback');
+    box.classList.remove('hidden');
+    if(score>=85){ box.className="mt-2 p-3 rounded-xl border text-center bg-emerald-500/10 border-emerald-500/30"; txt.innerHTML=`✅ ${score}% - 잘했어요! "${spoken}"`; feed.innerText=`Target: ${target}`; if(score>=90) setTimeout(()=>nextCard(),1200); }
+    else if(score>=60){ box.className="mt-2 p-3 rounded-xl border text-center bg-yellow-500/10 border-yellow-500/30"; txt.innerHTML=`⚠️ ${score}% - "${spoken}"`; feed.innerText=`Target: ${target}`; }
+    else{ box.className="mt-2 p-3 rounded-xl border text-center bg-rose-500/10 border-rose-500/30"; txt.innerHTML=`❌ ${score}% - "${spoken}"`; feed.innerText=`Target: ${target}`; }
+    btn.classList.remove('pulse-ring'); label.innerText="Speak Again";
   };
-  
-  recognition.onerror=(e)=>{
-    btn.classList.remove('pulse-ring');
-    label.innerText="Mic error, try again";
-    console.log(e);
-  };
-  
-  recognition.onend=()=>{
-    btn.classList.remove('pulse-ring');
-  };
+  rec.onerror=()=>{ btn.classList.remove('pulse-ring'); };
+  rec.onend=()=>{ btn.classList.remove('pulse-ring'); };
 }
 
-function calculateScore(spoken, target){
-  // Simple scoring like Teuida
-  const s=spoken.replace(/\s/g,""), t=target.replace(/\s/g,"");
-  if(s===t) return 100;
-  if(t.includes(s) || s.includes(t)) return 85;
-  // Check keywords
-  let match=0;
-  for(let char of t){ if(s.includes(char)) match++; }
-  const percent=Math.round((match/t.length)*100);
-  return Math.min(95, Math.max(20, percent));
-}
-
-function showScore(spoken, target, score){
-  const box=document.getElementById('score-box');
-  const text=document.getElementById('score-text');
-  const feed=document.getElementById('score-feedback');
-  box.classList.remove('hidden');
-  
-  if(score>=85){
-    box.className="mt-2 p-3 rounded-xl border text-center bg-emerald-500/10 border-emerald-500/30";
-    text.innerHTML=`✅ ${score}% - Great! You said: "${spoken}"`;
-    feed.innerText=`Target: ${target} - Perfect pronunciation! Next →`;
-    // Auto next after 2 sec like Teuida
-    setTimeout(()=>{ if(score>=90) nextCard(); }, 2000);
-  } else if(score>=60){
-    box.className="mt-2 p-3 rounded-xl border text-center bg-yellow-500/10 border-yellow-500/30";
-    text.innerHTML=`⚠️ ${score}% - Good try: "${spoken}"`;
-    feed.innerText=`Target: ${target}. Tip: Listen slow then try again.`;
-  } else {
-    box.className="mt-2 p-3 rounded-xl border text-center bg-rose-500/10 border-rose-500/30";
-    text.innerHTML=`❌ ${score}% - You said: "${spoken}"`;
-    feed.innerText=`Target: ${target}. Click 🔊 to listen slow, then try mic again.`;
-  }
-}
-
-renderCard();
+loadFromInternet();
 </script>
 </body>
 </html>
