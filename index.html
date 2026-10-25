@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min Jun (민준)</title>
+<title>Min Jun (민준) - Bunpo & Duolingo Korean Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-.glass-panel { background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+.glass-panel { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
 .minjun-avatar { background: linear-gradient(135deg, #6366f1, #3b82f6, #ec4899); }
 .pulse-mic { animation: mic-pulse 1.4s infinite ease-in-out; }
 @keyframes mic-pulse { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 16px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
@@ -18,153 +18,100 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
 
-<!-- Header Gamification Bar -->
+<!-- Gamification Header Bar (Duolingo Style) -->
 <header class="border-b border-slate-800/80 bg-slate-900/90 sticky top-0 z-50 px-4 py-3 backdrop-blur-md">
 <div class="max-w-md mx-auto flex justify-between items-center">
-<div class="flex items-center gap-2.5">
+<div class="flex items-center gap-2.5 cursor-pointer" onclick="goHome()">
 <div class="relative">
 <div class="w-10 h-10 rounded-2xl minjun-avatar flex items-center justify-center font-black text-white text-lg shadow-lg shadow-indigo-500/20">민</div>
 <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-slate-950 rounded-full"></span>
 </div>
 <div>
 <h1 class="font-black text-sm text-white tracking-wide">Min Jun (민준)</h1>
-<p class="text-[10px] text-emerald-400 font-semibold" id="source-status">Bunpo + Duolingo Engine</p>
+<p class="text-[10px] text-emerald-400 font-semibold">Bunpo Grammar Master</p>
 </div>
 </div>
 <!-- Stats: Streak, XP, Hearts -->
 <div class="flex items-center gap-2 text-xs font-black">
-<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-amber-400">
-<i class="fa-solid fa-fire text-[11px]"></i> <span id="stat-streak">3</span>
+<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-amber-400" title="Streak">
+<i class="fa-solid fa-fire text-[11px]"></i> <span id="stat-streak">5</span>
 </div>
-<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-indigo-400">
-<i class="fa-solid fa-bolt text-[11px]"></i> <span id="stat-xp">120</span>
+<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-indigo-400" title="XP">
+<i class="fa-solid fa-bolt text-[11px]"></i> <span id="stat-xp">380</span>
 </div>
-<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-rose-400">
+<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-rose-400" title="Hearts">
 <i class="fa-solid fa-heart text-[11px]"></i> <span id="stat-hearts">5</span>
 </div>
 </div>
 </div>
 </header>
 
-<!-- Main App Container -->
+<!-- Main Container -->
 <main class="max-w-md mx-auto px-4 py-4 w-full flex-1 flex flex-col gap-4">
 
-<!-- Teuida Learning Step Indicator -->
-<div class="flex gap-1.5 w-full">
-<div id="step-1-bar" class="flex-1 h-1.5 rounded-full bg-indigo-500 transition-all"></div>
-<div id="step-2-bar" class="flex-1 h-1.5 rounded-full bg-slate-800 transition-all"></div>
-<div id="step-3-bar" class="flex-1 h-1.5 rounded-full bg-slate-800 transition-all"></div>
-<div id="step-4-bar" class="flex-1 h-1.5 rounded-full bg-slate-800 transition-all"></div>
+<!-- VIEW 1: BUNPO GRAMMAR SYLLABUS (HOME) -->
+<div id="view-home" class="space-y-4">
+<div class="glass-panel rounded-3xl p-5 shadow-xl border border-slate-800">
+<h2 class="text-base font-black text-white flex items-center gap-2 mb-1">
+<i class="fa-solid fa-book-bookmark text-indigo-400"></i> Beginner Korean Grammar (Bunpo Style)
+</h2>
+<p class="text-xs text-slate-400">Select a structured grammar unit to study particles, counters, and verb endings with textbook explanations.</p>
 </div>
 
-<!-- Category & Live Fetch Controls -->
-<div class="flex gap-2">
-<select id="category-select" onchange="changeCategory()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold flex-1 text-indigo-300 focus:outline-none focus:border-indigo-500">
-<option value="PeopleAndAge">👥 People & Age (사람, 나이, 살 - Verified)</option>
-<option value="GKS">🎓 GKS Interview & University</option>
-<option value="Survival">✈️ Survival & Daily Life</option>
-<option value="ALL">🌐 All Categories (Unlimited Live)</option>
-</select>
-<button onclick="fetchLiveSentences()" class="px-3 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition shadow-md shadow-blue-600/20" title="Fetch 50+ live sentences from internet">
-<i class="fa-solid fa-globe mr-1"></i> Live API
+<div id="grammar-list" class="space-y-3">
+<!-- Injected dynamically via JS -->
+</div>
+</div>
+
+<!-- VIEW 2: BUNPO LESSON & QUIZ VIEW -->
+<div id="view-lesson" class="hidden space-y-4">
+<!-- Back button -->
+<button onclick="goHome()" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5">
+<i class="fa-solid fa-arrow-left"></i> Back to Grammar List
 </button>
-</div>
 
-<!-- Interactive Lesson Card (Teuida / Bunpo Hybrid) -->
-<div class="glass-panel rounded-3xl p-5 flex flex-col justify-between shadow-2xl relative min-h-[540px]">
-
-<!-- Top Speaker & Coach Bar -->
+<div class="glass-panel rounded-3xl p-5 flex flex-col justify-between shadow-2xl relative space-y-4">
+<!-- Lesson Header -->
 <div class="flex justify-between items-center border-b border-slate-800/80 pb-3">
 <div class="flex items-center gap-2">
 <div class="w-7 h-7 rounded-lg minjun-avatar flex items-center justify-center font-bold text-white text-[11px]">민</div>
-<span id="lesson-step-label" class="text-xs font-bold text-indigo-300">Step 1: Bunpo Grammar Guide</span>
+<span id="lesson-unit-title" class="text-xs font-bold text-indigo-300">Unit</span>
 </div>
-<div class="flex gap-1.5">
-<button onclick="speakKorean(0.5)" class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center justify-center" title="Slow Audio">
-<i class="fa-solid fa-person-walking text-xs"></i>
-</button>
-<button onclick="speakKorean(0.85)" class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/30" title="Normal Audio">
+<button onclick="speakCurrentSentence()" class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/30" title="Listen Audio">
 <i class="fa-solid fa-volume-high text-xs"></i>
 </button>
 </div>
+
+<!-- Bunpo Textbook Explanation Box -->
+<div class="space-y-3">
+<div>
+<span id="grammar-badge" class="text-[10px] uppercase font-bold tracking-widest text-purple-400 bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full inline-block mb-2">Grammar Point</span>
+<h2 id="lesson-title" class="text-xl font-black text-white tracking-wide"></h2>
+<p id="lesson-summary" class="text-xs text-indigo-300 font-medium mt-1"></p>
 </div>
 
-<!-- Center Dynamic Content Area -->
-<div class="my-auto py-3 space-y-4">
-
-<!-- STEP 1: BUNPO GRAMMAR & TEXTBOOK BREAKDOWN -->
-<div id="phase-grammar" class="space-y-3">
-<div class="text-center">
-<span id="card-category-tag" class="text-[10px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full inline-block mb-2">People & Age</span>
-<h2 id="grammar-hangul" class="text-2xl font-black text-white tracking-wide">Loading...</h2>
-<p id="grammar-roman" class="text-xs text-indigo-300/90 font-medium italic mt-1"></p>
-<h3 id="grammar-english" class="text-sm font-bold text-emerald-300 mt-1.5"></h3>
+<div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2 text-left">
+<p class="text-[11px] font-bold text-yellow-400"><i class="fa-solid fa-graduation-cap mr-1"></i> Textbook Explanation</p>
+<p id="lesson-explanation" class="text-xs text-slate-300 leading-relaxed"></p>
 </div>
 
-<div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800/80 space-y-2 text-left">
-<div class="flex items-center justify-between border-b border-slate-800 pb-1">
-<span class="text-[11px] font-bold text-yellow-400"><i class="fa-solid fa-book-open mr-1"></i> Bunpo Grammar Breakdown</span>
-<span class="text-[10px] text-slate-400">Textbook Note</span>
+<!-- Example Sentences -->
+<div class="space-y-2 text-left">
+<p class="text-[11px] font-bold text-emerald-400"><i class="fa-solid fa-list-check mr-1"></i> Example Sentences</p>
+<div id="lesson-examples" class="space-y-2">
+<!-- Examples injected here -->
 </div>
-<div id="grammar-tags" class="flex flex-wrap gap-1.5 pt-0.5"></div>
-<p id="grammar-explanation" class="text-xs text-slate-300 leading-relaxed pt-1"></p>
-</div>
-</div>
-
-<!-- STEP 2: READING & COMPREHENSION -->
-<div id="phase-reading" class="hidden space-y-4 text-center">
-<span class="text-[10px] uppercase font-bold tracking-widest text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full inline-block">Reading Practice</span>
-<div class="p-4 bg-slate-900/80 rounded-2xl border border-slate-800">
-<h2 id="reading-hangul" class="text-3xl font-black text-white mb-2"></h2>
-<p id="reading-roman" class="text-xs text-indigo-300 italic mb-3"></p>
-<p id="reading-english" class="text-sm font-bold text-emerald-300"></p>
-</div>
-<p class="text-xs text-slate-400">Listen to native audio above and repeat out loud before moving to writing.</p>
-</div>
-
-<!-- STEP 3: WRITING (HANGUL TYPING CHALLENGE) -->
-<div id="phase-writing" class="hidden space-y-3 text-center">
-<span class="text-[10px] uppercase font-bold tracking-widest text-pink-400 bg-pink-500/10 border border-pink-500/20 px-3 py-1 rounded-full inline-block">Writing Challenge (Duolingo Style)</span>
-<h3 id="write-prompt-en" class="text-sm font-bold text-emerald-300">Translate this sentence</h3>
-<p class="text-xs text-slate-400">Target Hangul hint: <span id="write-hint" class="text-white font-mono font-bold">...</span></p>
-
-<div class="pt-2 space-y-2">
-<input id="user-write-input" type="text" placeholder="Type Korean here (e.g. 저는 가나 사람입니다)" class="w-full bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-indigo-500 text-center font-medium">
-<button onclick="checkWritingInput()" class="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 font-bold text-xs text-white transition shadow-lg shadow-indigo-600/30">
-Check Answer
-</button>
-<p id="write-feedback" class="text-xs font-bold min-h-[20px]"></p>
 </div>
 </div>
 
-<!-- STEP 4: SPEAKING (MICROPHONE PRONUNCIATION SCORING) -->
-<div id="phase-speaking" class="hidden space-y-3 text-center">
-<span class="text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full inline-block">Speaking Challenge (Teuida Style)</span>
-<div class="bg-indigo-950/40 border border-indigo-800/40 p-4 rounded-2xl space-y-1">
-<p class="text-xs text-indigo-300 font-semibold">Min Jun asks: Speak clearly into mic!</p>
-<h2 id="speak-target-hangul" class="text-2xl font-black text-white"></h2>
-<p id="speak-target-roman" class="text-xs text-indigo-300/80 italic"></p>
+<!-- Interactive Quiz Section (Bunpo Check) -->
+<div class="border-t border-slate-800 pt-3 space-y-3">
+<p class="text-xs font-bold text-white"><i class="fa-solid fa-puzzle-piece text-pink-400 mr-1"></i> Knowledge Check</p>
+<p id="quiz-question" class="text-xs text-slate-300 font-semibold"></p>
+<div id="quiz-options" class="grid grid-cols-1 gap-2">
+<!-- Quiz options injected here -->
 </div>
-<button id="mic-btn" onclick="startSpeechRecognition()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-pink-600 font-bold text-xs text-white flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition">
-<i class="fa-solid fa-microphone text-sm"></i> <span id="mic-label">Press & Speak in Korean</span>
-</button>
-<p id="speak-feedback" class="text-xs font-bold min-h-[20px] text-slate-400"></p>
-</div>
-
-</div>
-
-<!-- Gamified Feedback / Score Alert Box -->
-<div id="score-banner" class="hidden p-3 rounded-xl border text-center text-xs font-bold mb-2"></div>
-
-<!-- Bottom Navigation Controls -->
-<div class="border-t border-slate-800/80 pt-3 flex justify-between items-center">
-<button onclick="prevLesson()" class="px-3 py-2 text-slate-400 hover:text-white text-xs font-bold transition flex items-center gap-1">
-<i class="fa-solid fa-chevron-left text-[10px]"></i> Prev
-</button>
-<span id="lesson-progress-indicator" class="text-[11px] font-black text-slate-400">1 / 10</span>
-<button onclick="nextLessonStep()" id="next-step-btn" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-md shadow-indigo-600/30 flex items-center gap-1">
-Next Step <i class="fa-solid fa-chevron-right text-[10px]"></i>
-</button>
+<p id="quiz-feedback" class="text-xs font-bold text-center min-h-[20px]"></p>
 </div>
 
 </div>
@@ -174,108 +121,126 @@ Next Step <i class="fa-solid fa-chevron-right text-[10px]"></i>
 
 <script>
 // ==========================================
-// 1. VERIFIED CORE CURRICULUM (People & Age Focus)
+// 1. BUNPO STRUCTURED GRAMMAR CURRICULUM
 // ==========================================
-const VERIFIED_LESSONS = [
+const BUNPO_UNITS = [
     {
-        id: 1,
-        category: "PeopleAndAge",
-        korean: "저는 가나 사람입니다.",
-        roman: "jeo-neun ga-na sa-ram-im-ni-da.",
-        english: "I am a Ghanaian person.",
-        tags: [
-            { text: "Topic: 저는 (I)", type: "badge-particle" },
-            { text: "Noun: 사람 (Person)", type: "badge-verb" },
-            { text: "Verb: 입니다 (am/is)", type: "badge-verb" }
+        id: "topic",
+        title: "Topic Marker: 은 / 는",
+        category: "Particles",
+        badge: "badge-particle",
+        summary: "Used to introduce or highlight the main topic of a sentence.",
+        explanation: "<b>• 은 / 는</b> are topic markers. Use <b>은</b> after nouns ending in a consonant (e.g., 사람 + 은), and <b>는</b> after nouns ending in a vowel (e.g., 저 + 는). It answers the implicit question 'As for...'.",
+        examples: [
+            { ko: "저는 가나 사람입니다.", roman: "jeo-neun ga-na sa-ram-im-ni-da.", en: "I am a Ghanaian person." },
+            { ko: "어머니는 요리를 좋아합니다.", roman: "eo-meo-ni-neun yo-ri-reul jo-a-hab-ni-da.", en: "Mother likes cooking." }
         ],
-        explanation: "<b>• 은/는:</b> Topic marker attached to pronouns (저 -> 저는).<br><b>• 사람:</b> Means 'person'. Prefixing a country name like 가나 (Ghana) + 사람 forms nationality (가나 사람).<br><b>• 입니다:</b> Formal polite copula equivalent to 'am/is/are'."
+        quiz: {
+            question: "Which topic marker should be attached to '아버지' (father, ends in vowel)?",
+            options: ["아버지은", "아버지는", "아버지가"],
+            correct: 1,
+            explanation: "Because 아버지 ends in a vowel (ㅣ), you attach 는."
+        }
     },
     {
-        id: 2,
-        category: "PeopleAndAge",
-        korean: "제 아버지는 선생님입니다.",
-        roman: "je a-beo-ji-neun seon-saeng-nim-im-ni-da.",
-        english: "My father is a teacher.",
-        tags: [
-            { text: "Noun: 아버지 (Father)", type: "badge-verb" },
-            { text: "Topic: ~는", type: "badge-particle" },
-            { text: "Honorific: 선생님", type: "badge-verb" }
+        id: "subject",
+        title: "Subject Marker: 이 / 가",
+        category: "Particles",
+        badge: "badge-particle",
+        summary: "Used to mark the grammatical subject performing an action or state.",
+        explanation: "<b>• 이 / 가</b> point out who or what is doing the action. Use <b>이</b> after consonants, and <b>가</b> after vowels. Unlike 은/는 (topic), 이/가 emphasizes Tatoeba/new information.",
+        examples: [
+            { ko: "날씨가 좋습니다.", roman: "nal-ssi-ga joh-seub-ni-da.", en: "The weather is good." },
+            { ko: "친구가 왔습니다.", roman: "chin-gu-ga wass-seub-ni-da.", en: "A friend has arrived." }
         ],
-        explanation: "<b>• 아버지:</b> Father. (My father = 제 아버지).<br><b>• 선생님:</b> Teacher (composed of 선 'before' + 생 'life', plus honorific suffix 님)."
+        quiz: {
+            question: "Which subject marker follows '날씨' (weather, ends in vowel)?",
+            options: ["날씨이", "날씨가", "날씨는"],
+            correct: 1,
+            explanation: "날씨 ends in a vowel, so the subject marker is 가."
+        }
     },
     {
-        id: 3,
-        category: "PeopleAndAge",
-        korean: "어머니는 요리를 좋아합니다.",
-        roman: "eo-meo-ni-neun yo-ri-reul jo-a-hab-ni-da.",
-        english: "Mother likes cooking.",
-        tags: [
-            { text: "Noun: 어머니 (Mother)", type: "badge-verb" },
-            { text: "Object: ~을/를 (object marker)", type: "badge-particle" },
-            { text: "Verb: 좋아하다 (to like)", type: "badge-verb" }
+        id: "object",
+        title: "Object Marker: 을 / 를",
+        category: "Particles",
+        badge: "badge-particle",
+        summary: "Marks the direct object receiving the action of the verb.",
+        explanation: "<b>• 을 / 를</b> indicate the direct object in a sentence. Use <b>을</b> after consonants (e.g., 밥 + 을), and <b>를</b> after vowels (e.g., 사과 + 를).",
+        examples: [
+            { ko: "한국어를 공부합니다.", roman: "han-gug-eo-reul gong-bu-hab-ni-da.", en: "I study the Korean language." },
+            { ko: "책을 읽습니다.", roman: "chaek-eul ilg-seub-ni-da.", en: "I read a book." }
         ],
-        explanation: "<b>• 어머니:</b> Mother.<br><b>• 을/를:</b> Object particle marking the target of the verb (요리를 = cooking)."
+        quiz: {
+            question: "Which object marker follows '책' (book, ends in consonant)?",
+            options: ["책을", "책를", "책가"],
+            correct: 0,
+            explanation: "책 ends in a consonant (ㄱ), so you attach 을."
+        }
     },
     {
-        id: 4,
-        category: "PeopleAndAge",
-        korean: "나이가 어떻게 되십니까?",
-        roman: "na-i-ga eotteoh-ge doe-sim-ni-ka?",
-        english: "How old are you? (Formal honorific)",
-        tags: [
-            { text: "Subject: 나이가 (Age + 이/가)", type: "badge-particle" },
-            { text: "Honorific Question", type: "badge-verb" }
+        id: "location",
+        title: "Location / Action Marker: 에서",
+        category: "Particles",
+        badge: "badge-particle",
+        summary: "Indicates the physical place where an active verb takes place.",
+        explanation: "<b>• 에서</b> translates to 'at', 'in', or 'from'. It is attached to locations where an active action occurs (e.g., studying, eating, working).",
+        examples: [
+            { ko: "연세대학교에서 공부합니다.", roman: "yeon-se-dae-hag-gyo-e-seo gong-bu-hab-ni-da.", en: "I study at Yonsei University." },
+            { ko: "도서관에서 책을 읽습니다.", roman: "do-seo-gwan-e-seo chaek-eul ilg-seub-ni-da.", en: "I read books at the library." }
         ],
-        explanation: "<b>• 이/가:</b> Subject marker.<br><b>• 나이:</b> Age. When speaking to elders or in formal settings, '나이가 어떻게 되십니까?' is the polite way to ask age."
+        quiz: {
+            question: "Choose the correct particle for doing an action 'at school' (학교):",
+            options: ["학교에", "학교에서", "학교를"],
+            correct: 1,
+            explanation: "When performing an active verb at a location, use 에서."
+        }
     },
     {
-        id: 5,
-        category: "PeopleAndAge",
-        korean: "저는 스무 살입니다.",
-        roman: "jeo-neun seu-mu sal-im-ni-da.",
-        english: "I am twenty years old.",
-        tags: [
-            { text: "Native Number: 스무 (20)", type: "badge-counter" },
-            { text: "Counter: 살 (years old)", type: "badge-counter" }
+        id: "counter",
+        title: "Age Counter: 살",
+        category: "Counters",
+        badge: "badge-counter",
+        summary: "The native Korean counter used specifically for counting years of age.",
+        explanation: "<b>• 살</b> is paired with Native Korean numbers (하나, 둘, 셋...) rather than Chinese numbers. Note that numbers 1, 2, 3, 4, and 20 change their forms slightly (한 살, 두 살, 스무 살).",
+        examples: [
+            { ko: "저는 스무 살입니다.", roman: "jeo-neun seu-mu sal-im-ni-da.", en: "I am twenty years old." },
+            { ko: "동생은 열 살입니다.", roman: "dong-saeng-eun yeol sal-im-ni-da.", en: "My younger sibling is ten years old." }
         ],
-        explanation: "<b>• 살:</b> The native Korean counter used specifically for age ('years old').<br><b>• 스무:</b> Special contracted form of 스물 (20) when paired with 살."
+        quiz: {
+            question: "What is the special contracted form of 20 (스물) when followed by 살?",
+            options: ["스물 살", "스무 살", "스십 살"],
+            correct: 1,
+            explanation: "스물 shortens to 스무 when attached to 살."
+        }
     },
     {
-        id: 6,
-        category: "GKS",
-        korean: "저는 연세대학교에서 공부하고 싶습니다.",
-        roman: "jeo-neun yeon-se-dae-hag-gyo-e-seo gong-bu-ha-go sip-seub-ni-da.",
-        english: "I want to study at Yonsei University.",
-        tags: [
-            { text: "Location: 에서 (at/in)", type: "badge-particle" },
-            { text: "Desire: ~고 싶다 (want to)", type: "badge-verb" }
+        id: "copula",
+        title: "Formal Copula: 입니다",
+        category: "Verb Endings",
+        badge: "badge-verb",
+        summary: "The formal polite ending equivalent to 'am / is / are'.",
+        explanation: "<b>• 입니다</b> attaches directly to nouns to equate them with the subject (A = B). It is extremely common in self-introductions and GKS interviews.",
+        examples: [
+            { ko: "저는 학생입니다.", roman: "jeo-neun hak-saeng-im-ni-da.", en: "I am a student." },
+            { ko: "이것은 책입니다.", roman: "i-got-eun chaek-im-ni-da.", en: "This is a book." }
         ],
-        explanation: "<b>• 에서:</b> Location marker indicating where an action takes place (연세대학교에서 = at Yonsei University).<br><b>• ~고 싶다:</b> Attached to verb stems to express personal desire."
-    },
-    {
-        id: 7,
-        category: "Survival",
-        korean: "기숙사 위치가 어디에 있습니까?",
-        roman: "gi-sug-sa wi-chi-ga eo-di-e iss-seub-ni-ka?",
-        english: "Where is the dormitory located?",
-        tags: [
-            { text: "Location Marker: 에", type: "badge-particle" },
-            { text: "Question Ending: ~습니까?", type: "badge-verb" }
-        ],
-        explanation: "<b>• 에:</b> Direction/location destination marker.<br><b>• 어디:</b> Where."
+        quiz: {
+            question: "How do you say 'I am a researcher (연구원)' formally?",
+            options: ["연구원이에요", "연구원입니다", "연구원가"],
+            correct: 1,
+            explanation: "연구원입니다 is the formal polite copula form."
+        }
     }
 ];
 
 // App State
-let activeLessons = [...VERIFIED_LESSONS];
-let currentLessonIndex = 0;
-let currentStep = 1; // 1: Grammar, 2: Reading, 3: Writing, 4: Speaking
-let streak = 3;
-let xp = 120;
+let currentUnitIndex = 0;
+let streak = 5;
+let xp = 380;
 let hearts = 5;
 let bestVoice = null;
 
-// Load user stats from localStorage if available
 if(localStorage.getItem('minjun_xp')) {
     xp = parseInt(localStorage.getItem('minjun_xp'));
     streak = parseInt(localStorage.getItem('minjun_streak'));
@@ -291,7 +256,7 @@ function updateStatsUI() {
     localStorage.setItem('minjun_hearts', hearts);
 }
 
-// Speech Synthesis Setup
+// Speech Setup
 function initVoices() {
     if(!('speechSynthesis' in window)) return;
     const voices = window.speechSynthesis.getVoices();
@@ -302,252 +267,122 @@ if('speechSynthesis' in window) {
     initVoices();
 }
 
-function speakKorean(rate = 0.85) {
-    if(activeLessons.length === 0) return;
-    const item = activeLessons[currentLessonIndex];
+function speakText(text) {
     if('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(item.korean);
+        const u = new SpeechSynthesisUtterance(text);
         u.lang = 'ko-KR';
-        u.rate = rate;
+        u.rate = 0.85;
         if(bestVoice) u.voice = bestVoice;
         window.speechSynthesis.speak(u);
     }
 }
 
-// ==========================================
-// 2. RENDER ENGINE & STEP NAVIGATION
-// ==========================================
-function renderLesson() {
-    if(activeLessons.length === 0) return;
-    if(currentLessonIndex >= activeLessons.length) currentLessonIndex = 0;
-    const item = activeLessons[currentLessonIndex];
-
-    // Step Progress UI Bars
-    for(let i=1; i<=4; i++) {
-        const bar = document.getElementById(`step-${i}-bar`);
-        bar.className = i <= currentStep ? "flex-1 h-1.5 rounded-full bg-indigo-500 transition-all" : "flex-1 h-1.5 rounded-full bg-slate-800 transition-all";
+function speakCurrentSentence() {
+    const unit = BUNPO_UNITS[currentUnitIndex];
+    if(unit.examples && unit.examples.length > 0) {
+        speakText(unit.examples[0].ko);
     }
+}
 
-    // Hide/Show Phase UIs
-    document.getElementById('phase-grammar').classList.toggle('hidden', currentStep !== 1);
-    document.getElementById('phase-reading').classList.toggle('hidden', currentStep !== 2);
-    document.getElementById('phase-writing').classList.toggle('hidden', currentStep !== 3);
-    document.getElementById('phase-speaking').classList.toggle('hidden', currentStep !== 4);
-    document.getElementById('score-banner').classList.add('hidden');
-
-    const stepLabels = [
-        "Step 1: Bunpo Grammar Guide",
-        "Step 2: Reading & Listening",
-        "Step 3: Writing Challenge",
-        "Step 4: Speaking Pronunciation"
-    ];
-    document.getElementById('lesson-step-label').innerText = stepLabels[currentStep - 1];
-
-    // Populate Phase 1: Grammar
-    document.getElementById('card-category-tag').innerText = item.category;
-    document.getElementById('grammar-hangul').innerText = item.korean;
-    document.getElementById('grammar-roman').innerText = item.roman || "";
-    document.getElementById('grammar-english').innerText = item.english;
+// ==========================================
+// 2. VIEW CONTROLLERS
+// ==========================================
+function renderHome() {
+    document.getElementById('view-home').classList.remove('hidden');
+    document.getElementById('view-lesson').classList.add('hidden');
     
-    const tagsBox = document.getElementById('grammar-tags');
-    tagsBox.innerHTML = "";
-    if(item.tags) {
-        item.tags.forEach(t => {
-            const span = document.createElement('span');
-            span.className = `text-[10px] font-bold px-2 py-0.5 rounded-md ${t.type}`;
-            span.innerText = t.text;
-            tagsBox.appendChild(span);
-        });
-    }
-    document.getElementById('grammar-explanation').innerHTML = item.explanation || "Bunpo textbook linguistic notes active.";
+    const listContainer = document.getElementById('grammar-list');
+    listContainer.innerHTML = "";
 
-    // Populate Phase 2: Reading
-    document.getElementById('reading-hangul').innerText = item.korean;
-    document.getElementById('reading-roman').innerText = item.roman || "";
-    document.getElementById('reading-english').innerText = item.english;
-
-    // Populate Phase 3: Writing
-    document.getElementById('write-prompt-en').innerText = `Translate: "${item.english}"`;
-    document.getElementById('write-hint').innerText = item.korean.replace(/[가-힣]/g, "_");
-    document.getElementById('user-write-input').value = "";
-    document.getElementById('write-feedback').innerText = "";
-
-    // Populate Phase 4: Speaking
-    document.getElementById('speak-target-hangul').innerText = item.korean;
-    document.getElementById('speak-target-roman').innerText = item.roman || "";
-    document.getElementById('speak-feedback').innerText = "";
-
-    document.getElementById('lesson-progress-indicator').innerText = `${currentLessonIndex + 1} / ${activeLessons.length}`;
+    BUNPO_UNITS.forEach((unit, idx) => {
+        const card = document.createElement('div');
+        card.className = "glass-panel rounded-2xl p-4 border border-slate-800 hover:border-indigo-500/50 transition cursor-pointer flex items-center justify-between";
+        card.onclick = () => openLesson(idx);
+        card.innerHTML = `
+            <div class="space-y-1">
+                <span class="text-[10px] uppercase font-bold tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-0.5 rounded-full">${unit.category}</span>
+                <h3 class="font-black text-sm text-white">${unit.title}</h3>
+                <p class="text-xs text-slate-400">${unit.summary}</p>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </div>
+        `;
+        listContainer.appendChild(card);
+    });
     updateStatsUI();
 }
 
-function nextLessonStep() {
-    if(currentStep < 4) {
-        currentStep++;
-        xp += 10;
-        updateStatsUI();
-        renderLesson();
-    } else {
-        // Complete current lesson item, move to next
-        currentStep = 1;
-        currentLessonIndex = (currentLessonIndex + 1) % activeLessons.length;
-        xp += 25;
-        updateStatsUI();
-        renderLesson();
-    }
+function goHome() {
+    renderHome();
 }
 
-function prevLesson() {
-    if(currentStep > 1) {
-        currentStep--;
-    } else if(currentLessonIndex > 0) {
-        currentLessonIndex--;
-        currentStep = 4;
-    }
-    renderLesson();
+function openLesson(index) {
+    currentUnitIndex = index;
+    document.getElementById('view-home').classList.add('hidden');
+    document.getElementById('view-lesson').classList.remove('hidden');
+    renderLessonView();
 }
 
-function changeCategory() {
-    const val = document.getElementById('category-select').value;
-    if(val === "ALL") {
-        activeLessons = [...VERIFIED_LESSONS];
-    } else {
-        activeLessons = VERIFIED_LESSONS.filter(l => l.category === val);
-        if(activeLessons.length === 0) activeLessons = [...VERIFIED_LESSONS];
-    }
-    currentLessonIndex = 0;
-    currentStep = 1;
-    renderLesson();
+function renderLessonView() {
+    const unit = BUNPO_UNITS[currentUnitIndex];
+
+    document.getElementById('lesson-unit-title').innerText = `Bunpo Unit: ${unit.category}`;
+    document.getElementById('grammar-badge').innerText = unit.category;
+    document.getElementById('lesson-title').innerText = unit.title;
+    document.getElementById('lesson-summary').innerText = unit.summary;
+    document.getElementById('lesson-explanation').innerHTML = unit.explanation;
+
+    // Render Examples
+    const exContainer = document.getElementById('lesson-examples');
+    exContainer.innerHTML = "";
+    unit.examples.forEach(ex => {
+        const div = document.createElement('div');
+        div.className = "p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center";
+        div.innerHTML = `
+            <div>
+                <p class="text-sm font-bold text-white">${ex.ko}</p>
+                <p class="text-[11px] text-indigo-300 italic">${ex.roman}</p>
+                <p class="text-xs text-emerald-300 font-medium">${ex.en}</p>
+            </div>
+            <button onclick="speakText('${ex.ko}')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-400 flex items-center justify-center">
+                <i class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+        `;
+        exContainer.appendChild(div);
+    });
+
+    // Render Quiz
+    document.getElementById('quiz-question').innerText = unit.quiz.question;
+    const optContainer = document.getElementById('quiz-options');
+    optContainer.innerHTML = "";
+    document.getElementById('quiz-feedback').innerText = "";
+
+    unit.quiz.options.forEach((opt, oIdx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full py-2.5 px-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-xs font-bold text-slate-200 transition text-left flex justify-between items-center";
+        btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-dot text-[10px] text-slate-600"></i>`;
+        btn.onclick = () => checkQuizAnswer(oIdx, unit.quiz.correct, unit.quiz.explanation);
+        optContainer.appendChild(btn);
+    });
 }
 
-// ==========================================
-// 3. INTERACTIVE WRITING & SPEECH VALIDATION
-// ==========================================
-function checkWritingInput() {
-    const val = document.getElementById('user-write-input').value.trim();
-    const target = activeLessons[currentLessonIndex].korean.trim();
-    const fb = document.getElementById('write-feedback');
-    const banner = document.getElementById('score-banner');
-
-    banner.classList.remove('hidden');
-    if(val === target) {
-        fb.innerHTML = `<span class="text-emerald-400 font-bold">✅ 정답입니다! Perfect!</span>`;
-        banner.className = "p-3 rounded-xl border text-center text-xs font-bold mb-2 bg-emerald-500/10 border-emerald-500/30 text-emerald-300";
-        banner.innerText = "Fantastic Hangul typing! +20 XP";
-        xp += 20;
+function checkQuizAnswer(selected, correct, explanation) {
+    const fb = document.getElementById('quiz-feedback');
+    if(selected === correct) {
+        fb.innerHTML = `<span class="text-emerald-400 font-bold">✅ 정답입니다! ${explanation} (+15 XP)</span>`;
+        xp += 15;
         updateStatsUI();
-        setTimeout(() => { nextLessonStep(); }, 1200);
     } else {
-        fb.innerHTML = `<span class="text-rose-400 font-bold">❌ Try again! Target: ${target}</span>`;
-        banner.className = "p-3 rounded-xl border text-center text-xs font-bold mb-2 bg-rose-500/10 border-rose-500/30 text-rose-300";
-        banner.innerText = "Check spelling and spacing.";
+        fb.innerHTML = `<span class="text-rose-400 font-bold">❌ Incorrect. ${explanation}</span>`;
         hearts = Math.max(0, hearts - 1);
         updateStatsUI();
     }
 }
 
-function startSpeechRecognition() {
-    if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert("Speech Recognition requires mobile Chrome or a modern browser.");
-        return;
-    }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const rec = new SR();
-    rec.lang = 'ko-KR';
-    const btn = document.getElementById('mic-btn');
-    const label = document.getElementById('mic-label');
-    const feed = document.getElementById('speak-feedback');
-
-    btn.classList.add('pulse-mic');
-    label.innerText = "Min Jun is listening...";
-    rec.start();
-
-    rec.onresult = (e) => {
-        const spoken = e.results[0][0].transcript.trim();
-        const target = activeLessons[currentLessonIndex].korean.trim();
-        
-        const cleanSpoken = spoken.replace(/[\s\.,?!]/g, "");
-        const cleanTarget = target.replace(/[\s\.,?!]/g, "");
-
-        let score = cleanSpoken === cleanTarget ? 100 : (cleanTarget.includes(cleanSpoken) || cleanSpoken.includes(cleanTarget) ? 80 : 40);
-
-        feed.innerHTML = `You said: "${spoken}" (${score}%)`;
-        const banner = document.getElementById('score-banner');
-        banner.classList.remove('hidden');
-
-        if(score >= 80) {
-            banner.className = "p-3 rounded-xl border text-center text-xs font-bold mb-2 bg-emerald-500/10 border-emerald-500/30 text-emerald-300";
-            banner.innerText = `Great pronunciation! Score: ${score}% 🎉 +30 XP`;
-            xp += 30;
-            updateStatsUI();
-            setTimeout(() => { nextLessonStep(); }, 1500);
-        } else {
-            banner.className = "p-3 rounded-xl border text-center text-xs font-bold mb-2 bg-yellow-500/10 border-yellow-500/30 text-yellow-300";
-            banner.innerText = `Close! Try speaking slightly slower. (${score}%)`;
-        }
-        btn.classList.remove('pulse-mic');
-        label.innerText = "Press & Speak in Korean";
-    };
-
-    rec.onerror = () => {
-        btn.classList.remove('pulse-mic');
-        label.innerText = "Press & Speak in Korean";
-        feed.innerText = "Microphone error or timeout. Try again.";
-    };
-    rec.onend = () => {
-        btn.classList.remove('pulse-mic');
-        label.innerText = "Press & Speak in Korean";
-    };
-}
-
-// ==========================================
-// 4. UNLIMITED LIVE INTERNET TATOEBA FETCH
-// ==========================================
-async function fetchLiveSentences() {
-    const status = document.getElementById('source-status');
-    status.innerText = "Fetching live from Tatoeba...";
-    try {
-        const page = Math.floor(Math.random() * 20) + 1;
-        const res = await fetch(`https://tatoeba.org/en/api_v0/search?from=kor&to=eng&limit=50&page=${page}`);
-        const json = await res.json();
-        let fetched = [];
-        if(json && json.results) {
-            json.results.forEach((row, idx) => {
-                if(row.text && row.translations && row.translations[0] && row.translations[0][0]) {
-                    const kor = row.text.trim();
-                    const eng = row.translations[0][0].text.trim();
-                    if(kor.length > 2 && eng.length > 2) {
-                        fetched.push({
-                            id: 5000 + idx,
-                            category: "Survival",
-                            korean: kor,
-                            roman: "live-internet-sentence",
-                            english: eng,
-                            tags: [
-                                { text: "Live API Sentence", type: "badge-particle" },
-                                { text: "Unlimited", type: "badge-verb" }
-                            ],
-                            explanation: `<b>• Live Internet Dataset:</b> Real-world native Korean sentence fetched live from Tatoeba.<br><b>• English Meaning:</b> ${eng}`
-                        });
-                    }
-                }
-            });
-        }
-        if(fetched.length > 0) {
-            activeLessons = [...fetched, ...VERIFIED_LESSONS];
-            currentLessonIndex = 0;
-            currentStep = 1;
-            renderLesson();
-            status.innerText = `Live API Active (${activeLessons.length} sentences)`;
-        }
-    } catch(e) {
-        status.innerText = "Using Verified Curated Database";
-    }
-}
-
-// Initialize App
-renderLesson();
+// Initialize App on Home
+renderHome();
 </script>
 </body>
 </html>
