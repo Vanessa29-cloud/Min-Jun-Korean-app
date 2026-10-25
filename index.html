@@ -3,22 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min Jun Unlimited - Live Internet - Teuida Style</title>
+<title>Min Jun </title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-.glass-card{background:rgba(15,23,42,0.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1)}
-.pulse-ring{animation:pulse 1.5s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,0.7)}70%{box-shadow:0 0 0 15px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
-.minjun-bubble{background:linear-gradient(135deg,#3b82f6,#1e40af)}
-.correct{border-color:#10b981!important;background:rgba(16,185,129,0.1)}
-.wrong{border-color:#ef4444!important;background:rgba(239,68,68,0.1)}
+.glass-card { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
+.pulse-ring { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+.minjun-bubble { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+.correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.1); }
+.wrong { border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.1); }
 </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 px-4 py-3">
 <div class="max-w-5xl mx-auto flex justify-between items-center">
-<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl minjun-bubble flex items-center justify-center font-black">민</div><div><h1 class="font-bold text-sm">Min Jun - Unlimited - 민준</h1><p class="text-[10px] text-emerald-400" id="source-label">Live from Internet - Unlimited like Teuida</p></div></div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl minjun-bubble flex items-center justify-center font-black text-white text-lg">민</div>
+<div>
+<h1 class="font-bold text-sm">Min Jun - Unlimited - 민준</h1>
+<p class="text-[10px] text-emerald-400" id="source-label">Live from Internet - Unlimited like Teuida</p>
+</div>
+</div>
 <span id="progress" class="text-[11px] text-slate-400">0 cards</span>
 </div>
 </header>
@@ -31,29 +37,32 @@
 </div>
 
 <div class="flex flex-wrap gap-2 max-w-lg mx-auto w-full">
-<select id="category-select" onchange="filterCategory()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold flex-1">
+<select id="category-select" onchange="filterCategory()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold flex-1 text-slate-200">
 <option value="ALL">ALL - Unlimited Live</option>
 <option value="People">People - 사람 (Auto detect)</option>
 <option value="Age">Age - 나이, 살 (Auto detect)</option>
-<option value="Greeting">Greeting</option>
-<option value="GKS">GKS</option>
-<option value="Food">Food</option>
+<option value="Greeting">Greeting - 인사</option>
+<option value="GKS">GKS & University</option>
+<option value="Food">Food - 음식</option>
 </select>
-<button onclick="fetchMore()" class="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600">🔄 Fetch 80 More From Internet</button>
+<button onclick="fetchMore()" class="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 transition">🔄 Fetch 80 More</button>
 </div>
 
 <div class="w-full max-w-lg mx-auto">
-<div class="glass-card rounded-3xl p-5 min-h-[600px] flex flex-col justify-between shadow-2xl">
+<div class="glass-card rounded-3xl p-5 min-h-[550px] flex flex-col justify-between shadow-2xl">
 <div class="flex justify-between items-center">
 <span id="minjun-say" class="text-[11px] bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20 text-blue-300">민준: Live from Internet!</span>
-<div class="flex gap-2"><button onclick="speakSlow()" class="w-9 h-9 rounded-full bg-slate-800 border flex items-center justify-center"><i class="fa-solid fa-ear-listen text-xs"></i></button><button onclick="speakKorean()" class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center"><i class="fa-solid fa-volume-high text-xs"></i></button></div>
+<div class="flex gap-2">
+<button onclick="speakSlow()" class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-slate-700 transition"><i class="fa-solid fa-ear-listen text-xs text-slate-300"></i></button>
+<button onclick="speakKorean()" class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center hover:bg-blue-500 transition"><i class="fa-solid fa-volume-high text-xs text-white"></i></button>
+</div>
 </div>
 
 <div class="text-center my-4">
 <div id="reading-ui">
 <h2 id="card-hangul" class="text-[28px] font-black text-white mb-2 leading-snug">Min Jun fetching unlimited from Internet...</h2>
 <h3 id="card-english" class="text-sm text-emerald-300 font-bold">Please wait - Live sentences</h3>
-<div class="mt-4 p-3 bg-slate-900 rounded-xl border text-left">
+<div class="mt-4 p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-left">
 <p class="text-[10px] font-bold text-yellow-400">민준 auto-teaching:</p>
 <p id="breakdown" class="text-xs text-slate-300 mt-1 leading-relaxed">Analyzing live Korean grammar...</p>
 </div>
@@ -62,9 +71,9 @@
 <div id="writing-ui" class="hidden">
 <p class="text-[11px] text-slate-400 mb-2">Min Jun: Write the Korean you see/hear:</p>
 <h3 id="write-english" class="text-sm font-bold text-emerald-300 mb-2">English</h3>
-<p class="text-xs mb-2">Target: <span id="write-target" class="text-white font-bold"></span></p>
+<p class="text-xs mb-2 text-slate-400">Target: <span id="write-target" class="text-white font-bold"></span></p>
 <input id="write-input" type="text" placeholder="Type Korean here..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500">
-<button onclick="checkWriting()" class="mt-3 w-full py-3 rounded-xl bg-blue-600 font-bold text-xs">Check Writing</button>
+<button onclick="checkWriting()" class="mt-3 w-full py-3 rounded-xl bg-blue-600 font-bold text-xs hover:bg-blue-500 transition">Check Writing</button>
 <p id="write-feedback" class="text-xs mt-2"></p>
 </div>
 
@@ -81,13 +90,13 @@
 </div>
 
 <div class="flex flex-col gap-3 mt-4">
-<button id="mic-btn" onclick="startListening()" class="hidden w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 font-bold text-sm flex items-center justify-center gap-2">
+<button id="mic-btn" onclick="startListening()" class="hidden w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 font-bold text-sm flex items-center justify-center gap-2 hover:from-blue-500 hover:to-indigo-500 transition">
 <i class="fa-solid fa-microphone"></i> <span id="mic-label">Press to Speak with Min Jun</span>
 </button>
 <div class="flex justify-between items-center">
-<button onclick="prevCard()" class="px-4 py-2 text-slate-400 text-xs">← Prev</button>
+<button onclick="prevCard()" class="px-4 py-2 text-slate-400 text-xs hover:text-white transition">← Prev</button>
 <span id="card-index" class="text-[11px] text-slate-500">0 / 0</span>
-<button onclick="nextCard()" class="px-4 py-2 bg-slate-800 rounded-full text-xs font-bold">Next →</button>
+<button onclick="nextCard()" class="px-4 py-2 bg-slate-800 rounded-full text-xs font-bold hover:bg-slate-700 transition">Next →</button>
 </div>
 </div>
 
@@ -95,163 +104,282 @@
 </div>
 
 <div class="max-w-lg mx-auto mt-3 text-[10px] text-slate-500 text-center">
-Min Jun Unlimited = No words stored inside. All fetched live from Tatoeba API (used by Duolingo). Click "Fetch 80 More" = unlimited new lessons forever, like Teuida.
+Min Jun Unlimited = Dynamic Live Sentences Engine. All fetched live from Tatoeba API. Click "Fetch 80 More" = unlimited new lessons forever, like Teuida.
 </div>
 </main>
 
 <script>
-let WORD_DATA=[], FILTERED=[], currentIndex=0, mode='reading', bestKoreanVoice=null;
+let WORD_DATA = [], FILTERED = [], currentIndex = 0, mode = 'reading', bestKoreanVoice = null;
 
-function autoTeach(kor, eng){
-  let b=[];
-  if(kor.includes("사람")||/person|father|mother|friend/i.test(eng)) b.push("사람 = person, Country + 사람 = nationality, 가나 사람 = Ghanaian");
-  if(kor.includes("살")||/age|years old|몇 살/i.test(eng)) b.push("🔢 살 = years old counter, 스무 살=20, 서른 살=30, 몇 살이에요?=How old?");
-  if(kor.includes("저는")) b.push("저는 = I (formal), 는/은 = topic marker");
-  if(kor.includes("입니다")||kor.includes("이에요")) b.push("입니다/이에요 = am/is/are, formal/polite ending");
-  if(kor.includes("에서")) b.push("에서 = from/in, 가나에서=from Ghana, 한국에서=in Korea");
-  if(kor.includes("을")||kor.includes("를")) b.push("을/를 = object marker");
-  if(kor.includes("고 싶")) b.push("고 싶다 = want to, 공부하고 싶다 = want to study (GKS key)");
-  if(b.length===0) b.push("Order: Subject + Object + Verb, 입니다 = am/is formal, Use for GKS");
-  return b.join("<br>• ");
+const FALLBACK_DATA = [
+    { korean: "안녕하세요! 저는 민준입니다.", english: "Hello! I am Min Jun.", category: "Greeting", breakdown: "안녕하세요 = Hello, 저는 = I am, 입니다 = formal verb to be", question: "Min Jun: Say hello in Korean!" },
+    { korean: "저는 가나 사람입니다.", english: "I am a Ghanaian person.", category: "People", breakdown: "가나 = Ghana, 사람 = person, 입니다 = am/is", question: "Min Jun: Tell me your nationality!" },
+    { korean: "저는 스무 살입니다.", english: "I am twenty years old.", category: "Age", breakdown: "스무 = 20, 살 = counter for age, 입니다 = am", question: "Min Jun: How old are you?" },
+    { korean: "연세대학교에서 공부하고 싶습니다.", english: "I want to study at Yonsei University.", category: "GKS", breakdown: "에서 = at/in, 공부하고 싶다 = want to study", question: "Min Jun: What do you want to study in Korea?" },
+    { korean: "한국 음식을 좋아합니다.", english: "I like Korean food.", category: "Food", breakdown: "한국 = Korea, 음식 = food, 좋아합니다 = like", question: "Min Jun: Do you like Korean food?" }
+];
+
+function autoTeach(kor, eng) {
+    let b = [];
+    if (kor.includes("사람") || /person|father|mother|friend/i.test(eng)) b.push("사람 = person, Country + 사람 = nationality (e.g., 가나 사람)");
+    if (kor.includes("살") || /age|years old|몇 살/i.test(eng)) b.push("🔢 살 = years old counter (스무 살 = 20 years old)");
+    if (kor.includes("저는")) b.push("저는 = I (formal), 는 = topic marker");
+    if (kor.includes("입니다") || kor.includes("이에요") || kor.includes("예요")) b.push("입니다/이에요 = am/is/are (formal/polite ending)");
+    if (kor.includes("에서")) b.push("에서 = from / at / in (location marker)");
+    if (kor.includes("을") || kor.includes("를")) b.push("을/를 = object marker");
+    if (kor.includes("고 싶")) b.push("고 싶다 = want to (e.g., 공부하고 싶다 = want to study)");
+    if (b.length === 0) b.push("Order: Subject + Object + Verb. Formal endings are standard in GKS interviews.");
+    return b.join("<br>• ");
 }
 
-function classify(kor, eng){
-  const e=eng.toLowerCase();
-  if(/father|mother|friend|person|people|family|man|woman|child/i.test(e)||kor.includes("사람")||kor.includes("아버지")||kor.includes("어머니")) return "People";
-  if(/age|years old|how old|몇 살|살/i.test(e)||kor.includes("살")) return "Age";
-  if(/hello|thank|good morning|goodbye|sorry|nice to meet/i.test(e)) return "Greeting";
-  if(/university|scholarship|gks|study in korea|professor/i.test(e)||kor.includes("장학금")) return "GKS";
-  if(/food|eat|drink|rice|kimchi/i.test(e)) return "Food";
-  return "Sentences";
+function classify(kor, eng) {
+    const e = eng.toLowerCase();
+    if (/father|mother|friend|person|people|family|man|woman|child/i.test(e) || kor.includes("사람") || kor.includes("아버지") || kor.includes("어머니")) return "People";
+    if (/age|years old|how old|몇 살|살/i.test(e) || kor.includes("살")) return "Age";
+    if (/hello|thank|good morning|goodbye|sorry|nice to meet/i.test(e) || kor.includes("안녕")) return "Greeting";
+    if (/university|scholarship|gks|study in korea|professor/i.test(e) || kor.includes("장학금") || kor.includes("학교")) return "GKS";
+    if (/food|eat|drink|rice|kimchi|water/i.test(e) || kor.includes("음식") || kor.includes("먹")) return "Food";
+    return "People";
 }
 
-async function fetchLive(){
-  const page=Math.floor(Math.random()*20)+1;
-  const url=`https://tatoeba.org/en/api_v0/search?from=kor&to=eng&limit=80&page=${page}&sort=random`;
-  const res=await fetch(url);
-  const json=await res.json();
-  let newList=[];
-  json.results.forEach(row=>{
-    if(row.text && row.translations?.[0]?.[0]?.text){
-      const kor=row.text.trim(), eng=row.translations[0][0].text.trim();
-      if(kor.length>1 && eng.length>1){
-        newList.push({korean:kor, english:eng, category:classify(kor, eng), breakdown:autoTeach(kor, eng), question:`민준: 따라해 보세요! (${eng})`});
-      }
+async function fetchLive() {
+    const page = Math.floor(Math.random() * 20) + 1;
+    const url = `https://tatoeba.org/en/api_v0/search?from=kor&to=eng&limit=80&page=${page}&sort=random`;
+    const res = await fetch(url);
+    const json = await res.json();
+    let newList = [];
+    if (json && json.results) {
+        json.results.forEach(row => {
+            if (row.text && row.translations && row.translations[0] && row.translations[0][0] && row.translations[0][0].text) {
+                const kor = row.text.trim();
+                const eng = row.translations[0][0].text.trim();
+                if (kor.length > 1 && eng.length > 1) {
+                    newList.push({
+                        korean: kor,
+                        english: eng,
+                        category: classify(kor, eng),
+                        breakdown: autoTeach(kor, eng),
+                        question: `민준: 따라해 보세요! (${eng})`
+                    });
+                }
+            }
+        });
     }
-  });
-  return newList;
+    return newList;
 }
 
-async function loadFromInternet(){
-  document.getElementById('card-hangul').innerText="Min Jun fetching unlimited...";
-  document.getElementById('source-label').innerText="Fetching live...";
-  try{
-    const list=await fetchLive();
-    WORD_DATA=list;
+async function loadFromInternet() {
+    document.getElementById('card-hangul').innerText = "Min Jun fetching live sentences...";
+    document.getElementById('source-label').innerText = "Fetching live from internet...";
+    try {
+        const list = await fetchLive();
+        if (list.length > 0) {
+            WORD_DATA = list;
+            document.getElementById('source-label').innerText = `Min Jun Live: ${list.length} unlimited cards`;
+        } else {
+            WORD_DATA = FALLBACK_DATA;
+            document.getElementById('source-label').innerText = "Min Jun Live (Fallback Dataset Active)";
+        }
+    } catch (e) {
+        console.warn("Live fetch error, using built-in engine:", e);
+        WORD_DATA = FALLBACK_DATA;
+        document.getElementById('source-label').innerText = "Min Jun Live (Fallback Dataset Active)";
+    }
     applyFilter();
     renderCard();
-    document.getElementById('source-label').innerText=`Min Jun Live: ${list.length} unlimited`;
-  }catch(e){
-    console.log(e);
-    // fallback live translation - still from internet
-    const base=["Hello","Thank you","Father","Mother","Friend","How old are you?","I am twenty years old","I am from Ghana","I want to study in Korea","University","Scholarship","Food","Family"];
-    let list=[];
-    for(let en of base){
-      try{
-        const res=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(en)}&langpair=en|ko`);
-        const data=await res.json(); const ko=data.responseData.translatedText;
-        list.push({korean:ko, english:en, category:classify(ko,en), breakdown:autoTeach(ko,en), question:`Min Jun: ${en}`});
-      }catch{}
+}
+
+async function fetchMore() {
+    document.getElementById('source-label').innerText = "Fetching 80 more...";
+    try {
+        const more = await fetchLive();
+        if (more.length > 0) {
+            WORD_DATA = [...WORD_DATA, ...more];
+            applyFilter();
+            document.getElementById('source-label').innerText = `Min Jun Unlimited: ${WORD_DATA.length} total cards`;
+            document.getElementById('progress').innerText = `${WORD_DATA.length} live`;
+        }
+    } catch (e) {
+        console.warn("Could not fetch more cards right now:", e);
     }
-    WORD_DATA=list; applyFilter(); renderCard();
-    document.getElementById('source-label').innerText=`Min Jun Live Translated: ${list.length}`;
-  }
 }
 
-async function fetchMore(){
-  document.getElementById('source-label').innerText="Fetching 80 more...";
-  try{
-    const more=await fetchLive();
-    WORD_DATA=[...WORD_DATA, ...more];
+function applyFilter() {
+    const cat = document.getElementById('category-select').value;
+    FILTERED = cat === "ALL" ? WORD_DATA : WORD_DATA.filter(x => x.category === cat);
+    if (FILTERED.length === 0) FILTERED = WORD_DATA;
+    if (currentIndex >= FILTERED.length) currentIndex = 0;
+}
+
+function filterCategory() {
     applyFilter();
-    document.getElementById('source-label').innerText=`Min Jun Unlimited: ${WORD_DATA.length} total`;
-    document.getElementById('progress').innerText=`${WORD_DATA.length} live`;
-  }catch{}
+    renderCard();
 }
 
-function applyFilter(){
-  const cat=document.getElementById('category-select').value;
-  FILTERED=cat==="ALL"?WORD_DATA:WORD_DATA.filter(x=>x.category===cat);
-  if(currentIndex>=FILTERED.length) currentIndex=0;
-}
-function filterCategory(){ applyFilter(); renderCard(); }
-
-function renderCard(){
-  if(FILTERED.length===0){ document.getElementById('card-hangul').innerText="No cards in filter, select ALL or Fetch More"; return; }
-  if(currentIndex>=FILTERED.length) currentIndex=0;
-  const c=FILTERED[currentIndex];
-  document.getElementById('card-hangul').innerText=c.korean;
-  document.getElementById('card-english').innerText=c.english;
-  document.getElementById('breakdown').innerHTML="• "+c.breakdown;
-  document.getElementById('write-english').innerText=c.english;
-  document.getElementById('write-target').innerText=c.korean;
-  document.getElementById('speak-target').innerText=c.korean;
-  document.getElementById('speak-question').innerText=c.question;
-  document.getElementById('card-index').innerText=(currentIndex+1)+" / "+FILTERED.length;
-  document.getElementById('progress').innerText=`${FILTERED.length} / ${WORD_DATA.length} live`;
-  document.getElementById('write-input').value=""; document.getElementById('write-input').className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none";
-  document.getElementById('write-feedback').innerText=""; document.getElementById('score-box').classList.add('hidden');
-  updateModeUI();
-}
-
-function setMode(m){ mode=m; document.getElementById('m-reading').className=m==='reading'?'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600':'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800'; document.getElementById('m-writing').className=m==='writing'?'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600':'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800'; document.getElementById('m-speaking').className=m==='speaking'?'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600':'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800'; updateModeUI(); }
-function updateModeUI(){
-  document.getElementById('reading-ui').classList.toggle('hidden', mode!=='reading');
-  document.getElementById('writing-ui').classList.toggle('hidden', mode!=='writing');
-  document.getElementById('speaking-ui').classList.toggle('hidden', mode!=='speaking');
-  document.getElementById('mic-btn').classList.toggle('hidden', mode!=='speaking');
-  const say=document.getElementById('minjun-say');
-  if(mode==='reading') say.innerText="민준: 읽어 보세요! Read aloud - Min Jun will speak";
-  if(mode==='writing') say.innerText="민준: 써 보세요! Type the Korean!";
-  if(mode==='speaking') say.innerText="민준: 말해 보세요! Speak Korean!";
+function renderCard() {
+    if (FILTERED.length === 0) {
+        document.getElementById('card-hangul').innerText = "No cards available. Fetching more...";
+        return;
+    }
+    if (currentIndex >= FILTERED.length) currentIndex = 0;
+    const c = FILTERED[currentIndex];
+    document.getElementById('card-hangul').innerText = c.korean;
+    document.getElementById('card-english').innerText = c.english;
+    document.getElementById('breakdown').innerHTML = "• " + c.breakdown;
+    document.getElementById('write-english').innerText = c.english;
+    document.getElementById('write-target').innerText = c.korean;
+    document.getElementById('speak-target').innerText = c.korean;
+    document.getElementById('speak-question').innerText = c.question || `Min Jun: ${c.english}`;
+    document.getElementById('card-index').innerText = (currentIndex + 1) + " / " + FILTERED.length;
+    document.getElementById('progress').innerText = `${FILTERED.length} / ${WORD_DATA.length} live`;
+    
+    document.getElementById('write-input').value = "";
+    document.getElementById('write-input').className = "w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-blue-500";
+    document.getElementById('write-feedback').innerText = "";
+    document.getElementById('score-box').classList.add('hidden');
+    
+    updateModeUI();
 }
 
-function checkWriting(){
-  const input=document.getElementById('write-input').value.trim();
-  const target=FILTERED[currentIndex].korean.trim();
-  const fb=document.getElementById('write-feedback'), inp=document.getElementById('write-input');
-  if(input===target){ inp.className="w-full bg-emerald-500/10 border border-emerald-500 rounded-xl px-4 py-3 text-sm text-white"; fb.innerHTML=`<span class="text-emerald-400 font-bold">✅ 잘했어요! Perfect!</span>`; setTimeout(()=>nextCard(),1200); }
-  else if(target.includes(input)&&input.length>1){ inp.className="w-full bg-yellow-500/10 border border-yellow-500 rounded-xl px-4 py-3 text-sm text-white"; fb.innerHTML=`<span class="text-yellow-400">⚠️ Close! Target: ${target}</span>`; }
-  else{ inp.className="w-full bg-rose-500/10 border border-rose-500 rounded-xl px-4 py-3 text-sm text-white"; fb.innerHTML=`<span class="text-rose-400">❌ Target: ${target}</span>`; }
+function setMode(m) {
+    mode = m;
+    document.getElementById('m-reading').className = m === 'reading' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800';
+    document.getElementById('m-writing').className = m === 'writing' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800';
+    document.getElementById('m-speaking').className = m === 'speaking' ? 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-blue-600' : 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800';
+    updateModeUI();
 }
 
-function nextCard(){ currentIndex=(currentIndex+1)%FILTERED.length; if(currentIndex===0 && FILTERED.length<200) fetchMore(); renderCard(); }
-function prevCard(){ currentIndex=(currentIndex-1+FILTERED.length)%FILTERED.length; renderCard(); }
+function updateModeUI() {
+    document.getElementById('reading-ui').classList.toggle('hidden', mode !== 'reading');
+    document.getElementById('writing-ui').classList.toggle('hidden', mode !== 'writing');
+    document.getElementById('speaking-ui').classList.toggle('hidden', mode !== 'speaking');
+    document.getElementById('mic-btn').classList.toggle('hidden', mode !== 'speaking');
+    
+    const say = document.getElementById('minjun-say');
+    if (mode === 'reading') say.innerText = "민준: 읽어 보세요! Read aloud - Min Jun will speak";
+    if (mode === 'writing') say.innerText = "민준: 써 보세요! Type the Korean!";
+    if (mode === 'speaking') say.innerText = "민준: 말해 보세요! Speak Korean!";
+}
 
-function initVoices(){ const v=speechSynthesis.getVoices(); bestKoreanVoice=v.filter(x=>x.lang.toLowerCase().includes('ko')).find(x=>x.name.includes('Google'))||v.find(x=>x.lang.includes('ko')); }
-if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=initVoices; initVoices(); setTimeout(initVoices,800); }
-function speakKorean(){ const c=FILTERED[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(c.korean); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.9; speechSynthesis.speak(u); }
-function speakSlow(){ const c=FILTERED[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(c.korean); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.5; speechSynthesis.speak(u); }
+function checkWriting() {
+    const input = document.getElementById('write-input').value.trim();
+    const target = FILTERED[currentIndex].korean.trim();
+    const fb = document.getElementById('write-feedback');
+    const inp = document.getElementById('write-input');
+    
+    if (input === target) {
+        inp.className = "w-full bg-emerald-500/10 border border-emerald-500 rounded-xl px-4 py-3 text-sm text-white";
+        fb.innerHTML = `<span class="text-emerald-400 font-bold">✅ 잘했어요! Perfect!</span>`;
+        setTimeout(() => nextCard(), 1200);
+    } else if (target.includes(input) && input.length > 1) {
+        inp.className = "w-full bg-yellow-500/10 border border-yellow-500 rounded-xl px-4 py-3 text-sm text-white";
+        fb.innerHTML = `<span class="text-yellow-400">⚠️ Close! Target: ${target}</span>`;
+    } else {
+        inp.className = "w-full bg-rose-500/10 border border-rose-500 rounded-xl px-4 py-3 text-sm text-white";
+        fb.innerHTML = `<span class="text-rose-400">❌ Target: ${target}</span>`;
+    }
+}
 
-function startListening(){
-  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){ alert("Use Chrome for mic!"); return; }
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; const rec=new SR();
-  rec.lang='ko-KR';
-  const btn=document.getElementById('mic-btn'), label=document.getElementById('mic-label');
-  btn.classList.add('pulse-ring'); label.innerText="Min Jun listening...";
-  rec.start();
-  rec.onresult=(e)=>{
-    const spoken=e.results[0][0].transcript, target=FILTERED[currentIndex].korean;
-    const score=(()=>{ const s=spoken.replace(/\s/g,""), t=target.replace(/\s/g,""); if(s===t) return 100; if(t.includes(s)||s.includes(t)) return 85; let m=0; for(let ch of t) if(s.includes(ch)) m++; return Math.min(95, Math.max(20, Math.round((m/t.length)*100))); })();
-    const box=document.getElementById('score-box'), txt=document.getElementById('score-text'), feed=document.getElementById('score-feedback');
-    box.classList.remove('hidden');
-    if(score>=85){ box.className="mt-2 p-3 rounded-xl border text-center bg-emerald-500/10 border-emerald-500/30"; txt.innerHTML=`✅ ${score}% - 잘했어요! "${spoken}"`; feed.innerText=`Target: ${target}`; if(score>=90) setTimeout(()=>nextCard(),1200); }
-    else if(score>=60){ box.className="mt-2 p-3 rounded-xl border text-center bg-yellow-500/10 border-yellow-500/30"; txt.innerHTML=`⚠️ ${score}% - "${spoken}"`; feed.innerText=`Target: ${target}`; }
-    else{ box.className="mt-2 p-3 rounded-xl border text-center bg-rose-500/10 border-rose-500/30"; txt.innerHTML=`❌ ${score}% - "${spoken}"`; feed.innerText=`Target: ${target}`; }
-    btn.classList.remove('pulse-ring'); label.innerText="Speak Again";
-  };
-  rec.onerror=()=>{ btn.classList.remove('pulse-ring'); };
-  rec.onend=()=>{ btn.classList.remove('pulse-ring'); };
+function nextCard() {
+    if (FILTERED.length === 0) return;
+    currentIndex = (currentIndex + 1) % FILTERED.length;
+    if (currentIndex === 0 && FILTERED.length < 200) fetchMore();
+    renderCard();
+}
+
+function prevCard() {
+    if (FILTERED.length === 0) return;
+    currentIndex = (currentIndex - 1 + FILTERED.length) % FILTERED.length;
+    renderCard();
+}
+
+function initVoices() {
+    if (!('speechSynthesis' in window)) return;
+    const v = speechSynthesis.getVoices();
+    bestKoreanVoice = v.filter(x => x.lang.toLowerCase().includes('ko')).find(x => x.name.includes('Google') || x.name.includes('Natural')) || v.find(x => x.lang.includes('ko'));
+}
+
+if ('speechSynthesis' in window) {
+    speechSynthesis.onvoiceschanged = initVoices;
+    initVoices();
+}
+
+function speakKorean() {
+    if (FILTERED.length === 0) return;
+    const c = FILTERED[currentIndex];
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(c.korean);
+    u.lang = 'ko-KR';
+    if (bestKoreanVoice) u.voice = bestKoreanVoice;
+    u.rate = 0.9;
+    speechSynthesis.speak(u);
+}
+
+function speakSlow() {
+    if (FILTERED.length === 0) return;
+    const c = FILTERED[currentIndex];
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(c.korean);
+    u.lang = 'ko-KR';
+    if (bestKoreanVoice) u.voice = bestKoreanVoice;
+    u.rate = 0.5;
+    speechSynthesis.speak(u);
+}
+
+function startListening() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert("Speech Recognition requires Google Chrome or a modern browser!");
+        return;
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const rec = new SR();
+    rec.lang = 'ko-KR';
+    const btn = document.getElementById('mic-btn');
+    const label = document.getElementById('mic-label');
+    
+    btn.classList.add('pulse-ring');
+    label.innerText = "Min Jun listening...";
+    rec.start();
+
+    rec.onresult = (e) => {
+        const spoken = e.results[0][0].transcript;
+        const target = FILTERED[currentIndex].korean;
+        
+        const score = (() => {
+            const s = spoken.replace(/\s/g, "");
+            const t = target.replace(/\s/g, "");
+            if (s === t) return 100;
+            if (t.includes(s) || s.includes(t)) return 85;
+            let m = 0;
+            for (let ch of t) if (s.includes(ch)) m++;
+            return Math.min(95, Math.max(20, Math.round((m / t.length) * 100)));
+        })();
+
+        const box = document.getElementById('score-box');
+        const txt = document.getElementById('score-text');
+        const feed = document.getElementById('score-feedback');
+        
+        box.classList.remove('hidden');
+        if (score >= 85) {
+            box.className = "mt-2 p-3 rounded-xl border text-center bg-emerald-500/10 border-emerald-500/30";
+            txt.innerHTML = `✅ ${score}% - 잘했어요! "${spoken}"`;
+            feed.innerText = `Target: ${target}`;
+            if (score >= 90) setTimeout(() => nextCard(), 1200);
+        } else if (score >= 60) {
+            box.className = "mt-2 p-3 rounded-xl border text-center bg-yellow-500/10 border-yellow-500/30";
+            txt.innerHTML = `⚠️ ${score}% - "${spoken}"`;
+            feed.innerText = `Target: ${target}`;
+        } else {
+            box.className = "mt-2 p-3 rounded-xl border text-center bg-rose-500/10 border-rose-500/30";
+            txt.innerHTML = `❌ ${score}% - "${spoken}"`;
+            feed.innerText = `Target: ${target}`;
+        }
+        btn.classList.remove('pulse-ring');
+        label.innerText = "Press to Speak Again";
+    };
+
+    rec.onerror = () => { btn.classList.remove('pulse-ring'); label.innerText = "Press to Speak with Min Jun"; };
+    rec.onend = () => { btn.classList.remove('pulse-ring'); label.innerText = "Press to Speak with Min Jun"; };
 }
 
 loadFromInternet();
