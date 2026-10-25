@@ -1,388 +1,340 @@
-<<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Min Jun (민준) - Bunpo & Duolingo Korean Master</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Min Jun (민준) – Korean Academy</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
 <style>
-.glass-panel { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-.minjun-avatar { background: linear-gradient(135deg, #6366f1, #3b82f6, #ec4899); }
-.pulse-mic { animation: mic-pulse 1.4s infinite ease-in-out; }
-@keyframes mic-pulse { 0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); } 70% { box-shadow: 0 0 0 16px rgba(99, 102, 241, 0); } 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); } }
-.badge-particle { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color: #c084fc; }
-.badge-verb { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
-.badge-counter { background: rgba(236, 72, 153, 0.15); border: 1px solid rgba(236, 72, 153, 0.3); color: #f472b6; }
-</style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
-
-<!-- Gamification Header Bar (Duolingo Style) -->
-<header class="border-b border-slate-800/80 bg-slate-900/90 sticky top-0 z-50 px-4 py-3 backdrop-blur-md">
-<div class="max-w-md mx-auto flex justify-between items-center">
-<div class="flex items-center gap-2.5 cursor-pointer" onclick="goHome()">
-<div class="relative">
-<div class="w-10 h-10 rounded-2xl minjun-avatar flex items-center justify-center font-black text-white text-lg shadow-lg shadow-indigo-500/20">민</div>
-<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-slate-950 rounded-full"></span>
-</div>
-<div>
-<h1 class="font-black text-sm text-white tracking-wide">Min Jun (민준)</h1>
-<p class="text-[10px] text-emerald-400 font-semibold">Bunpo Grammar Master</p>
-</div>
-</div>
-<!-- Stats: Streak, XP, Hearts -->
-<div class="flex items-center gap-2 text-xs font-black">
-<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-amber-400" title="Streak">
-<i class="fa-solid fa-fire text-[11px]"></i> <span id="stat-streak">5</span>
-</div>
-<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-indigo-400" title="XP">
-<i class="fa-solid fa-bolt text-[11px]"></i> <span id="stat-xp">380</span>
-</div>
-<div class="bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1 text-rose-400" title="Hearts">
-<i class="fa-solid fa-heart text-[11px]"></i> <span id="stat-hearts">5</span>
-</div>
-</div>
-</div>
-</header>
-
-<!-- Main Container -->
-<main class="max-w-md mx-auto px-4 py-4 w-full flex-1 flex flex-col gap-4">
-
-<!-- VIEW 1: BUNPO GRAMMAR SYLLABUS (HOME) -->
-<div id="view-home" class="space-y-4">
-<div class="glass-panel rounded-3xl p-5 shadow-xl border border-slate-800">
-<h2 class="text-base font-black text-white flex items-center gap-2 mb-1">
-<i class="fa-solid fa-book-bookmark text-indigo-400"></i> Beginner Korean Grammar (Bunpo Style)
-</h2>
-<p class="text-xs text-slate-400">Select a structured grammar unit to study particles, counters, and verb endings with textbook explanations.</p>
-</div>
-
-<div id="grammar-list" class="space-y-3">
-<!-- Injected dynamically via JS -->
-</div>
-</div>
-
-<!-- VIEW 2: BUNPO LESSON & QUIZ VIEW -->
-<div id="view-lesson" class="hidden space-y-4">
-<!-- Back button -->
-<button onclick="goHome()" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5">
-<i class="fa-solid fa-arrow-left"></i> Back to Grammar List
-</button>
-
-<div class="glass-panel rounded-3xl p-5 flex flex-col justify-between shadow-2xl relative space-y-4">
-<!-- Lesson Header -->
-<div class="flex justify-between items-center border-b border-slate-800/80 pb-3">
-<div class="flex items-center gap-2">
-<div class="w-7 h-7 rounded-lg minjun-avatar flex items-center justify-center font-bold text-white text-[11px]">민</div>
-<span id="lesson-unit-title" class="text-xs font-bold text-indigo-300">Unit</span>
-</div>
-<button onclick="speakCurrentSentence()" class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/30" title="Listen Audio">
-<i class="fa-solid fa-volume-high text-xs"></i>
-</button>
-</div>
-
-<!-- Bunpo Textbook Explanation Box -->
-<div class="space-y-3">
-<div>
-<span id="grammar-badge" class="text-[10px] uppercase font-bold tracking-widest text-purple-400 bg-purple-500/10 border border-purple-500/20 px-3 py-1 rounded-full inline-block mb-2">Grammar Point</span>
-<h2 id="lesson-title" class="text-xl font-black text-white tracking-wide"></h2>
-<p id="lesson-summary" class="text-xs text-indigo-300 font-medium mt-1"></p>
-</div>
-
-<div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2 text-left">
-<p class="text-[11px] font-bold text-yellow-400"><i class="fa-solid fa-graduation-cap mr-1"></i> Textbook Explanation</p>
-<p id="lesson-explanation" class="text-xs text-slate-300 leading-relaxed"></p>
-</div>
-
-<!-- Example Sentences -->
-<div class="space-y-2 text-left">
-<p class="text-[11px] font-bold text-emerald-400"><i class="fa-solid fa-list-check mr-1"></i> Example Sentences</p>
-<div id="lesson-examples" class="space-y-2">
-<!-- Examples injected here -->
-</div>
-</div>
-</div>
-
-<!-- Interactive Quiz Section (Bunpo Check) -->
-<div class="border-t border-slate-800 pt-3 space-y-3">
-<p class="text-xs font-bold text-white"><i class="fa-solid fa-puzzle-piece text-pink-400 mr-1"></i> Knowledge Check</p>
-<p id="quiz-question" class="text-xs text-slate-300 font-semibold"></p>
-<div id="quiz-options" class="grid grid-cols-1 gap-2">
-<!-- Quiz options injected here -->
-</div>
-<p id="quiz-feedback" class="text-xs font-bold text-center min-h-[20px]"></p>
-</div>
-
-</div>
-</div>
-
-</main>
-
+:root{--bg1:#e6f0ff;--bg2:#f6e8ff;--card:rgba(255,255,255,.72);--tx:#1d2145;--mut:#69709a;--pri:#58cc02;--pri2:#3a9a00;--acc:#7c5cff;--line:rgba(110,120,180,.28);--guide:rgba(100,110,160,.2);--red:#ff4b4b;--box:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#0e1230;--bg2:#1d1040;--card:rgba(35,40,85,.65);--tx:#eef0ff;--mut:#a3a9d6;--line:rgba(160,170,255,.22);--guide:rgba(200,205,255,.18);--box:#262c5e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#0e1230;--bg2:#1d1040;--card:rgba(35,40,85,.65);--tx:#eef0ff;--mut:#a3a9d6;--line:rgba(160,170,255,.22);--guide:rgba(200,205,255,.18);--box:#262c5e;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Nunito,system-ui,sans-serif;color:var(--tx);background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;min-height:100vh;padding-bottom:90px;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg1);z-index:30}
+.ko{font-family:"Noto Sans KR",sans-serif;font-weight:700}
+.glass{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px}
+.p{padding:16px;margin:12px}
+.mut{color:var(--mut);font-weight:700}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin:8px;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;font-weight:900}
+.logo{font-size:22px;background:linear-gradient(90deg,#ff7a18,#af002d 60%,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{background:var(--pri);color:#fff;font:900 15px Nunito;border:0;border-radius:16px;padding:14px 18px;box-shadow:0 4px 0 var(--pri2);cursor:pointer;letter-spacing:.4px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--pri2)}
+.btn.sec{background:var(--box);color:var(--acc);box-shadow:0 4px 0 var(--line);border:2px solid var(--line)}
+.btn.red{background:var(--red);box-shadow:0 4px 0 #b32e2e}
+.btn.w{width:100%}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+nav button{background:none;border:0;color:var(--mut);font:800 11px Nunito;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 7px;border-radius:14px}
+nav button span{font-size:22px}
+nav button.on{color:var(--acc);background:rgba(124,92,255,.14)}
+.hidden{display:none!important}
+.sec-h{margin:22px 12px 6px;padding:14px 16px;border-radius:20px;color:#fff;font-weight:900;display:flex;justify-content:space-between;background:linear-gradient(120deg,var(--c1),var(--c2));box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.path{display:flex;flex-direction:column;align-items:center;gap:14px;padding:12px 0}
+.node{width:78px;height:78px;border-radius:50%;border:0;font-size:32px;color:#fff;cursor:pointer;background:#b7bddb;box-shadow:0 7px 0 #8a90b3;position:relative}
+.node.done{background:var(--pri);box-shadow:0 7px 0 var(--pri2)}
+.node.cur{background:linear-gradient(135deg,#ffb020,#ff6a00);box-shadow:0 7px 0 #b84a00;animation:pulse 1.6s infinite}
+.node:active{transform:translateY(5px)}
+.nl{font-size:12px;font-weight:800;color:var(--mut);margin-top:6px;text-align:center}
+@keyframes pulse{50%{transform:scale(1.09)}}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.avatar{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#7c5cff,#ff7ab6);display:grid;place-items:center;font-size:38px;animation:bob 2.6s ease-in-out infinite;flex:none}
+.bubble{background:var(--box);border-radius:16px;padding:10px 14px;font-weight:800;font-size:14px;border:1px solid var(--line)}
+#les,#stm,#call{position:fixed;inset:0;z-index:50;background:linear-gradient(160deg,var(--bg1),var(--bg2));display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);overflow:hidden}
+.lbar{display:flex;align-items:center;gap:10px;padding:12px 14px;font-weight:900}
+.prog{flex:1;height:14px;border-radius:9px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,#58cc02,#b5f23d);border-radius:9px;transition:width .4s}
+.lbody{flex:1;overflow:auto;padding:10px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.big{font-size:72px}.kob{font-size:46px}.en{font-size:22px;font-weight:900}
+.ft{padding:12px 14px;min-height:76px}
+.ft.ok{background:rgba(88,204,2,.25)}.ft.bad{background:rgba(255,75,75,.25)}
+.opt{width:100%;text-align:left;background:var(--box);border:2px solid var(--line);border-radius:16px;padding:14px;font:800 17px Nunito;color:var(--tx);box-shadow:0 3px 0 var(--line);cursor:pointer}
+.opt.good{border-color:var(--pri);background:rgba(88,204,2,.25)}.opt.no{border-color:var(--red);background:rgba(255,75,75,.2)}
+.inp{min-height:62px;width:100%;border-radius:16px;border:2px solid var(--line);background:var(--box);font:700 34px "Noto Sans KR";display:flex;align-items:center;justify-content:center}
+.kb{display:flex;flex-direction:column;gap:6px;width:100%}.kb div{display:flex;gap:5px;justify-content:center}
+.kb button{flex:1;max-width:38px;height:44px;border-radius:10px;border:0;background:var(--box);color:var(--tx);font:700 19px "Noto Sans KR";box-shadow:0 2px 0 var(--line)}
+canvas#dc{width:100%;max-width:320px;aspect-ratio:1;touch-action:none;border-radius:18px;background:var(--box);border:2px dashed var(--line);display:block;margin:10px auto}
+.chips{display:flex;gap:6px;overflow:auto;padding-bottom:4px}
+.chip{flex:none;width:42px;height:42px;border-radius:12px;border:2px solid var(--line);background:var(--box);color:var(--tx);font:700 22px "Noto Sans KR"}.chip.on{background:var(--acc);color:#fff}
+.wd{display:inline-block;padding:2px 4px;margin:2px;border-radius:8px;border-bottom:2px dotted var(--acc);font-size:26px;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:#1d2145;color:#fff;padding:10px 16px;border-radius:14px;font-weight:800;z-index:90;opacity:0;transition:.3s;pointer-events:none;max-width:90%;text-align:center}
+#toast.on{opacity:1}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:80;width:100%;height:100%}
+.stat{display:flex;justify-content:space-between;padding:10px 4px;border-bottom:1px solid var(--line);font-weight:800}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<header class="glass"><b class="logo ko">민준 Min Jun</b><div id="hud" class="flex gap-3"></div></header>
+<main id="main"></main>
+<nav id="nav"></nav>
+<div id="les" class="hidden"></div>
+<div id="stm" class="hidden"></div>
+<div id="call" class="hidden"></div>
+<canvas id="cf"></canvas><div id="toast"></div>
 <script>
-// ==========================================
-// 1. BUNPO STRUCTURED GRAMMAR CURRICULUM
-// ==========================================
-const BUNPO_UNITS = [
-    {
-        id: "topic",
-        title: "Topic Marker: 은 / 는",
-        category: "Particles",
-        badge: "badge-particle",
-        summary: "Used to introduce or highlight the main topic of a sentence.",
-        explanation: "<b>• 은 / 는</b> are topic markers. Use <b>은</b> after nouns ending in a consonant (e.g., 사람 + 은), and <b>는</b> after nouns ending in a vowel (e.g., 저 + 는). It answers the implicit question 'As for...'.",
-        examples: [
-            { ko: "저는 가나 사람입니다.", roman: "jeo-neun ga-na sa-ram-im-ni-da.", en: "I am a Ghanaian person." },
-            { ko: "어머니는 요리를 좋아합니다.", roman: "eo-meo-ni-neun yo-ri-reul jo-a-hab-ni-da.", en: "Mother likes cooking." }
-        ],
-        quiz: {
-            question: "Which topic marker should be attached to '아버지' (father, ends in vowel)?",
-            options: ["아버지은", "아버지는", "아버지가"],
-            correct: 1,
-            explanation: "Because 아버지 ends in a vowel (ㅣ), you attach 는."
-        }
-    },
-    {
-        id: "subject",
-        title: "Subject Marker: 이 / 가",
-        category: "Particles",
-        badge: "badge-particle",
-        summary: "Used to mark the grammatical subject performing an action or state.",
-        explanation: "<b>• 이 / 가</b> point out who or what is doing the action. Use <b>이</b> after consonants, and <b>가</b> after vowels. Unlike 은/는 (topic), 이/가 emphasizes Tatoeba/new information.",
-        examples: [
-            { ko: "날씨가 좋습니다.", roman: "nal-ssi-ga joh-seub-ni-da.", en: "The weather is good." },
-            { ko: "친구가 왔습니다.", roman: "chin-gu-ga wass-seub-ni-da.", en: "A friend has arrived." }
-        ],
-        quiz: {
-            question: "Which subject marker follows '날씨' (weather, ends in vowel)?",
-            options: ["날씨이", "날씨가", "날씨는"],
-            correct: 1,
-            explanation: "날씨 ends in a vowel, so the subject marker is 가."
-        }
-    },
-    {
-        id: "object",
-        title: "Object Marker: 을 / 를",
-        category: "Particles",
-        badge: "badge-particle",
-        summary: "Marks the direct object receiving the action of the verb.",
-        explanation: "<b>• 을 / 를</b> indicate the direct object in a sentence. Use <b>을</b> after consonants (e.g., 밥 + 을), and <b>를</b> after vowels (e.g., 사과 + 를).",
-        examples: [
-            { ko: "한국어를 공부합니다.", roman: "han-gug-eo-reul gong-bu-hab-ni-da.", en: "I study the Korean language." },
-            { ko: "책을 읽습니다.", roman: "chaek-eul ilg-seub-ni-da.", en: "I read a book." }
-        ],
-        quiz: {
-            question: "Which object marker follows '책' (book, ends in consonant)?",
-            options: ["책을", "책를", "책가"],
-            correct: 0,
-            explanation: "책 ends in a consonant (ㄱ), so you attach 을."
-        }
-    },
-    {
-        id: "location",
-        title: "Location / Action Marker: 에서",
-        category: "Particles",
-        badge: "badge-particle",
-        summary: "Indicates the physical place where an active verb takes place.",
-        explanation: "<b>• 에서</b> translates to 'at', 'in', or 'from'. It is attached to locations where an active action occurs (e.g., studying, eating, working).",
-        examples: [
-            { ko: "연세대학교에서 공부합니다.", roman: "yeon-se-dae-hag-gyo-e-seo gong-bu-hab-ni-da.", en: "I study at Yonsei University." },
-            { ko: "도서관에서 책을 읽습니다.", roman: "do-seo-gwan-e-seo chaek-eul ilg-seub-ni-da.", en: "I read books at the library." }
-        ],
-        quiz: {
-            question: "Choose the correct particle for doing an action 'at school' (학교):",
-            options: ["학교에", "학교에서", "학교를"],
-            correct: 1,
-            explanation: "When performing an active verb at a location, use 에서."
-        }
-    },
-    {
-        id: "counter",
-        title: "Age Counter: 살",
-        category: "Counters",
-        badge: "badge-counter",
-        summary: "The native Korean counter used specifically for counting years of age.",
-        explanation: "<b>• 살</b> is paired with Native Korean numbers (하나, 둘, 셋...) rather than Chinese numbers. Note that numbers 1, 2, 3, 4, and 20 change their forms slightly (한 살, 두 살, 스무 살).",
-        examples: [
-            { ko: "저는 스무 살입니다.", roman: "jeo-neun seu-mu sal-im-ni-da.", en: "I am twenty years old." },
-            { ko: "동생은 열 살입니다.", roman: "dong-saeng-eun yeol sal-im-ni-da.", en: "My younger sibling is ten years old." }
-        ],
-        quiz: {
-            question: "What is the special contracted form of 20 (스물) when followed by 살?",
-            options: ["스물 살", "스무 살", "스십 살"],
-            correct: 1,
-            explanation: "스물 shortens to 스무 when attached to 살."
-        }
-    },
-    {
-        id: "copula",
-        title: "Formal Copula: 입니다",
-        category: "Verb Endings",
-        badge: "badge-verb",
-        summary: "The formal polite ending equivalent to 'am / is / are'.",
-        explanation: "<b>• 입니다</b> attaches directly to nouns to equate them with the subject (A = B). It is extremely common in self-introductions and GKS interviews.",
-        examples: [
-            { ko: "저는 학생입니다.", roman: "jeo-neun hak-saeng-im-ni-da.", en: "I am a student." },
-            { ko: "이것은 책입니다.", roman: "i-got-eun chaek-im-ni-da.", en: "This is a book." }
-        ],
-        quiz: {
-            question: "How do you say 'I am a researcher (연구원)' formally?",
-            options: ["연구원이에요", "연구원입니다", "연구원가"],
-            correct: 1,
-            explanation: "연구원입니다 is the formal polite copula form."
-        }
-    }
+const $=q=>document.querySelector(q),H=(e,h)=>{e.innerHTML=h};
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+// ---------- data ----------
+const SEC=[['Hangul Mastery',1,3,'#ff7a18','#af002d'],['People & Family',4,5,'#12c2e9','#7c5cff'],['Age & Numbers',6,7,'#f7971e','#e44d26'],['Animals',8,8,'#43cea2','#185a9d'],['Places',9,9,'#8e2de2','#4a00e0'],['Seasons & Time',10,10,'#ff9a9e','#f6416c'],['Greetings & Manners',11,11,'#36d1dc','#5b86e5'],['Countries',12,12,'#11998e','#38ef7d'],['Food & Drink',13,14,'#fc4a1a','#f7b733'],['Numbers Master',15,15,'#7f00ff','#e100ff'],['Colors & Body',16,17,'#f093fb','#f5576c'],['Clothes',18,18,'#4facfe','#00c6a7'],['Verbs',19,20,'#fa709a','#fee140'],['Adjectives',21,21,'#30cfd0','#6a3093'],['Family Plus',22,22,'#ff9966','#ff5e62'],['Everyday Things',23,23,'#667eea','#764ba2'],['Time & Dates',24,24,'#f7797d','#fbd786'],['Getting Around',25,25,'#0ba360','#3cba92'],['Shopping',26,26,'#fc5c7d','#6a82fb'],['Feelings & Health',27,27,'#ee9ca7','#ffdde1'],['Home Life',28,28,'#2193b0','#6dd5ed'],['Questions & Links',29,29,'#8e2de2','#ff6a88'],['School & Hobbies',30,30,'#00b4db','#0083b0'],['Work & Jobs',31,31,'#f857a6','#ff5858'],['Nature & Weather',32,32,'#56ab2f','#a8e063'],['More Adjectives',33,33,'#e65c00','#f9d423'],['More Verbs 3',34,34,'#654ea3','#eaafc8'],['Grammar Particles',35,35,'#1d976c','#93f9b9'],['Korean Foods',36,36,'#f2994a','#f2c94c'],['Days & Dates',37,37,'#4776e6','#8e54e9'],['Money Talk',38,38,'#11998e','#38ef7d'],['Daily Actions',39,39,'#ee0979','#ff6a00'],['Ideas & Plans',40,40,'#2c3e50','#4ca1af'],['Useful Phrases',41,41,'#ff5f6d','#ffc371']];
+const RAW=[
+['Consonants','ㄱ|g|g as in go|🐍;ㄴ|n|n as in no|👃;ㄷ|d|d as in do|🚪;ㄹ|r/l|r/l sound|🌊;ㅁ|m|m as in mom|👄;ㅂ|b|b as in bus|🚌;ㅅ|s|s as in sun|☀️;ㅇ|ng|silent or ng|⭕'],
+['Vowels','ㅏ|a|ah|😮;ㅓ|eo|uh|🤔;ㅗ|o|oh|😲;ㅜ|u|oo|🐮;ㅡ|eu|flat eu|😐;ㅣ|i|ee|🐭;ㅐ|ae|ae as in cat|🐱;ㅔ|e|e as in bed|🛏️'],
+['Blocks & Batchim','가|ga|ga|🧩;나|na|na|🧩;다|da|da|🧩;국|guk|soup|🍲;밥|bap|rice|🍚;물|mul|water|💧;산|san|mountain|⛰️;말|mal|horse|🐴'],
+['People','사람|saram|person|🧑;아버지|abeoji|father|👨;어머니|eomeoni|mother|👩;친구|chingu|friend|🤝;가족|gajok|family|👨‍👩‍👧'],
+['More People','남자|namja|man|🧔;여자|yeoja|woman|👩;아이|ai|child|🧒;선생님|seonsaengnim|teacher|👩‍🏫;학생|haksaeng|student|🎒'],
+['Age','나이|nai|age|🎂;살|sal|years old|📅;명|myeong|people counter|👥;몇 살이에요?|myeot sal-ieyo?|How old are you?|❓;한 살|han sal|one year old|👶'],
+['Native Numbers','하나|hana|one|1️⃣;둘|dul|two|2️⃣;셋|set|three|3️⃣;넷|net|four|4️⃣;다섯|daseot|five|5️⃣;열|yeol|ten|🔟;스무|seumu|twenty|✋;백|baek|one hundred|💯'],
+['Animals','개|gae|dog|🐕;고양이|goyangi|cat|🐈;소|so|cow|🐄;닭|dak|chicken|🐔;돼지|dwaeji|pig|🐖;사자|saja|lion|🦁;코끼리|kokkiri|elephant|🐘;원숭이|wonsungi|monkey|🐒'],
+['Places','집|jip|house|🏠;학교|hakgyo|school|🏫;병원|byeongwon|hospital|🏥;시장|sijang|market|🛒;공항|gonghang|airport|✈️;가나|Gana|Ghana|🇬🇭;한국|Hanguk|Korea|🇰🇷;미국|Miguk|America|🇺🇸;식당|sikdang|restaurant|🍽️;회사|hoesa|company|🏢'],
+['Seasons & Time','봄|bom|spring|🌸;여름|yeoreum|summer|🏖️;가을|gaeul|autumn|🍂;겨울|gyeoul|winter|⛄;오늘|oneul|today|📆;내일|naeil|tomorrow|➡️;어제|eoje|yesterday|⬅️;아침|achim|morning|🌅;저녁|jeonyeok|evening|🌇;날씨|nalssi|weather|⛅;달|dal|moon|🌙;해|hae|sun|☀️'],
+['Greetings','안녕하세요|annyeonghaseyo|hello|👋;감사합니다|gamsahamnida|thank you|🙏;죄송합니다|joesonghamnida|I am sorry|😔;안녕히 가세요|annyeonghi gaseyo|goodbye (to one leaving)|🚶;네|ne|yes|✅;아니요|aniyo|no|❌;괜찮아요|gwaenchanayo|it is okay|👌'],
+['Countries','가나 사람|Gana saram|Ghanaian|🇬🇭;한국 사람|Hanguk saram|Korean person|🇰🇷;미국 사람|Miguk saram|American|🇺🇸;나라|nara|country|🌍;언어|eoneo|language|🗣️'],
+['Food','밥|bap|cooked rice|🍚;김치|gimchi|kimchi|🥬;불고기|bulgogi|bulgogi|🥩;푸푸|pupu|fufu|🍲;커피|keopi|coffee|☕;빵|ppang|bread|🍞;과일|gwail|fruit|🍎;야채|yachae|vegetables|🥦'],
+['Likes & Wants','좋아요|joayo|I like it|👍;싫어요|sirheoyo|I dislike it|👎;먹고 싶어요|meokgo sipeoyo|I want to eat|😋;맛있어요|masisseoyo|it is delicious|😍;배고파요|baegopayo|I am hungry|🍴;물 주세요|mul juseyo|water, please|🥤'],
+['Numbers Master','일|il|one (Sino)|1️⃣;이|i|two (Sino)|2️⃣;삼|sam|three (Sino)|3️⃣;사|sa|four (Sino)|4️⃣;오|o|five (Sino)|5️⃣;십|sip|ten (Sino)|🔟;서른|seoreun|thirty (native)|3️⃣;쉰|swin|fifty (native)|5️⃣;천|cheon|one thousand|💰;마리|mari|animal counter|🐾'],
+['Colors','빨간색|ppalgansaek|red|🔴;파란색|paransaek|blue|🔵;노란색|noransaek|yellow|🟡;초록색|choroksaek|green|🟢;하얀색|hayansaek|white|⚪;검은색|geomeunsaek|black|⚫;분홍색|bunhongsaek|pink|🩷;색|saek|color|🎨'],
+['Body','머리|meori|head|🧠;눈|nun|eye|👁️;코|ko|nose|👃;입|ip|mouth|👄;귀|gwi|ear|👂;손|son|hand|✋;발|bal|foot|🦶;다리|dari|leg|🦵;배|bae|stomach|🫃'],
+['Clothes','옷|ot|clothes|👕;모자|moja|hat|🧢;신발|sinbal|shoes|👟;바지|baji|pants|👖;치마|chima|skirt|👗;가방|gabang|bag|👜;안경|angyeong|glasses|👓;시계|sigye|watch|⌚'],
+['Verbs','가요|gayo|go|🚶;와요|wayo|come|🏃;먹어요|meogeoyo|eat|🍽️;마셔요|masyeoyo|drink|🥤;자요|jayo|sleep|😴;봐요|bwayo|see or watch|👀;읽어요|ilgeoyo|read|📖;써요|sseoyo|write|✍️;공부해요|gongbuhaeyo|study|📚;말해요|malhaeyo|speak|🗣️'],
+['More Verbs','사요|sayo|buy|🛍️;일해요|ilhaeyo|work|💼;좋아해요|joahaeyo|like (a thing)|❤️;알아요|arayo|know|💡;들어요|deureoyo|listen|🎧;앉아요|anjayo|sit|🪑;일어나요|ireonayo|wake up|⏰;만나요|mannayo|meet|🤝;주세요|juseyo|please give|🎁;있어요|isseoyo|there is, have|✅'],
+['Adjectives','커요|keoyo|big|🐘;작아요|jagayo|small|🐜;많아요|manayo|many|📚;적어요|jeogeoyo|few|🤏;예뻐요|yeppeoyo|pretty|🌺;더워요|deowoyo|hot (weather)|🥵;추워요|chuwoyo|cold (weather)|🥶;뜨거워요|tteugeowoyo|hot (to touch)|🔥;재미있어요|jaemiisseoyo|fun|🎉'],
+['Family Plus','형|hyeong|older brother (male speaker)|👦;누나|nuna|older sister (male speaker)|👧;동생|dongsaeng|younger sibling|🧒;할머니|halmeoni|grandmother|👵;할아버지|harabeoji|grandfather|👴;아들|adeul|son|👦;딸|ttal|daughter|👧;부모님|bumonim|parents|👪'],
+['Everyday Things','책|chaek|book|📘;연필|yeonpil|pencil|✏️;책상|chaeksang|desk|🗄️;문|mun|door|🚪;창문|changmun|window|🪟;전화|jeonhwa|phone|📱;돈|don|money|💵;버스|beoseu|bus|🚌;기차|gicha|train|🚆'],
+['Time & Dates','시간|sigan|time|⏱️;시|si|o’clock|🕐;분|bun|minute|⏲️;월요일|woryoil|Monday|📅;주말|jumal|weekend|🎉;생일|saengil|birthday|🎂;지금|jigeum|now|⏳;매일|maeil|every day|🔁;나중에|najunge|later|🔜'],
+['Getting Around','길|gil|road|🛣️;오른쪽|oreunjjok|right side|➡️;왼쪽|oenjjok|left side|⬅️;앞|ap|front|⬆️;뒤|dwi|behind|⬇️;위|wi|above|🔼;아래|arae|below|🔽;지하철|jihacheol|subway|🚇;택시|taeksi|taxi|🚕;역|yeok|station|🚉'],
+['Shopping','얼마예요?|eolmayeyo?|How much is it?|💰;비싸요|bissayo|expensive|💸;싸요|ssayo|cheap|🏷️;깎아 주세요|kkakka juseyo|please give a discount|🤏;가게|gage|shop|🏪;손님|sonnim|customer|🙋;바나나|banana|banana|🍌;계란|gyeran|egg|🥚;우유|uyu|milk|🥛;생선|saengseon|fish|🐟'],
+['Feelings & Health','기뻐요|gippeoyo|happy|😊;슬퍼요|seulpeoyo|sad|😢;피곤해요|pigonhaeyo|tired|😩;아파요|apayo|hurts or sick|🤒;화나요|hwanayo|angry|😠;무서워요|museowoyo|scary|😨;행복해요|haengbokhaeyo|joyful|🥰;약|yak|medicine|💊;의사|uisa|doctor|🩺;감기|gamgi|a cold (illness)|🤧'],
+['Home Life','방|bang|room|🛏️;부엌|bueok|kitchen|🍳;화장실|hwajangsil|bathroom|🚻;침대|chimdae|bed|🛌;텔레비전|tellebijeon|TV|📺;냉장고|naengjanggo|refrigerator|🧊;청소|cheongso|cleaning|🧹;요리|yori|cooking|👨‍🍳;빨래|ppallae|laundry|🧺;열쇠|yeolsoe|key|🔑'],
+['Questions & Links','누구|nugu|who|🙋;무엇|mueot|what|❔;어디|eodi|where|📍;언제|eonje|when|🕒;왜|wae|why|🤔;어떻게|eotteoke|how|🛠️;그리고|geurigo|and then|➕;그런데|geureonde|but, by the way|↩️;하지만|hajiman|however|⚖️;그래서|geuraeseo|so, therefore|🔗'],
+['School & Hobbies','수업|sueop|class|🏫;숙제|sukje|homework|📝;시험|siheom|exam|📋;노래|norae|song|🎵;영화|yeonghwa|movie|🎬;운동|undong|exercise|🏃;축구|chukgu|soccer|⚽;여행|yeohaeng|travel|🧳;사진|sajin|photo|📷;취미|chwimi|hobby|🎯'],
+['Work & Jobs','일|il|work, job|💼;직업|jigeop|occupation|🪪;회사원|hoesawon|office worker|👔;경찰|gyeongchal|police officer|👮;요리사|yorisa|cook, chef|🧑‍🍳;가수|gasu|singer|🎤;농부|nongbu|farmer|🧑‍🌾;운전사|unjeonsa|driver|🚖;월급|wolgeup|salary|💵;회의|hoeui|meeting|🗓️'],
+['Nature & Weather','하늘|haneul|sky|🌤️;바다|bada|sea|🌊;강|gang|river|🏞️;나무|namu|tree|🌳;꽃|kkot|flower|🌷;비|bi|rain|🌧️;바람|baram|wind|💨;구름|gureum|cloud|☁️;별|byeol|star|⭐;불|bul|fire|🔥'],
+['More Adjectives','나빠요|nappayo|bad|👎;길어요|gireoyo|long|📏;짧아요|jjalbayo|short|✂️;빨라요|ppallayo|fast|⚡;느려요|neuryeoyo|slow|🐢;어려워요|eoryeowoyo|difficult|😰;쉬워요|swiwoyo|easy|😌;바빠요|bappayo|busy|🏃;조용해요|joyonghaeyo|quiet|🤫;깨끗해요|kkaekkeuthaeyo|clean|✨'],
+['More Verbs 3','걸어요|georeoyo|walk|🚶;뛰어요|ttwieoyo|run|💨;웃어요|useoyo|laugh, smile|😄;울어요|ureoyo|cry|😭;배워요|baewoyo|learn|🎓;가르쳐요|gareuchyeoyo|teach|👩‍🏫;기다려요|gidaryeoyo|wait|⏳;찾아요|chajayo|look for|🔍;열어요|yeoreoyo|open|📂;닫아요|dadayo|close|🔒'],
+['Grammar Particles','은/는|eun/neun|topic marker|🏷️;이/가|i/ga|subject marker|📍;을/를|eul/reul|object marker|🎯;에|e|at, to (time, place)|📌;에서|eseo|at, from (place of action)|🏙️;도|do|also, too|➕;와/과|wa/gwa|and, with|🤝;의|ui|of (possessive)|🔗;으로|euro|by, toward|➡️;부터|buteo|from (a start point)|🚦'],
+['Korean Foods','비빔밥|bibimbap|bibimbap|🍲;라면|ramyeon|instant noodles|🍜;떡볶이|tteokbokki|spicy rice cakes|🌶️;고기|gogi|meat|🍖;닭고기|dakgogi|chicken meat|🍗;쌀|ssal|raw rice|🌾;국|guk|soup|🥣;차|cha|tea|🍵;주스|juseu|juice|🧃;간식|gansik|snack|🍪'],
+['Days & Dates','오전|ojeon|morning (a.m.)|🌤️;오후|ohu|afternoon (p.m.)|🌇;밤|bam|night|🌃;새벽|saebyeok|dawn|🌄;요일|yoil|day of the week|📆;화요일|hwayoil|Tuesday|📅;금요일|geumyoil|Friday|📅;일요일|iryoil|Sunday|📅;이번 주|ibeon ju|this week|🗓️;다음 주|daeum ju|next week|⏭️;올해|olhae|this year|📈;작년|jaknyeon|last year|⏮️'],
+['Money Talk','원|won|won (currency)|💴;만 원|man won|ten thousand won|💵;현금|hyeongeum|cash|💵;카드|kadeu|card|💳;영수증|yeongsujeung|receipt|🧾;할인|halin|discount|🏷️;무료|muryo|free of charge|🆓;포장|pojang|takeout|🥡;봉투|bongtu|plastic bag|🛍️;거스름돈|geoseureumdon|change (money)|🪙'],
+['Daily Actions','씻어요|ssiseoyo|wash|🧼;입어요|ibeoyo|wear (clothes)|👕;신어요|sineoyo|wear (shoes)|👟;타요|tayo|ride|🚌;내려요|naeryeoyo|get off|⬇️;전화해요|jeonhwahaeyo|make a phone call|📞;가르쳐요|gareuchyeoyo|teach|👩‍🏫;배워요|baewoyo|learn|🎓;쉬어요|swieoyo|rest|🛋️;운전해요|unjeonhaeyo|drive|🚗'],
+['Ideas & Plans','필요해요|piryohaeyo|need|✅;중요해요|jungyohaeyo|important|❗;유명해요|yumyeonghaeyo|famous|🌟;생각해요|saenggakhaeyo|think|💭;기억해요|gieokhaeyo|remember|🧠;잊어버렸어요|ijeobeoryeosseoyo|forgot|🙈;걱정해요|geokjeonghaeyo|worry|😟;준비해요|junbihaeyo|prepare|🧰;약속|yaksok|promise or appointment|🤞;이유|iyu|reason|❓'],
+['Useful Phrases','처음 뵙겠습니다|cheoeum boepgetseumnida|nice to meet you (formal)|🤝;잘 먹겠습니다|jal meokgetseumnida|thank you for the meal (before)|🍚;잘 먹었습니다|jal meogeosseumnida|thank you for the meal (after)|😋;실례합니다|sillyehamnida|excuse me|🙇;잠깐만요|jamkkanmanyo|just a moment|☝️;천천히 말해 주세요|cheoncheonhi malhae juseyo|please speak slowly|🐢;다시 말해 주세요|dasi malhae juseyo|please say it again|🔁;모르겠어요|moreugesseoyo|I do not know|🤷;이해했어요|ihaehaesseoyo|I understood|💡;도와주세요|dowajuseyo|please help|🆘']
 ];
 
-// App State
-let currentUnitIndex = 0;
-let streak = 5;
-let xp = 380;
-let hearts = 5;
-let bestVoice = null;
-
-if(localStorage.getItem('minjun_xp')) {
-    xp = parseInt(localStorage.getItem('minjun_xp'));
-    streak = parseInt(localStorage.getItem('minjun_streak'));
-    hearts = parseInt(localStorage.getItem('minjun_hearts'));
-}
-
-function updateStatsUI() {
-    document.getElementById('stat-streak').innerText = streak;
-    document.getElementById('stat-xp').innerText = xp;
-    document.getElementById('stat-hearts').innerText = hearts;
-    localStorage.setItem('minjun_xp', xp);
-    localStorage.setItem('minjun_streak', streak);
-    localStorage.setItem('minjun_hearts', hearts);
-}
-
-// Speech Setup
-function initVoices() {
-    if(!('speechSynthesis' in window)) return;
-    const voices = window.speechSynthesis.getVoices();
-    bestVoice = voices.find(v => v.lang.includes('ko') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Sun-Hi'))) || voices.find(v => v.lang.includes('ko'));
-}
-if('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = initVoices;
-    initVoices();
-}
-
-function speakText(text) {
-    if('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'ko-KR';
-        u.rate = 0.85;
-        if(bestVoice) u.voice = bestVoice;
-        window.speechSynthesis.speak(u);
-    }
-}
-
-function speakCurrentSentence() {
-    const unit = BUNPO_UNITS[currentUnitIndex];
-    if(unit.examples && unit.examples.length > 0) {
-        speakText(unit.examples[0].ko);
-    }
-}
-
-// ==========================================
-// 2. VIEW CONTROLLERS
-// ==========================================
-function renderHome() {
-    document.getElementById('view-home').classList.remove('hidden');
-    document.getElementById('view-lesson').classList.add('hidden');
-    
-    const listContainer = document.getElementById('grammar-list');
-    listContainer.innerHTML = "";
-
-    BUNPO_UNITS.forEach((unit, idx) => {
-        const card = document.createElement('div');
-        card.className = "glass-panel rounded-2xl p-4 border border-slate-800 hover:border-indigo-500/50 transition cursor-pointer flex items-center justify-between";
-        card.onclick = () => openLesson(idx);
-        card.innerHTML = `
-            <div class="space-y-1">
-                <span class="text-[10px] uppercase font-bold tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-0.5 rounded-full">${unit.category}</span>
-                <h3 class="font-black text-sm text-white">${unit.title}</h3>
-                <p class="text-xs text-slate-400">${unit.summary}</p>
-            </div>
-            <div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400">
-                <i class="fa-solid fa-chevron-right text-xs"></i>
-            </div>
-        `;
-        listContainer.appendChild(card);
-    });
-    updateStatsUI();
-}
-
-function goHome() {
-    renderHome();
-}
-
-function openLesson(index) {
-    currentUnitIndex = index;
-    document.getElementById('view-home').classList.add('hidden');
-    document.getElementById('view-lesson').classList.remove('hidden');
-    renderLessonView();
-}
-
-function renderLessonView() {
-    const unit = BUNPO_UNITS[currentUnitIndex];
-
-    document.getElementById('lesson-unit-title').innerText = `Bunpo Unit: ${unit.category}`;
-    document.getElementById('grammar-badge').innerText = unit.category;
-    document.getElementById('lesson-title').innerText = unit.title;
-    document.getElementById('lesson-summary').innerText = unit.summary;
-    document.getElementById('lesson-explanation').innerHTML = unit.explanation;
-
-    // Render Examples
-    const exContainer = document.getElementById('lesson-examples');
-    exContainer.innerHTML = "";
-    unit.examples.forEach(ex => {
-        const div = document.createElement('div');
-        div.className = "p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center";
-        div.innerHTML = `
-            <div>
-                <p class="text-sm font-bold text-white">${ex.ko}</p>
-                <p class="text-[11px] text-indigo-300 italic">${ex.roman}</p>
-                <p class="text-xs text-emerald-300 font-medium">${ex.en}</p>
-            </div>
-            <button onclick="speakText('${ex.ko}')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-400 flex items-center justify-center">
-                <i class="fa-solid fa-volume-high text-xs"></i>
-            </button>
-        `;
-        exContainer.appendChild(div);
-    });
-
-    // Render Quiz
-    document.getElementById('quiz-question').innerText = unit.quiz.question;
-    const optContainer = document.getElementById('quiz-options');
-    optContainer.innerHTML = "";
-    document.getElementById('quiz-feedback').innerText = "";
-
-    unit.quiz.options.forEach((opt, oIdx) => {
-        const btn = document.createElement('button');
-        btn.className = "w-full py-2.5 px-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500 text-xs font-bold text-slate-200 transition text-left flex justify-between items-center";
-        btn.innerHTML = `<span>${opt}</span> <i class="fa-solid fa-circle-dot text-[10px] text-slate-600"></i>`;
-        btn.onclick = () => checkQuizAnswer(oIdx, unit.quiz.correct, unit.quiz.explanation);
-        optContainer.appendChild(btn);
-    });
-}
-
-function checkQuizAnswer(selected, correct, explanation) {
-    const fb = document.getElementById('quiz-feedback');
-    if(selected === correct) {
-        fb.innerHTML = `<span class="text-emerald-400 font-bold">✅ 정답입니다! ${explanation} (+15 XP)</span>`;
-        xp += 15;
-        updateStatsUI();
-    } else {
-        fb.innerHTML = `<span class="text-rose-400 font-bold">❌ Incorrect. ${explanation}</span>`;
-        hearts = Math.max(0, hearts - 1);
-        updateStatsUI();
-    }
-}
-
-// Initialize App on Home
-renderHome();
-</script>
-</body>
-</html>
+const LV=RAW.map(([t,d],i)=>({n:i+1,t,v:d.split(';').map(x=>{const a=x.split('|');return{ko:a[0],ro:a[1],en:a[2],em:a[3]||'✨'}})}));
+const ALLW={};LV.forEach(l=>l.v.forEach(w=>ALLW[w.ko]=ALLW[w.ko]||w));
+const STR={'ㄱ':[[[22,28],[78,28],[72,82]]],'ㄴ':[[[28,20],[28,76],[80,76]]],'ㄷ':[[[78,24],[28,24]],[[28,24],[28,76],[78,76]]],'ㄹ':[[[26,20],[74,20],[74,42],[26,42],[26,64],[74,64]],[[22,82],[78,82]]],'ㅁ':[[[26,26],[26,74]],[[26,26],[74,26],[74,74],[26,74]]],'ㅏ':[[[40,15],[40,85]],[[40,48],[68,48]]],'ㅓ':[[[60,15],[60,85]],[[32,48],[60,48]]],'ㅗ':[[[50,32],[50,62]],[[18,72],[82,72]]],'ㅜ':[[[18,30],[82,30]],[[50,30],[50,64]]],'ㅡ':[[[18,50],[82,50]]],'ㅣ':[[[50,15],[50,85]]]};
+const DJ=[...Object.keys(STR),'가','나','다'];
+const ST=[
+{t:"Min Jun at the Ghana market",em:"🛒",req:4,l:[[["안녕하세요!","hello!"],["저는","I (topic)"],["민준이에요.","am Min Jun."]],[["여기는","here"],["가나","Ghana"],["시장이에요.","is a market."]],[["물","water"],["주세요.","please give me."]],[["감사합니다!","thank you!"]]],q:["Where is Min Jun?",["At a Ghana market","At school","At the airport"]]},
+{t:"How old is Min Jun’s father?",em:"🎂",req:7,l:[[["민준의","Min Jun’s"],["아버지는","father (topic)"],["쉰 살이에요.","is fifty years old."]],[["어머니는","mother (topic)"],["마흔다섯","forty-five"],["살이에요.","years old."]],[["민준은","Min Jun (topic)"],["스무 살이에요.","is twenty."]]],q:["How old is Min Jun’s father?",["50","45","20"]]},
+{t:"Counting animals at the farm",em:"🐄",req:8,l:[[["농장에","on the farm"],["개가","dog(s)"],["두 마리","two (animals)"],["있어요.","there are."]],[["소가","cows"],["세 마리","three (animals)"],["있어요.","there are."]],[["닭은","chickens"],["다섯 마리예요.","are five."]]],q:["How many cows are on the farm?",["3","2","5"]]},
+{t:"At the restaurant",em:"🍽️",req:15,l:[[["식당에서","at the restaurant"]],[["김치와","kimchi and"],["불고기를","bulgogi (object)"],["주세요.","please give me."]],[["맛있어요!","it is delicious!"]],[["감사합니다.","thank you."]]],q:["What does Min Jun order?",["Kimchi and bulgogi","Fruit and rice","Coffee and bread"]]},
+{t:"Where is the airport?",em:"✈️",req:10,l:[[["죄송합니다.","excuse me."]],[["공항이","the airport"],["어디예요?","where is it?"]],[["공항은","the airport"],["저기예요.","is over there."]],[["감사합니다!","thank you!"]]],q:["What does Min Jun ask about?",["Where the airport is","Where the school is","What time it is"]]},
+{t:"Colors at the market",em:"🎨",req:17,l:[[["시장에","at the market"],["빨간색","red"],["가방이","bag"],["있어요.","there is."]],[["파란색","blue"],["모자도","hat too"],["있어요.","there is."]],[["저는","I"],["노란색","yellow"],["모자를","hat (object)"],["사요.","buy."]]],q:["What does Min Jun buy?",["A yellow hat","A red bag","A blue hat"]]},
+{t:"Min Jun at the hospital",em:"🏥",req:18,l:[[["병원에","at the hospital"],["가요.","go."]],[["머리가","head"],["아파요.","hurts."]],[["의사","doctor"],["선생님이","(honorific subject)"],["말해요.","says."]],[["물을","water (object)"],["마시세요.","please drink."]]],q:["What hurts?",["His head","His foot","His ear"]]},
+{t:"Min Jun’s day",em:"⏰",req:20,l:[[["아침에","in the morning"],["일어나요.","wake up."]],[["밥을","rice (object)"],["먹어요.","eat."]],[["학교에","to school"],["가요.","go."]],[["저녁에","in the evening"],["책을","book (object)"],["읽어요.","read."]],[["밤에","at night"],["자요.","sleep."]]],q:["What does he do in the evening?",["Reads a book","Eats rice","Goes to school"]]},
+{t:"Hot summer day",em:"🥵",req:22,l:[[["여름이에요.","it is summer."]],[["날씨가","the weather"],["더워요.","is hot."]],[["시원한","cool"],["물을","water (object)"],["마셔요.","drink."]]],q:["What is the weather like?",["Hot","Cold","Rainy"]]},
+{t:"Meeting grandmother",em:"👵",req:23,l:[[["오늘","today"],["할머니를","grandmother (object)"],["만나요.","meet."]],[["할머니는","grandmother"],["일흔 살이에요.","is seventy years old."]],[["동생도","younger sibling too"],["같이","together"],["가요.","goes."]]],q:["How old is grandmother?",["70","60","17"]]},
+{t:"Taking the subway",em:"🚇",req:26,l:[[["지하철역이","subway station"],["어디예요?","where is it?"]],[["오른쪽이에요.","it is on the right."]],[["지금","now"],["세 시예요.","it is three o’clock."]]],q:["Which side is the station on?",["Right","Left","Behind"]]},
+{t:"How much is it?",em:"💰",req:27,l:[[["우유가","milk"],["얼마예요?","how much is it?"]],[["삼천 원이에요.","it is 3,000 won."]],[["조금","a little"],["비싸요.","expensive."]],[["깎아 주세요!","please give a discount!"]]],q:["What does Min Jun think of the price?",["It is expensive","It is cheap","It is free"]]},
+{t:"A tired day",em:"😩",req:28,l:[[["오늘","today"],["너무","very"],["피곤해요.","I am tired."]],[["그래서","so"],["일찍","early"],["자요.","I sleep."]],[["내일은","tomorrow"],["기뻐요!","I will be happy!"]]],q:["Why does he sleep early?",["He is tired","He is hungry","He is angry"]]},
+{t:"Who is it?",em:"🤔",req:30,l:[[["누구예요?","who is it?"]],[["제","my"],["친구예요.","it is a friend."]],[["이름이","name"],["뭐예요?","what is it?"]],[["민준이에요.","it is Min Jun."]]],q:["Who is it?",["A friend","A teacher","A doctor"]]},
+{t:"A school day",em:"🏫",req:31,l:[[["오늘","today"],["수업이","class"],["있어요.","there is."]],[["내일은","tomorrow"],["시험이","exam"],["있어요.","there is."]],[["그래서","so"],["숙제를","homework (object)"],["해요.","I do."]]],q:["What is happening tomorrow?",["An exam","A movie","A trip"]]},
+{t:"Jobs in the family",em:"🧑‍🌾",req:32,l:[[["제","my"],["아버지는","father"],["농부예요.","is a farmer."]],[["어머니는","mother"],["의사예요.","is a doctor."]],[["저는","I"],["가수가","singer"],["되고 싶어요.","want to become."]]],q:["What is Min Jun’s father’s job?",["Farmer","Doctor","Singer"]]},
+{t:"A rainy day",em:"🌧️",req:33,l:[[["오늘은","today"],["비가","rain"],["와요.","comes."]],[["하늘이","the sky"],["어두워요.","is dark."]],[["그래서","so"],["집에","at home"],["있어요.","I stay."]]],q:["Why does Min Jun stay home?",["It rains","It is hot","It is a holiday"]]},
+{t:"Weekend trip",em:"🚆",req:34,l:[[["주말에","on the weekend"],["여행을","a trip (object)"],["가요.","go."]],[["기차는","the train"],["빨라요.","is fast."]],[["바다가","the sea"],["정말","really"],["예뻐요.","is pretty."]]],q:["How is the train?",["Fast","Slow","Expensive"]]},
+{t:"Learning Korean",em:"📚",req:36,l:[[["저는","I"],["한국어를","Korean (object)"],["배워요.","learn."]],[["한국어는","Korean"],["조금","a little"],["어려워요.","is difficult."]],[["하지만","however"],["재미있어요!","it is fun!"]],[["매일","every day"],["공부해요.","I study."]]],q:["What does Min Jun think of Korean?",["Hard but fun","Easy and boring","Too fast"]]},
+{t:"Bibimbap for lunch",em:"🍲",req:37,l:[[["점심에","at lunch"],["비빔밥을","bibimbap (object)"],["먹어요.","eat."]],[["국도","soup too"],["주세요.","please give me."]],[["잘 먹겠습니다!","thank you for the meal!"]]],q:["What does he eat for lunch?",["Bibimbap","Ramyeon","Bread"]]},
+{t:"Days of the week",em:"📅",req:38,l:[[["오늘은","today"],["금요일이에요.","is Friday."]],[["일요일에","on Sunday"],["친구를","a friend (object)"],["만나요.","meet."]]],q:["Which day does he meet a friend?",["Sunday","Friday","Monday"]]},
+{t:"Please speak slowly",em:"🐢",req:42,l:[[["실례합니다.","excuse me."]],[["천천히","slowly"],["말해 주세요.","please speak."]],[["아, 이해했어요!","ah, I understood!"]],[["감사합니다.","thank you."]]],q:["What does he ask for?",["To speak slowly","To open the door","For water"]]}
+];
+ST.sort((a,b)=>a.req-b.req);
+// ---------- state ----------
+let S={xp:0,gems:30,hearts:5,streak:0,last:'',done:0,today:0,day:'',theme:'',srs:{},chest:'',slow:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem('minjun5')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('minjun5',JSON.stringify(S))}catch(e){}};
+const dayStr=()=>new Date().toDateString();
+if(S.day!==dayStr()){S.day=dayStr();S.today=0}
+let T='learn',MJ="Annyeong! I am Min Jun. Ready to learn Hangul?";
+function theme(){if(S.theme)document.documentElement.dataset.theme=S.theme;else delete document.documentElement.dataset.theme}
+theme();
+// ---------- speech ----------
+function voices(){try{return speechSynthesis.getVoices().filter(v=>/^ko/i.test(v.lang))}catch(e){return[]}}
+function bestVoice(){const v=voices();if(!v.length)return null;const m=S.voice&&v.find(x=>x.name==S.voice);if(m)return m;const sc=x=>(/natural|neural|online|premium|enhanced/i.test(x.name)?4:0)+(/google|yuna|sunhi|injoon|heami|network|-x-/i.test(x.name+' '+x.voiceURI)?3:0)-(/samsung|smt/i.test(x.name+' '+x.voiceURI)?5:0)+(x.localService?0:1);return v.slice().sort((a,b)=>sc(b)-sc(a))[0]}
+function mkU(t,slow){const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';const v=bestVoice();if(v)u.voice=v;u.rate=slow?.55:.88;u.pitch=1.05;return u}
+function say(t,slow){try{speechSynthesis.cancel();speechSynthesis.speak(mkU(t,slow||S.slow))}catch(e){}}
+function nextVoice(){const v=voices();if(!v.length){toast('No Korean voice found on this device. Install one in your phone settings.');return}const i=v.findIndex(x=>x.name==(bestVoice()||{}).name);const n=v[(i+1)%v.length];S.voice=n.name;save();toast('Voice: '+n.name);say('안녕하세요, 저는 민준이에요.')}
+function listen(cb){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){cb(null);return}let d=0;const fin=x=>{if(!d){d=1;cb(x)}};try{const r=new R();r.lang='ko-KR';r.onresult=e=>fin(e.results[0][0].transcript);r.onerror=()=>fin('');r.onend=()=>fin('');r.start()}catch(e){fin(null)}}
+const norm=s=>s.normalize('NFKC').replace(/[\s?!.,]/g,'');
+function lev(a,b){const m=[...Array(a.length+1)].map((_,i)=>[i]);for(let j=1;j<=b.length;j++)m[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+const sim=(a,b)=>{a=norm(a);b=norm(b);return Math.round(100*(1-lev(a,b)/Math.max(a.length,b.length,1)))};
+// ---------- hangul keyboard ----------
+const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',JUN='ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ',JON='ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ';
+const CMP={'ㄱㅅ':'ㄳ','ㄴㅈ':'ㄵ','ㄴㅎ':'ㄶ','ㄹㄱ':'ㄺ','ㄹㅁ':'ㄻ','ㄹㅂ':'ㄼ','ㄹㅅ':'ㄽ','ㄹㅌ':'ㄾ','ㄹㅍ':'ㄿ','ㄹㅎ':'ㅀ','ㅂㅅ':'ㅄ'};
+const cc=(i,b)=>String.fromCharCode(b+i);
+let TV='';
+function typeKey(t,k){
+ const n=t.normalize('NFD'),lc=n.slice(-1).charCodeAt(0)||0,isJon=lc>=0x11A8&&lc<=0x11C2,isJun=lc>=0x1161&&lc<=0x1175;
+ if(JUN.includes(k)){
+  if(isJon){const ci=CHO.indexOf(JON[lc-0x11A8]);if(ci>=0)return(n.slice(0,-1)+cc(ci,0x1100)+cc(JUN.indexOf(k),0x1161)).normalize('NFC')}
+  return(n+cc(JUN.indexOf(k),0x1161)).normalize('NFC')}
+ if(isJon){const c=CMP[JON[lc-0x11A8]+k];if(c)return(n.slice(0,-1)+cc(JON.indexOf(c),0x11A8)).normalize('NFC')}
+ if(isJun){const ji=JON.indexOf(k);if(ji>=0)return(n+cc(ji,0x11A8)).normalize('NFC')}
+ const ci=CHO.indexOf(k);return(n+(ci>=0?cc(ci,0x1100):k)).normalize('NFC')}
+function kb(){const R=['ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ','ㅁㄴㅇㄹㅎㅗㅓㅏㅣ','ㅋㅌㅊㅍㅠㅜㅡ'];
+ return `<div class="kb">${R.map((r,i)=>`<div>${[...r].map(c=>`<button onclick="key('${c}')">${c}</button>`).join('')}${i==2?'<button onclick="key(\'⌫\')">⌫</button>':''}</div>`).join('')}</div>`}
+function key(k){TV=k=='⌫'?TV.normalize('NFD').slice(0,-1).normalize('NFC'):typeKey(TV,k);document.querySelectorAll('.inp').forEach(e=>e.textContent=TV||'…')}
+function resetTV(){TV='';document.querySelectorAll('.inp').forEach(e=>e.textContent='…')}
+// ---------- UI helpers ----------
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1800)}
+function mj(m){MJ=m;const e=$('#mjm');if(e)e.textContent=m}
+function hud(){H($('#hud'),`<span>🔥${S.streak}</span><span>💎${S.gems}</span><span>❤️${S.hearts}</span><span>⭐${S.xp}</span>`)}
+function go(t){T=t;render()}
+function nav(){const N=[['learn','🗺️','Learn'],['dojo','✍️','Dojo'],['stories','📖','Stories'],['call','📹','Call'],['shop','🛍️','Shop'],['me','🏆','Me']];
+ H($('#nav'),N.map(n=>`<button class="${T==n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join(''))}
+function render(){hud();nav();const m=$('#main');
+ if(T=='learn')H(m,learn());else if(T=='dojo'){H(m,dojo());initD()}else if(T=='stories')H(m,stories());else if(T=='call')H(m,callTab());else if(T=='shop')H(m,shop());else H(m,me());scrollTo(0,0)}
+// confetti
+const CF=$('#cf'),cx=CF.getContext('2d');let P=[];
+function boom(n){CF.width=innerWidth;CF.height=innerHeight;for(let i=0;i<(n||70);i++)P.push({x:innerWidth/2,y:innerHeight*.6,vx:(Math.random()-.5)*14,vy:-Math.random()*15-4,c:`hsl(${Math.random()*360},90%,60%)`,s:5+Math.random()*6,r:Math.random()*6});if(P.length==(n||70))loop()}
+function loop(){cx.clearRect(0,0,CF.width,CF.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.5;p.r+=.2;cx.fillStyle=p.c;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);cx.restore()});P=P.filter(p=>p.y<innerHeight+20);if(P.length)requestAnimationFrame(loop);else cx.clearRect(0,0,CF.width,CF.height)}
+// ---------- Learn tab ----------
+function due(){const n=Date.now();return Object.keys(S.srs).filter(k=>S.srs[k].due<=n&&ALLW[k])}
+function learn(){const goal=50,pc=Math.min(1,S.today/goal),C=2*Math.PI*26;
+ let h=`<div class="glass p" style="display:flex;gap:12px;align-items:center"><div class="avatar">🧑‍🎓</div><div class="bubble" id="mjm" style="flex:1">${MJ}</div>
+ <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="var(--line)" stroke-width="7"/><circle cx="32" cy="32" r="26" fill="none" stroke="#ffb020" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pc)}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-size="14" font-weight="900" fill="var(--tx)">${S.today}</text></svg></div>`;
+ const d=due().length;
+ if(d>=4)h+=`<div class="glass p" style="display:flex;justify-content:space-between;align-items:center"><b>🔁 ${d} words ready to review</b><button class="btn" onclick="review()">Review</button></div>`;
+ SEC.forEach((s,si)=>{h+=`<div class="sec-h" style="--c1:${s[3]};--c2:${s[4]}"><span>Section ${si+1}: ${s[0]}</span><span>Lv ${s[1]}${s[2]>s[1]?'–'+s[2]:''}</span></div><div class="path">`;
+  for(let n=s[1];n<=s[2];n++){const l=LV[n-1],st=n<=S.done?'done':n==S.done+1?'cur':'lock',o=[0,46,72,46,0,-46,-72,-46][n%8];
+   h+=`<div style="transform:translateX(${o}px);text-align:center"><button class="node ${st}" onclick="startLesson(${n})">${st=='done'?'✓':st=='cur'?'★':'🔒'}</button><div class="nl">${l.t}</div></div>`}
+  h+='</div>'});return h}
+// ---------- lesson engine ----------
+let LS=null,CB=null,O=[],busy=0;
+function review(){const ws=sh(due()).slice(0,8).map(k=>ALLW[k]);startLesson(0,{n:0,t:'Review',v:ws})}
+function startLesson(n,custom){if(!custom&&n>S.done+1){toast('Finish the previous level first 🔒');return}
+ if(S.hearts<1){toast('No hearts left. Visit the shop 💎');go('shop');return}
+ const lv=custom||LV[n-1],v=lv.v,qs=[];
+ v.forEach(w=>qs.push({t:'learn',w}));
+ sh(v).forEach((w,i)=>qs.push({t:'mc',w,dir:i%2}));
+ sh(v).slice(0,4).forEach(w=>qs.push({t:'type',w}));
+ sh(v).slice(0,3).forEach(w=>qs.push({t:'speak',w}));
+ LS={n,lv,qs,i:0,ok:0,tot:0};$('#les').classList.remove('hidden');q()}
+function closeL(){$('#les').classList.add('hidden');speechSynthesis&&speechSynthesis.cancel();render()}
+function shell(body,foot){const pc=LS.i/LS.qs.length*100;
+ H($('#les'),`<div class="lbar"><button class="btn sec" onclick="closeL()" style="padding:6px 12px">✕</button><div class="prog"><i style="width:${pc}%"></i></div><span>❤️${S.hearts}</span></div><div class="lbody">${body}</div><div class="ft" id="ft">${foot||''}</div>`)}
+const cont=(l,f)=>{CB=f;return`<button class="btn w" onclick="CB()">${l}</button>`};
+function q(){const s=LS.qs[LS.i];if(!s)return fin();const w=s.w;window.cur=w;busy=0;
+ if(s.t=='learn'){shell(`<div class="mut">New word</div><div class="big">${w.em}</div><div class="ko kob">${w.ko}</div><div class="mut">${w.ro}</div><div class="en">${w.en}</div><div class="row"><button class="btn sec" onclick="say(cur.ko)">🔊 Normal</button><button class="btn sec" onclick="say(cur.ko,1)">🐢 Slow</button></div>`,cont('Continue',nx));say(w.ko)}
+ else if(s.t=='mc'){const pool=sh(LS.lv.v.filter(x=>x.ko!=w.ko)).slice(0,3);O=sh([w,...pool]);
+  const lab=o=>s.dir?`<span class=ko>${o.ko}</span>`:o.en;
+  shell(`<div class="mut">${s.dir?'Pick the Korean':'What does this mean?'}</div>${s.dir?`<div class="big">${w.em}</div><div class="en">${w.en}</div>`:`<div class="ko kob">${w.ko}</div><button class="btn sec" onclick="say(cur.ko)">🔊</button>`}${O.map((o,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})">${lab(o)}</button>`).join('')}`);if(!s.dir)say(w.ko)}
+ else if(s.t=='type'){resetTV();shell(`<div class="mut">Listen, then type in Korean</div><button class="btn sec" style="font-size:34px" onclick="say(cur.ko)">🔊</button><div class="mut">${w.em} ${w.en}</div><div class="inp">…</div>${kb()}`,`<button class="btn w" onclick="chkT()">Check</button>`);say(w.ko)}
+ else{shell(`<div class="mut">Say it out loud</div><div class="big">${w.em}</div><div class="ko kob">${w.ko}</div><div class="mut">${w.ro} · ${w.en}</div><div class="row"><button class="btn sec" onclick="say(cur.ko)">🔊</button><button class="btn sec" onclick="say(cur.ko,1)">🐢</button></div><div id="sc" class="en"></div>`,`<button class="btn w" onclick="spk()">🎤 Tap and speak</button>`)}}
+function nx(){LS.i++;q()}
+function res(ok,msg){if(busy)return;busy=1;LS.tot++;const w=LS.qs[LS.i].w,r=S.srs[w.ko]||{box:0};
+ if(ok){LS.ok++;r.box=Math.min(5,r.box+1);boom(40)}else{S.hearts--;r.box=0}
+ r.due=Date.now()+[0,1,2,4,8,16][r.box]*864e5;S.srs[w.ko]=r;save();hud();
+ const f=$('#ft');f.className='ft '+(ok?'ok':'bad');
+ mj(ok?['Great job!','Daebak! 대박','Perfect!'][LS.i%3]:'It is okay. Try again later!');
+ H(f,`<b>${ok?'✅ Correct! '+(msg||''):'❌ '+(msg||'')}</b><div style="margin-top:8px">${cont('Continue',S.hearts<1?fin:nx)}</div>`)}
+function pick(i){if(busy)return;const w=LS.qs[LS.i].w,ok=O[i].ko==w.ko;$('#o'+i).classList.add(ok?'good':'no');if(!ok)document.getElementById('o'+O.findIndex(o=>o.ko==w.ko)).classList.add('good');res(ok,ok?'':w.ko+' = '+w.en)}
+function chkT(){if(busy)return;const w=LS.qs[LS.i].w,ok=norm(TV)==norm(w.ko);res(ok,ok?'':'Answer: '+w.ko+' ('+w.ro+')')}
+function spk(){if(busy)return;const w=LS.qs[LS.i].w;toast('Listening… 🎤');listen(t=>{
+ if(t===null){res(true,'Mic not supported here: self-checked');return}
+ const sc=sim(t,w.ko);$('#sc').textContent=sc+'% · heard: '+(t||'nothing');res(sc>=60,sc>=60?'Score '+sc+'%':'Score '+sc+'%. Try the slow audio.')})}
+function fin(){const pass=LS.tot&&LS.ok/LS.tot>=.8&&S.hearts>0,pc=LS.tot?Math.round(100*LS.ok/LS.tot):0;
+ let msg='';if(pass){const xp=10+LS.ok;S.xp+=xp;S.today+=xp;S.gems+=5;if(LS.n>S.done&&LS.n)S.done=LS.n;
+  const t=dayStr();if(S.last!==t){S.streak=(S.last===new Date(Date.now()-864e5).toDateString())?S.streak+1:1;S.last=t}
+  save();boom(160);msg=`+${xp} XP · +5 💎`;mj('You passed! 최고예요!')}
+ else mj('You need 80%. Let us try again!');
+ hud();H($('#les'),`<div class="lbody" style="justify-content:center"><div class="avatar" style="width:110px;height:110px;font-size:62px">${pass?'🥳':'😅'}</div><div class="en" style="font-size:30px">${pass?'Lesson complete!':S.hearts<1?'Out of hearts':'Not yet'}</div><div class="kob">${pc}%</div><div class="mut">${msg||'80% needed to pass'}</div></div><div class="ft"><button class="btn w" onclick="closeL()">${pass?'Continue':'Back to path'}</button></div>`)}
+// ---------- Dojo (writing + typing) ----------
+let DC,dx,dch='ㄱ',dst=[],dan=null,dcur=null,TW=null;
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function dojo(){return `<div class="glass p"><b>✍️ Hangul Writing Dojo</b><div class="mut" style="font-size:13px">Pick a letter, watch the stroke order, then trace it.</div>
+ <div class="chips" style="margin-top:8px">${DJ.map(c=>`<button class="chip ${c==dch?'on':''}" onclick="pickD('${c}')">${c}</button>`).join('')}</div>
+ <canvas id="dc" width="300" height="300"></canvas>
+ <div class="row"><button class="btn sec" onclick="animD()">▶ Order</button><button class="btn sec" onclick="clrD()">Clear</button><button class="btn" onclick="chkD()">Check</button></div><div id="dres" class="mut" style="text-align:center;margin-top:8px">Trace the faint letter.</div></div>
+ <div class="glass p"><b>⌨️ Typing practice (Listen → Type → Speak)</b><div id="tw" style="text-align:center;margin:10px 0"></div><div class="inp">…</div><div style="margin-top:8px">${kb()}</div><div class="row"><button class="btn sec" onclick="newTW()">Skip</button><button class="btn" onclick="chkTW()">Check</button><button class="btn sec" onclick="spkTW()">🎤</button></div><div id="twr" class="mut" style="text-align:center;margin-top:6px"></div></div>`}
+function pickD(c){dch=c;dst=[];dan=null;render()}
+function clrD(){dst=[];dan=null;redraw()}
+function path(p,k){dx.beginPath();p.forEach((q,i)=>i?dx.lineTo(q[0]*k,q[1]*k):dx.moveTo(q[0]*k,q[1]*k));if(p.length==1)dx.lineTo(p[0][0]*k+.1,p[0][1]*k);dx.stroke()}
+function part(p,t){const L=[];let tot=0;for(let i=1;i<p.length;i++){const d=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);L.push(d);tot+=d}let r=t*tot;const o=[p[0]];for(let i=0;i<L.length;i++){if(r>=L[i]){o.push(p[i+1]);r-=L[i]}else{const f=r/L[i];o.push([p[i][0]+(p[i+1][0]-p[i][0])*f,p[i][1]+(p[i+1][1]-p[i][1])*f]);break}}return o}
+function gl(c){c.font='bold 230px "Noto Sans KR",sans-serif';c.textAlign='center';c.textBaseline='middle'}
+function redraw(){if(!dx)return;dx.clearRect(0,0,300,300);gl(dx);dx.fillStyle=cv('--guide');dx.fillText(dch,150,160);dx.lineCap=dx.lineJoin='round';
+ if(dan){dx.strokeStyle='#ff9600';dx.lineWidth=11;STR[dch].forEach((p,i)=>{if(i<dan.i)path(p,3);else if(i==dan.i){path(part(p,dan.p),3);dx.fillStyle='#ff9600';dx.font='bold 20px Nunito';dx.fillText(i+1,p[0][0]*3-14,p[0][1]*3-10);gl(dx)}})}
+ dx.strokeStyle=cv('--acc');dx.lineWidth=12;dst.forEach(s=>path(s,1))}
+function initD(){DC=$('#dc');dx=DC.getContext('2d');const pt=e=>{const r=DC.getBoundingClientRect();return[(e.clientX-r.left)*300/r.width,(e.clientY-r.top)*300/r.height]};
+ DC.onpointerdown=e=>{DC.setPointerCapture(e.pointerId);dan=null;dcur=[pt(e)];dst.push(dcur);redraw()};DC.onpointermove=e=>{if(dcur){dcur.push(pt(e));redraw()}};DC.onpointerup=DC.onpointercancel=()=>dcur=null;
+ (document.fonts&&document.fonts.ready||Promise.resolve()).then(redraw);redraw();newTW()}
+function animD(){const E=STR[dch];if(!E){toast('Draw this block freely: no animation yet');return}dst=[];dan={i:0,p:0};const me=dan;(function f(){if(dan!==me)return;me.p+=.03;if(me.p>=1){if(me.i>=E.length-1){me.p=1;redraw();setTimeout(()=>{if(dan===me){dan=null;redraw()}},1200);return}me.i++;me.p=0}redraw();requestAnimationFrame(f)})()}
+function chkD(){if(!dst.length){toast('Draw the letter first');return}
+ const mk=()=>{const c=document.createElement('canvas');c.width=c.height=300;return c.getContext('2d')};
+ const g=mk(),gd=mk(),u=mk(),ud=mk();
+ [g,gd].forEach(c=>{gl(c);c.fillText(dch,150,160)});gd.lineWidth=36;gd.lineJoin='round';gd.strokeText(dch,150,160);
+ const dr=(c,w)=>{c.lineCap=c.lineJoin='round';c.lineWidth=w;dst.forEach(s=>{c.beginPath();s.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));if(s.length==1)c.lineTo(s[0][0]+.1,s[0][1]);c.stroke()})};
+ dr(u,12);dr(ud,46);const A=c=>c.getImageData(0,0,300,300).data,ga=A(g),gda=A(gd),ua=A(u),uda=A(ud);
+ let gp=0,cov=0,up=0,pr=0;for(let i=3;i<ga.length;i+=4){if(ga[i]>100){gp++;if(uda[i]>100)cov++}if(ua[i]>100){up++;if(gda[i]>100)pr++}}
+ const score=Math.round(100*Math.min(1,cov/gp*1.05)*(pr/Math.max(up,1))),E=STR[dch];
+ let okO=true;if(E)okO=E.length==dst.length&&E.every((e,i)=>Math.hypot(e[0][0]*3-dst[i][0][0],e[0][1]*3-dst[i][0][1])<120);
+ const pass=score>=55&&okO;
+ H($('#dres'),`Shape ${score}%${E?' · stroke order '+(okO?'✓':'✗ (press Order and watch)'):''}<br><b>${pass?'🎉 Nice writing! +3 XP':'Keep tracing, you can do it'}</b>`);
+ if(pass){S.xp+=3;S.today+=3;save();hud();boom(50);mj('Your handwriting is great!')}}
+// typing practice
+function newTW(){const pool=LV.slice(3,Math.max(4,S.done+1)).flatMap(l=>l.v);const p=pool.length?pool:LV[3].v;TW=sh(p)[0];resetTV();const e=$('#tw');if(!e)return;H(e,`<div style="font-size:48px">${TW.em}</div><div class="en">${TW.en}</div><button class="btn sec" onclick="say(TW.ko)">🔊</button> <button class="btn sec" onclick="say(TW.ko,1)">🐢</button>`);H($('#twr'),'')}
+function chkTW(){const ok=norm(TV)==norm(TW.ko);H($('#twr'),ok?'✅ Correct! +2 XP':'❌ Answer: '+TW.ko+' ('+TW.ro+')');if(ok){S.xp+=2;S.today+=2;save();hud();boom(30);setTimeout(newTW,900)}}
+function spkTW(){say(TW.ko);setTimeout(()=>listen(t=>{H($('#twr'),t===null?'Mic is not supported in this browser':'Score '+sim(t,TW.ko)+'% · heard: '+(t||'nothing'))}),900)}
+// ---------- Stories ----------
+let SI=0,SQ=0;
+function stories(){return topikCard()+`<div class="glass p"><b>📖 Stories</b><div class="mut" style="font-size:13px">Tap words for meanings. Stories unlock as you progress.</div></div>`+ST.map((s,i)=>{const lk=S.done<s.req-1;return `<div class="glass p" style="display:flex;gap:12px;align-items:center;${lk?'opacity:.55':''}"><div style="font-size:44px">${s.em}</div><div style="flex:1"><b>${s.t}</b><div class="mut" style="font-size:12px">${lk?'Finish level '+(s.req-1)+' to unlock':'Ready to read'}</div></div><button class="btn" onclick="openSt(${i})">${lk?'🔒':'Read'}</button></div>`}).join('')}
+function openSt(i){const s=ST[i];if(S.done<s.req-1){toast('Complete more levels first 🔒');return}SI=i;SQ=0;
+ $('#stm').classList.remove('hidden');H($('#stm'),`<div class="lbar"><button class="btn sec" style="padding:6px 12px" onclick="$('#stm').classList.add('hidden')">✕</button><b>${s.t}</b></div><div class="lbody" style="align-items:stretch;text-align:left"><div style="text-align:center;font-size:60px">${s.em}</div>${s.l.map((ln,li)=>`<div class="glass p" style="margin:0"><button class="btn sec" style="padding:4px 10px" onclick="say(ST[${i}].l[${li}].map(w=>w[0]).join(' '))">🔊</button><div class="ko">${ln.map((w,wi)=>`<span class="wd" onclick="gloss(${i},${li},${wi})">${w[0]}</span>`).join(' ')}</div></div>`).join('')}<div id="gl" class="bubble" style="text-align:center">Tap a word 👆</div><div class="glass p" style="margin:0"><b>${s.q[0]}</b><div id="sq" style="display:flex;flex-direction:column;gap:8px;margin-top:10px">${sh(s.q[1].map((o,oi)=>[o,oi])).map(([o,oi])=>`<button class="opt" onclick="ansSt(this,${oi})">${o}</button>`).join('')}</div></div></div>`)}
+function gloss(i,l,w){const x=ST[i].l[l][w];say(x[0]);H($('#gl'),`<b class="ko">${x[0]}</b> = ${x[1]}`)}
+function ansSt(b,i){if(SQ)return;if(i==0){SQ=1;b.classList.add('good');S.xp+=15;S.today+=15;S.gems+=2;save();hud();boom(120);mj('You can read Korean!');toast('Correct! +15 XP')}else{b.classList.add('no');toast('Try again')}}
+// ---------- Shop & profile ----------
+function shop(){const c=S.chest!==dayStr();return `<div class="glass p"><b>🛍️ Shop</b><div class="mut">You have 💎 ${S.gems}</div></div>
+ <div class="glass p" style="display:flex;justify-content:space-between;align-items:center"><div><b>🎁 Daily chest</b><div class="mut" style="font-size:12px">20 gems every day</div></div><button class="btn" onclick="buy('chest')">${c?'Open':'Opened'}</button></div>
+ <div class="glass p" style="display:flex;justify-content:space-between;align-items:center"><div><b>❤️ 1 heart</b><div class="mut" style="font-size:12px">10 gems</div></div><button class="btn sec" onclick="buy('h1')">Buy</button></div>
+ <div class="glass p" style="display:flex;justify-content:space-between;align-items:center"><div><b>💖 Refill hearts</b><div class="mut" style="font-size:12px">40 gems</div></div><button class="btn sec" onclick="buy('h5')">Buy</button></div>`}
+function buy(k){if(k=='chest'){if(S.chest===dayStr()){toast('Come back tomorrow');return}S.chest=dayStr();S.gems+=20;boom(80)}
+ else{const c=k=='h1'?10:40;if(S.gems<c){toast('Not enough gems');return}if(S.hearts>=5){toast('Hearts are full');return}S.gems-=c;S.hearts=k=='h1'?S.hearts+1:5}save();render()}
+function me(){const names=[['Ama',420],['Kwame',310],['Soo-ah',260],['Kofi',150],['Yuna',90]],L=[...names,['You',S.xp]].sort((a,b)=>b[1]-a[1]);
+ return `<div class="glass p" style="text-align:center"><div class="avatar" style="margin:0 auto;width:90px;height:90px;font-size:50px">🧑‍🎓</div><div class="en">Learner</div><div class="mut">${S.done}/${LV.length} levels · ${Object.keys(S.srs).length} words practiced</div></div>
+ <div class="glass p"><b>Stats</b><div class="stat"><span>⭐ XP</span><span>${S.xp}</span></div><div class="stat"><span>🔥 Streak</span><span>${S.streak} days</span></div><div class="stat"><span>🎯 Daily goal</span><span>${S.today}/50 XP</span></div></div>
+ ${(k=>`<div class="glass p"><b>🎯 TOPIK I Level 2 roadmap (goal: Dec 2028)</b><div class="prog" style="margin:10px 0"><i style="width:${Math.min(100,k/15)}%"></i></div><div class="mut">${k} of about 1,500 words learned · about ${Math.max(0,Math.ceil((1500-k)/((new Date('2028-12-31')-Date.now())/864e5)*7))} new words per week keeps you on track</div></div>`)(LV.filter(l=>l.n<=S.done).reduce((a,l)=>a+l.v.length,0))}
+ <div class="glass p"><b>🏆 Leaderboard</b>${L.map((x,i)=>`<div class="stat" style="${x[0]=='You'?'color:var(--acc)':''}"><span>${i+1}. ${x[0]}</span><span>${x[1]} XP</span></div>`).join('')}</div>
+ <div class="glass p"><b>Settings</b><div class="row"><button class="btn sec" onclick="tgl()">🌓 Theme</button><button class="btn sec" onclick="nextVoice()">🗣️ Change voice</button><button class="btn sec" onclick="S.slow=S.slow?0:1;save();toast('Slow audio '+(S.slow?'on':'off'))">🐢 Slow audio</button><button class="btn red" onclick="if(confirm('Reset all progress?')){localStorage.removeItem('minjun5');location.reload()}">Reset</button></div></div>`}
+// ---------- TOPIK practice ----------
+const TQ=[["저는 친구___ 만나요.","I meet a friend.","를","에","이","는"],["오늘 학교___ 가요.","I go to school today.","에","를","이","와"],["물___ 주세요.","Water, please.","을","에서","도","이에요"],["동생___ 학생이에요.","My sibling is also a student.","도","을","에서","에"],["지금 몇 ___예요?","What time is it now?","시","살","개","명"],["개가 두 ___ 있어요.","There are two dogs.","마리","명","살","시"],["저는 스무 ___이에요.","I am twenty years old.","살","마리","명","시"],["식당___ 밥을 먹어요.","I eat a meal at the restaurant.","에서","를","이","와"],["날씨가 ___. (It is hot)","Weather: hot","더워요","추워요","예뻐요","맛있어요"],["내일 친구를 ___. (meet)","Tomorrow I meet a friend.","만나요","마셔요","읽어요","자요"],["아침에 일찍 ___. (wake up)","I wake up early.","일어나요","닫아요","타요","웃어요"],["김치가 ___. (delicious)","The kimchi is delicious.","맛있어요","싫어요","무서워요","느려요"],["저는 한국 사람___.","I am a Korean person.","이에요","을","에서","도"],["어머니___ 시장에 가요.","Mother goes to the market.","는","를","에서","도"]];
+let TS=null;
+function topikCard(){return `<div class="glass p" style="display:flex;justify-content:space-between;align-items:center"><div><b>🎯 TOPIK I practice</b><div class="mut" style="font-size:12px">10 listening and reading questions</div></div><button class="btn" onclick="topik()">Start</button></div>`}
+function topik(){const pool=LV.slice(0,Math.max(6,S.done)).flatMap(l=>l.v).filter(w=>w.ko.length>1);
+ const Ls=sh(pool).slice(0,5).map(w=>({t:'L',w,o:sh([w,...sh(pool.filter(x=>x!=w)).slice(0,3)])})),Rs=sh(TQ).slice(0,5).map(x=>({t:'R',x,o:sh(x.slice(2))}));
+ TS={q:sh([...Ls,...Rs]),i:0,ok:0,lock:0};$('#les').classList.remove('hidden');tq()}
+function tq(){const s=TS.q[TS.i];TS.lock=0;
+ if(!s){const pass=TS.ok>=7;if(pass){S.xp+=TS.ok*3;S.today+=TS.ok*3;S.gems+=5;save();boom(140)}hud();H($('#les'),`<div class="lbody" style="justify-content:center"><div class="big">${pass?'🏆':'📚'}</div><div class="en">TOPIK practice: ${TS.ok}/10</div><div class="mut">${pass?'Strong result! +'+TS.ok*3+' XP':'Aim for 7 out of 10, then try again.'}</div></div><div class="ft"><button class="btn w" onclick="closeL()">Done</button></div>`);return}
+ const body=s.t=='L'?`<div class="mut">Listening: what does it mean?</div><button class="btn sec" style="font-size:40px" onclick="say('${s.w.ko}')">🔊</button><button class="btn sec" onclick="say('${s.w.ko}',1)">🐢 Slow</button>`+s.o.map((o,k)=>`<button class="opt" id="t${k}" onclick="ta(${k})">${o.en}</button>`).join(''):`<div class="mut">Reading: choose the best word</div><div class="ko" style="font-size:30px">${s.x[0]}</div><div class="mut">${s.x[1]}</div>`+s.o.map((o,k)=>`<button class="opt ko" id="t${k}" onclick="ta(${k})">${o}</button>`).join('');
+ H($('#les'),`<div class="lbar"><button class="btn sec" onclick="closeL()" style="padding:6px 12px">✕</button><div class="prog"><i style="width:${TS.i*10}%"></i></div><span>${TS.i+1}/10</span></div><div class="lbody">${body}</div>`);if(s.t=='L')say(s.w.ko)}
+function ta(k){if(TS.lock)return;TS.lock=1;const s=TS.q[TS.i],ok=s.t=='L'?s.o[k]==s.w:s.o[k]==s.x[2];if(ok)TS.ok++;$('#t'+k).classList.add(ok?'good':'no');if(!ok){const c=s.o.findIndex(o=>s.t=='L'?o==s.w:o==s.x[2]);$('#t'+c).classList.add('good')}setTimeout(()=>{TS.i++;tq()},ok?700:1500)}
+// ---------- Video call ----------
+let CL=null,camS=null;
+const SCN=[['Introduce yourself','Greet and introduce yourself: name, country, age, job or school.'],['At the market','Role-play buying food and asking prices.'],['At the restaurant','Role-play ordering food and drinks.'],['My family','Talk about family members and their ages.'],['Free talk','Chat about daily life.'],['At the airport','Role-play checking in: passport, ticket, destination, luggage.'],['Asking directions','Role-play asking where a place is and how to get there.'],['At the hospital','Role-play telling a doctor what hurts and how you feel.'],['Hobbies and weekend','Talk about hobbies, weekend plans and favorite things.'],['TOPIK speaking drill','Ask short TOPIK I style questions one at a time (name, age, family, daily routine, plans), then briefly react to each answer.']];
+function callTab(){return `<div class="glass p" style="text-align:center"><div class="avatar" style="margin:0 auto">🧑‍🎓</div><b class="en">Call Min Jun</b><div class="mut" style="font-size:13px;margin:6px 0">Practice speaking like a video call. Min Jun listens, answers in Korean, and corrects your mistakes.</div></div>`+SCN.map((s,i)=>`<div class="glass p" style="display:flex;justify-content:space-between;align-items:center"><b>${s[0]}</b><button class="btn" onclick="startCall(${i})">📹 Call</button></div>`).join('')+`<div class="glass p mut" style="font-size:12px">Needs microphone access (Chrome works best). If the mic or camera is blocked, type Korean instead.</div>`}
+async function startCall(i){let sm=null;try{sm=await claude.use('sample')}catch(e){}
+ CL={sc:SCN[i],h:[],n:0,sm,t0:Date.now(),busy:0,last:'',known:LV.filter(l=>l.n<=Math.max(S.done,3)).flatMap(l=>l.v.map(w=>w.ko)).slice(-60).join(', ')};
+ $('#call').classList.remove('hidden');
+ H($('#call'),`<div class="lbar"><b>📹 ${CL.sc[0]}</b><span id="ct" class="mut" style="margin-left:auto">0:00</span></div><div class="lbody" style="justify-content:flex-start"><div class="glass" style="position:relative;width:100%;max-width:420px;padding:18px"><div class="avatar" id="mjav" style="margin:0 auto;width:120px;height:120px;font-size:68px">🧑‍🎓</div><div style="position:absolute;right:10px;top:10px;width:84px;height:112px;border-radius:14px;overflow:hidden;background:#222;display:grid;place-items:center"><video id="cam" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover"></video><span id="camx" style="position:absolute">🙂</span></div></div><div class="glass p" style="margin:0;width:100%;max-width:420px;min-height:130px;text-align:left"><div class="mut" id="sy"></div><div class="ko" style="font-size:24px" id="sk">Connecting…</div><div class="mut" id="sr"></div><div id="se" style="font-weight:800"></div><div id="sf" style="margin-top:6px;color:var(--acc);font-weight:800"></div></div><div class="row"><button class="btn sec" onclick="say(CL.last,1)">🐢 Slow</button><button class="btn sec" onclick="speakCb(CL.last)">🔊 Again</button></div><div style="display:flex;gap:6px;width:100%;max-width:420px"><input id="ti" class="ko" placeholder="Type Korean…" style="flex:1;border-radius:12px;border:2px solid var(--line);padding:8px;background:var(--box);color:var(--tx);font-size:18px"><button class="btn" onclick="sendT()">Send</button></div></div><div class="ft"><div class="row" style="margin:0"><button class="btn" id="mic" style="flex:1" onclick="micTurn()">🎤 Tap and speak</button><button class="btn red" onclick="endCall()">End</button></div></div>`);
+ try{camS=await navigator.mediaDevices.getUserMedia({video:true});$('#cam').srcObject=camS;$('#camx').style.display='none'}catch(e){}
+ CL.tm=setInterval(()=>{const s=Math.floor((Date.now()-CL.t0)/1000),e=$('#ct');if(e)e.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')},1000);
+ turn('(call started: greet the learner)')}
+async function turn(said){if(!CL||CL.busy)return;CL.busy=1;$('#sk').textContent='…';$('#sy').textContent=said[0]=='('?'':'You: '+said;let r=null;
+ if(CL.sm){try{r=await CL.sm.json(`You are Min Jun, a kind Korean tutor on a video call with a beginner aiming for TOPIK I level 2. Scenario: ${CL.sc[1]} Use short, simple polite Korean (해요체), preferring words from this list: ${CL.known}. Reply with 1-2 short sentences then one easy question. Reply ONLY as JSON {"ko":"","rom":"romanization","en":"English meaning","fix":"if the learner's last Korean had mistakes, the corrected Korean plus a short English tip, else empty string"}. Conversation so far: ${CL.h.slice(-8).join(' | ')}. Learner just said: ${said}`,{cache:false})}catch(e){r=null}}
+ if(!r||!r.ko){const F=[['안녕하세요! 이름이 뭐예요?','annyeonghaseyo! ireumi mwoyeyo?','Hello! What is your name?'],['어느 나라 사람이에요?','eoneu nara saramieyo?','Which country are you from?'],['몇 살이에요?','myeot salieyo?','How old are you?'],['오늘 뭐 먹고 싶어요?','oneul mwo meokgo sipeoyo?','What do you want to eat today?']],f=F[CL.n%F.length];r={ko:f[0],rom:f[1],en:f[2],fix:CL.sm?'':'Tutor AI is unavailable here, so these are practice prompts. Answer them out loud.'}}
+ CL.n++;CL.h.push('Learner: '+said,'Min Jun: '+r.ko);CL.last=r.ko;$('#sk').textContent=r.ko;$('#sr').textContent=r.rom||'';$('#se').textContent=r.en||'';$('#sf').textContent=r.fix?'✏️ '+r.fix:'';CL.busy=0;speakCb(r.ko)}
+function speakCb(t){try{speechSynthesis.cancel();const u=mkU(t,S.slow),a=$('#mjav');u.onstart=()=>{if(a)a.style.animationDuration='.35s'};u.onend=()=>{if(a)a.style.animationDuration=''};speechSynthesis.speak(u)}catch(e){}}
+function micTurn(){if(!CL||CL.busy)return;$('#mic').textContent='🎤 Listening…';listen(t=>{$('#mic').textContent='🎤 Tap and speak';if(t===null){toast('Mic not supported: type instead');return}if(!t){toast('Did not hear anything. Try again');return}turn(t)})}
+function sendT(){const e=$('#ti'),t=e.value.trim();if(t){e.value='';turn(t)}}
+function endCall(){if(!CL)return;clearInterval(CL.tm);try{camS&&camS.getTracks().forEach(t=>t.stop())}catch(e){}camS=null;try{speechSynthesis.cancel()}catch(e){}const m=Math.max(1,Math.round((Date.now()-CL.t0)/6e4)),n=CL.n;$('#call').classList.add('hidden');if(n>=3){const xp=10+n*3;S.xp+=xp;S.today+=xp;S.gems+=3;save();boom(100);toast('Call done: +'+xp+' XP, '+m+' min speaking')}else toast('Call ended');CL=null;render()}
+function tgl(){const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;S.theme=dark?'light':'dark';theme();save()}
+render();
+</script></body></html>
