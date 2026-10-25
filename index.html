@@ -1,43 +1,258 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>KOREAN MASTER V2 - 8000 Words - Internet Sourced</title><style>
-body{font-family:system-ui,sans-serif;background:#0f172a;color:white;margin:0;padding:16px}
-.header{text-align:center;padding:10px}
-.card{background:#1e293b;border-radius:12px;padding:16px;margin:10px 0}
-.btn{background:#0ea5e9;color:white;border:none;padding:8px 16px;border-radius:8px;margin:4px;cursor:pointer}
-.stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.stat{background:#1e293b;padding:8px 16px;border-radius:8px;text-align:center;min-width:70px}
-.word-k{font-size:24px;font-weight:bold;color:#38bdf8}
-select{padding:8px;border-radius:8px;width:100%;max-width:320px;margin:5px}
-.badge{display:inline-block;background:#334155;padding:2px 8px;border-radius:10px;font-size:11px;margin:2px}
-.sources{font-size:10px;color:#475569;margin-top:10px}
-</style></head><body>
-<div class="header"><h1>KOREAN MASTER V2</h1><p>8000 Words + 6000 Sentences - 100% Unique - Internet Sourced - 9 Categories</p>
-<div class="stats"><div class="stat"><div id="wordCount">0</div><small>Words</small></div><div class="stat"><div id="sentCount">0</div><small>Sentences</small></div><div class="stat"><div id="catCount">0</div><small>Categories</small></div></div>
-<p style="font-size:11px;color:#64748b">GKS Yonsei CS - Sources: TOPIK 6000, 90DayKorean, TalkPal - Offline First</p></div>
-<div style="text-align:center"><select id="categoryFilter"><option value="All">All Categories (8000)</option></select><br>
-<button class="btn" onclick="speakCurrent()">Speak Korean</button>
-<button class="btn" onclick="prevWord()">Prev</button>
-<button class="btn" onclick="nextWord()">Next</button>
-<button class="btn" onclick="shuffleWords()">Shuffle</button></div>
-<div class="card"><div id="currentCat" style="color:#94a3b8;font-size:12px"></div><div class="word-k" id="currentK">Loading V2...</div><div id="currentR" style="color:#cbd5e1;margin:6px 0"></div><div id="currentE" style="font-size:18px"></div><div id="currentId" style="color:#475569;font-size:11px;margin-top:8px"></div><div id="catBadge"></div></div>
-<div class="card"><h3>Example Sentences</h3><div id="sentenceList"></div></div>
-<div class="card" style="background:#0f172a;border:1px solid #1e293b"><h4>Categories Breakdown - V2 Internet Sourced</h4><div id="breakdown" style="font-size:12px;color:#94a3b8"></div><div class="sources">Sources: TOPIK Word List 6000 (National Institute Korean Language), 90DayKorean, TalkPal, Yonsei Univ Dept list</div></div>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korean Teuida Style - Teach + Speak - Ghana</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+.glass-card{background:rgba(15,23,42,0.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1)}
+.pulse-ring{animation:pulse 1.5s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,0.7)}70%{box-shadow:0 0 0 15px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
+</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 py-3">
+<div class="max-w-5xl mx-auto flex justify-between items-center">
+<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-blue-600 flex items-center justify-center font-black">한</div><div><h1 class="font-bold text-sm">Teuida-Style Korean - Teach + Speak</h1><p class="text-[11px] text-slate-400">People + Age + GKS - Like Teuida</p></div></div>
+<div class="flex gap-2"><button onclick="setMode('teach')" id="btn-teach" class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-600">Teach Mode</button><button onclick="setMode('speak')" id="btn-speak" class="px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-800">Speak Mode</button></div>
+</div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-4 w-full flex-1 flex flex-col gap-4">
+<!-- LESSON SELECTOR -->
+<div class="flex flex-wrap gap-2">
+<select id="lesson-select" onchange="loadLesson()" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white min-w-[220px]">
+<option value="people">👨‍👩‍👧‍👦 Lesson 1: People - 사람</option>
+<option value="age" selected>🔢 Lesson 2: Age - 나이 (살)</option>
+<option value="greeting">👋 Lesson 3: Greeting</option>
+<option value="introduction">🙋 Lesson 4: Introduction + GKS</option>
+<option value="food">🍲 Lesson 5: Food</option>
+<option value="gks">🎓 Lesson 6: GKS Interview Role-play</option>
+</select>
+<span id="progress" class="px-3 py-2 text-xs text-slate-400">Step 1/5</span>
+</div>
+
+<div class="w-full max-w-lg mx-auto">
+<!-- TEACH CARD -->
+<div id="teach-card" class="glass-card rounded-3xl p-5 min-h-[520px] flex flex-col justify-between shadow-2xl">
+<div class="flex justify-between items-center"><span id="card-category" class="text-[10px] uppercase font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border">Age</span><div class="flex gap-2"><button onclick="speakKoreanSlow()" class="w-9 h-9 rounded-full bg-slate-800 border flex items-center justify-center"><i class="fa-solid fa-ear-listen text-xs"></i></button><button onclick="speakKorean()" class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center"><i class="fa-solid fa-volume-high text-xs"></i></button></div></div>
+
+<div class="text-center my-3">
+<!-- Korean -->
+<h2 id="card-hangul" class="text-3xl font-black text-white mb-1 leading-snug">저는 스무 살입니다</h2>
+<p id="card-roman" class="text-xs text-blue-300/80 mb-3">jeo-neun seu-mu sal-im-ni-da</p>
+
+<!-- Teaching Box - Like Teuida -->
+<div id="teach-box" class="text-left bg-slate-900/80 rounded-2xl p-4 border border-slate-800 mb-3">
+<p class="text-[10px] font-bold text-yellow-400 mb-1">📖 TEACHING:</p>
+<p id="teach-explain" class="text-xs text-slate-200 leading-relaxed">저는 = I (formal)<br>스무 = 20 (native number)<br>살 = years old counter<br>입니다 = am (formal ending)</p>
+</div>
+
+<!-- English -->
+<div class="mt-2 pt-3 border-t border-slate-700/60">
+<p class="text-[9px] uppercase tracking-widest font-bold text-emerald-400/60 mb-1">MEANS</p>
+<h3 id="card-english" class="text-lg font-bold text-emerald-300">I am 20 years old</h3>
+</div>
+
+<!-- Conversation - Like Teuida -->
+<div id="conversation-box" class="mt-4 text-left bg-blue-950/30 rounded-2xl p-3 border border-blue-800/30 hidden">
+<p class="text-[10px] font-bold text-blue-400 mb-1">💬 CONVERSATION:</p>
+<p id="conversation-line" class="text-xs text-white">AI: 몇 살이에요? (How old are you?)</p>
+<p class="text-[10px] text-slate-400 mt-1">Your turn: Say "저는 스무 살입니다"</p>
+</div>
+</div>
+
+<!-- SPEAKING SCORE -->
+<div id="score-box" class="hidden mt-2 p-3 rounded-xl border text-center">
+<p id="score-text" class="text-sm font-bold"></p>
+<p id="score-feedback" class="text-[11px] text-slate-400 mt-1"></p>
+</div>
+
+<div class="flex flex-col gap-3 mt-4">
+<!-- MIC BUTTON - Teuida Style -->
+<button id="mic-btn" onclick="startListening()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
+<i class="fa-solid fa-microphone"></i> <span id="mic-label">Press to Speak Korean - Like Teuida</span>
+</button>
+
+<div class="flex justify-between items-center">
+<button onclick="prevCard()" class="px-4 py-2 text-slate-400 text-xs">← Prev</button>
+<span id="card-index" class="text-[11px] text-slate-500">1 / 5</span>
+<button onclick="nextCard()" class="px-4 py-2 bg-slate-800 rounded-full text-xs font-bold">Next →</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="max-w-lg mx-auto mt-4 text-[11px] text-slate-500 leading-relaxed text-center">
+Allow microphone in Chrome. Speak clearly. Teuida-style: Teaches first, then you repeat. For People: 아버지 (a-beo-ji), 어머니 (eo-meo-ni). For Age: Use 살 after number.
+</div>
+</main>
+
 <script>
-const BASE_WORDS=[["Greetings","안녕하세요","annyeonghaseyo","Hello"],["Greetings","감사합니다","gamsahamnida","Thank you"],["Greetings","죄송합니다","joesonghamnida","Sorry"],["Greetings","안녕히 가세요","annyeonghi gaseyo","Goodbye"],["Greetings","어서 오세요","eoseo oseyo","Welcome"],["Greetings","만나서 반갑습니다","mannaseo bangapseumnida","Nice to meet you"],["Food","김치","gimchi","Kimchi"],["Food","비빔밥","bibimbap","Bibimbap"],["Food","불고기","bulgogi","Bulgogi"],["Food","된장찌개","doenjangjjigae","Soybean stew"],["Food","삼겹살","samgyeopsal","Pork belly"],["Food","치킨","chikin","Chicken"],["Food","라면","ramyeon","Ramen"],["Food","밥","bap","Rice"],["Food","국","guk","Soup"],["Food","반찬","banchan","Side dish"],["Food","물","mul","Water"],["Food","커피","keopi","Coffee"],["Food","사과","sagwa","Apple"],["Food","바나나","banana","Banana"],["Food","고기","gogi","Meat"],["Food","생선","saengseon","Fish"],["Food","야채","yachae","Vegetable"],["Food","과일","gwail","Fruit"],["Food","빵","ppang","Bread"],["Food","계란","gyeran","Egg"],["Food","우유","uyu","Milk"],["Food","설탕","seoltang","Sugar"],["Food","소금","sogeum","Salt"],["Food","식당","sikdang","Restaurant"],["Food","메뉴","menyu","Menu"],["Food","맛있다","masitda","Delicious"],["Food","배고프다","baegopeuda","Hungry"],["Food","배부르다","baebureuda","Full"],["Food","갈비","galbi","Ribs"],["Food","떡볶이","tteokbokki","Spicy rice cake"],["Food","잡채","japchae","Glass noodles"],["Food","김밥","gimbap","Seaweed roll"],["Food","돼지고기","dwaejigogi","Pork"],["Food","마늘","maneul","Garlic"],["Food","수박","subak","Watermelon"],["Food","소주","soju","Soju"],["Food","맥주","maekju","Beer"],["Food","차","cha","Tea"],["Food","과자","gwaja","Snack"],["Food","초콜릿","chokollit","Chocolate"],["Food","아이스크림","aiseukeurim","Ice cream"],["Food","샌드위치","saendeuwichi","Sandwich"],["Food","햄버거","haembeogeo","Hamburger"],["Food","피자","pija","Pizza"],["Food","스파게티","seupageti","Spaghetti"],["Food","샐러드","saelleodeu","Salad"],["Food","수프","supeu","Soup"],["Food","요리","yori","Cooking"],["Food","레시피","resipi","Recipe"],["Places","학교","hakgyo","School"],["Places","대학교","daehakgyo","University"],["Places","도서관","doseogwan","Library"],["Places","기숙사","gisuksa","Dorm"],["Places","강의실","gang-uisil","Classroom"],["Places","연구실","yeongusil","Lab"],["Places","병원","byeongwon","Hospital"],["Places","은행","eunhaeng","Bank"],["Places","공항","gonghang","Airport"],["Places","역","yeok","Station"],["Places","버스 정류장","beoseu jeongnyujang","Bus stop"],["Places","공원","gongwon","Park"],["Places","박물관","bakmulgwan","Museum"],["Places","시장","sijang","Market"],["Places","슈퍼마켓","syupeomaket","Supermarket"],["Places","카페","kape","Cafe"],["Places","호텔","hotel","Hotel"],["Places","집","jip","House"],["Places","회사","hoesa","Company"],["Places","서울","seoul","Seoul"],["Places","부산","busan","Busan"],["Places","인천","incheon","Incheon"],["Places","연세대","yeonsedae","Yonsei Univ"],["Places","한국","hanguk","Korea"],["Places","서울역","seoullyeok","Seoul Station"],["Places","강남","gangnam","Gangnam"],["Places","홍대","hongdae","Hongdae"],["Places","이태원","itaewon","Itaewon"],["Places","제주도","jejudo","Jeju Island"],["Places","경복궁","gyeongbokgung","Gyeongbok Palace"],["Places","남산","namsan","Namsan"],["Places","한강","hangang","Han River"],["Places","지하철","jihacheol","Subway"],["Places","택시","taeksi","Taxi"],["Places","비행기","bihaenggi","Airplane"],
-["People","사람","saram","Person"],["People","친구","chingu","Friend"],["People","가족","gajok","Family"],["People","부모님","bumonim","Parents"],["People","아버지","abeoji","Father"],["People","어머니","eomeoni","Mother"],["People","형","hyeong","Older brother"],["People","누나","nuna","Older sister"],["People","동생","dongsaeng","Younger sibling"],["People","교수님","gyosunim","Professor"],["People","학생","haksaeng","Student"],["People","선생님","seonsaengnim","Teacher"],["People","의사","uisa","Doctor"],["People","간호사","ganhosa","Nurse"],["People","경찰","gyeongchal","Police"],["People","한국인","hangukin","Korean person"],["People","외국인","oegukin","Foreigner"],["People","남자","namja","Man"],["People","여자","yeoja","Woman"],["People","아이","ai","Child"],["People","할아버지","harabeoji","Grandfather"],["People","할머니","halmeoni","Grandmother"],["People","삼촌","samchon","Uncle"],["People","이모","imo","Aunt"],["People","사촌","sachon","Cousin"],["People","연인","yeonin","Lover"],["People","남편","nampyeon","Husband"],["People","아내","anae","Wife"],["People","아기","agi","Baby"],["People","청소년","cheongsonyeon","Teenager"],["People","어른","eoreun","Adult"],["People","노인","noin","Elderly"],["People","고객","gogaek","Customer"],["People","직원","jigwon","Employee"],["People","사장님","sajangnim","Boss"],["Feelings","행복하다","haengbokhada","Happy"],["Feelings","슬프다","seulpeuda","Sad"],["Feelings","화나다","hwanada","Angry"],["Feelings","피곤하다","pigonhada","Tired"],["Feelings","즐겁다","jeulgeopda","Joyful"],["Feelings","외롭다","oeropda","Lonely"],["Feelings","무섭다","museopda","Scared"],["Feelings","긴장하다","ginjanghada","Nervous"],["Feelings","사랑","sarang","Love"],["Feelings","좋아하다","joahada","Like"],["Feelings","싫어하다","silheohada","Hate"],["Feelings","보고 싶다","bogo sipda","Miss"],["Feelings","기쁘다","gippeuda","Glad"],["Feelings","우울하다","uulhada","Depressed"],["Feelings","놀라다","nollada","Surprised"],["Feelings","감사하다","gamsahada","Grateful"],["Feelings","속상하다","soksanghada","Upset"],["Feelings","짜증나다","jjajeungnada","Annoyed"],["Feelings","신나다","sinnada","Excited"],["Feelings","기분이 안 좋다","gibuni an jota","Feel bad"],["Feelings","기분이 좋다","gibuni jota","Feel good"],["Feelings","심심하다","simsimhada","Bored"],["Feelings","바쁘다","bappeuda","Busy"],["Feelings","부끄럽다","bukkeureopda","Shy"],["Feelings","안도하다","andohada","Relieved"],["Feelings","설레다","seolleda","Thrilled"],["Feelings","지루하다","jiruhada","Boring"],["Feelings","재미있다","jaemiitda","Fun"],["Feelings","재미없다","jaemieopda","Not fun"],["Feelings","편하다","pyeonhada","Comfortable"],["Feelings","불편하다","bulpyeonhada","Uncomfortable"],["Feelings","건강하다","geonganghada","Healthy"],["Feelings","아프다","apeuda","Sick"],["Feelings","배고프다","baegopeuda","Hungry"],["Feelings","목마르다","mokmareuda","Thirsty"],["Feelings","춥다","chupda","Cold"],["Feelings","덥다","deopda","Hot"],["Feelings","따뜻하다","ttatteuthada","Warm"],["Feelings","시원하다","siwonhada","Cool"],["Feelings","어지럽다","eojireopda","Dizzy"],["Feelings","졸리다","jollida","Sleepy"],["Feelings","정신없다","jeongsineopda","Out of mind"],["Feelings","자랑스럽다","jarangseureopda","Proud"],["Feelings","고맙다","gomapda","Thankful"],["Feelings","미안하다","mianhada","Sorry"],["Feelings","걱정하다","geokjeonghada","Worried"],["Feelings","희망","huimang","Hope"],["Feelings","자신감","jasingam","Confidence"],["Feelings","용기","yonggi","Courage"],["Feelings","평화","pyeonghwa","Peace"],["CS Yonsei","컴퓨터","keompyuteo","Computer"],["CS Yonsei","인공지능","ingongjineung","AI"],["CS Yonsei","소프트웨어","sopeuteuweeo","Software"],["CS Yonsei","하드웨어","hadeuweeo","Hardware"],["CS Yonsei","알고리즘","algorijeum","Algorithm"],["CS Yonsei","데이터","deiteo","Data"],["CS Yonsei","데이터베이스","deiteobeiseu","Database"],["CS Yonsei","네트워크","neteuweokeu","Network"],["CS Yonsei","보안","boan","Security"],["CS Yonsei","프로그래밍","peurogeuraeming","Programming"],["CS Yonsei","코딩","koding","Coding"],["CS Yonsei","서버","seobeo","Server"],["CS Yonsei","클라우드","keullaudeu","Cloud"],["CS Yonsei","머신러닝","meosinreoning","Machine Learning"],["CS Yonsei","딥러닝","dipreoning","Deep Learning"],["CS Yonsei","개발자","gaebalja","Developer"],["CS Yonsei","연구","yeongu","Research"],["CS Yonsei","프로젝트","peurojekteu","Project"],["CS Yonsei","시스템","siseutem","System"],["CS Yonsei","운영체제","unyeongcheje","Operating System"],["CS Yonsei","자료구조","jaryogujo","Data Structure"],["CS Yonsei","컴퓨터공학","keompyuteogonghak","Computer Engineering"],["CS Yonsei","전기전자공학","jeongijeonjagonghak","Electrical Electronic Eng"],["CS Yonsei","수학과 컴퓨팅","suhakgwa keompyuting","Math and Computing"],["CS Yonsei","의과대학","uigwadaehak","Medical College"],["CS Yonsei","정보","jeongbo","Information"],["CS Yonsei","기술","gisul","Technology"],["CS Yonsei","인터넷","inteonet","Internet"],["CS Yonsei","웹사이트","wepsaiteu","Website"],["CS Yonsei","애플리케이션","aepeullikeisyeon","Application"],["CS Yonsei","인공신경망","ingonsingyeongmang","Neural Network"],["CS Yonsei","빅데이터","bikdeiteo","Big Data"],["CS Yonsei","사물인터넷","samulinteonet","IoT"],["CS Yonsei","블록체인","beullokchein","Blockchain"],["CS Yonsei","가상현실","gasanghyeonsil","Virtual Reality"],
-["GKS Interview","장학금","janghakgeum","Scholarship"],["GKS Interview","유학","yuhak","Study abroad"],["GKS Interview","면접","myeonjeop","Interview"],["GKS Interview","자기소개","jagisogae","Self-introduction"],["GKS Interview","학업계획","hageupgyehoek","Study plan"],["GKS Interview","동기","donggi","Motivation"],["GKS Interview","목표","mokpyo","Goal"],["GKS Interview","꿈","kkum","Dream"],["GKS Interview","열정","yeoljeong","Passion"],["GKS Interview","도전","dojeon","Challenge"],["GKS Interview","기회","gihoe","Opportunity"],["GKS Interview","미래","mirae","Future"],["GKS Interview","한국어","hangugeo","Korean language"],["GKS Interview","문화","munhwa","Culture"],["GKS Interview","경험","gyeongheom","Experience"],["GKS Interview","능력","neungnyeok","Ability"],["GKS Interview","성적","seongjeok","Grade"],["GKS Interview","졸업","joreop","Graduation"],["GKS Interview","입학","iphak","Admission"],["GKS Interview","지원","jiwon","Support"],["GKS Interview","추천서","chucheonseo","Recommendation letter"],["GKS Interview","학력","hakryeok","Education"],["GKS Interview","전공","jeongong","Major"],["GKS Interview","부전공","bujeongong","Minor"],["GKS Interview","논문","nonmun","Thesis"],["GKS Interview","연구계획","yeongugyehoek","Research plan"],["GKS Interview","진로","jinro","Career path"],["GKS Interview","취업","chwieop","Employment"],["GKS Interview","인턴십","inteonsip","Internship"],["GKS Interview","봉사활동","bongsahwaldong","Volunteer"],["Daily Life","오늘","oneul","Today"],["Daily Life","내일","naeil","Tomorrow"],["Daily Life","어제","eoje","Yesterday"],["Daily Life","아침","achim","Morning"],["Daily Life","점심","jeomsim","Lunch"],["Daily Life","저녁","jeonyeok","Evening"],["Daily Life","시간","sigan","Time"],["Daily Life","요일","yoil","Day of week"],["Daily Life","월요일","woryoil","Monday"],["Daily Life","화요일","hwayoil","Tuesday"],["Daily Life","공부하다","gongbuhada","To study"],["Daily Life","일하다","ilhada","To work"],["Daily Life","가다","gada","To go"],["Daily Life","오다","oda","To come"],["Daily Life","먹다","meokda","To eat"],["Daily Life","자다","jada","To sleep"],["Daily Life","읽다","ikda","To read"],["Daily Life","쓰다","sseuda","To write"],["Daily Life","듣다","deutda","To listen"],["Daily Life","말하다","malhada","To speak"],["Daily Life","것","geot","Thing - most common word"],["Daily Life","하다","hada","To do - #1 verb"],["Daily Life","있다","itda","To have"],["Daily Life","없다","eopda","To not have"],["Daily Life","되다","doeda","To become"],["Daily Life","가장","gajang","Most"],["Daily Life","모두","modu","All"],["Daily Life","사람","saram","Person - #4 most common"],["Daily Life","무엇","mueot","What"],["Daily Life","언제","eonje","When"],["Daily Life","어디","eodi","Where"],["Daily Life","왜","wae","Why"],["Daily Life","어떻게","eotteoke","How"],["Daily Life","누구","nugu","Who"],["Daily Life","이","i","This"],["Daily Life","그","geu","That"],["Daily Life","저","jeo","That over there"],["Daily Life","그리고","geurigo","And"],["Daily Life","하지만","hajiman","But"],["Daily Life","그래서","geuraeseo","So"],["TOPIK Core","크다","keuda","Big"],["TOPIK Core","작다","jakda","Small"],["TOPIK Core","많다","manta","Many"],["TOPIK Core","적다","jeokda","Few"],["TOPIK Core","빠르다","ppareuda","Fast"],["TOPIK Core","느리다","neurida","Slow"],["TOPIK Core","비싸다","bissada","Expensive"],["TOPIK Core","싸다","ssada","Cheap"],["TOPIK Core","쉽다","swipda","Easy"],["TOPIK Core","어렵다","eoryeopda","Difficult"],["TOPIK Core","예쁘다","yeppeuda","Pretty"],["TOPIK Core","새롭다","saeropda","New"],["TOPIK Core","좋다","jota","Good"],["TOPIK Core","나쁘다","nappeuda","Bad"],["TOPIK Core","높다","nopda","High"],["TOPIK Core","낮다","natda","Low"],["TOPIK Core","길다","gilda","Long"],["TOPIK Core","짧다","jjalda","Short"],["TOPIK Core","넓다","neolda","Wide"],["TOPIK Core","좁다","jopda","Narrow"],["TOPIK Core","무겁다","mugeopda","Heavy"],["TOPIK Core","가볍다","gabyeopda","Light"],["TOPIK Core","두껍다","dukkeopda","Thick"],["TOPIK Core","얇다","yalda","Thin"],["TOPIK Core","강하다","ganghada","Strong"],["TOPIK Core","약하다","yakhada","Weak"],["TOPIK Core","밝다","bakda","Bright"],["TOPIK Core","어둡다","eodupda","Dark"],["TOPIK Core","깨끗하다","kkaekkeuthada","Clean"],["TOPIK Core","더럽다","deoreopda","Dirty"]];
-const PLACES_MOD=["연세대에서","도서관에서","기숙사에서","연구실에서","서울에서","집에서","학교에서","카페에서","홍대에서","강남에서","제주도에서","병원에서"];
-const TIMES_MOD=["오늘","내일","매일","주말에","아침에","저녁에","어제","내년","작년에","다음 주에","매주","매일 아침"];
-const VERBS_MOD=["공부하다","배우다","가다","하다","좋아하다","필요하다","시작하다","준비하다","알다","만나다","가르치다","이해하다","만들다","사용하다","개발하다"];
-const SENT_TMPL=[["저는 {k}를 좋아합니다","I like {e}","Daily"],["{k}는 어디에 있습니까?","Where is {e}?","Places"],["{k}가 먹고 싶습니다","I want to eat {e}","Food"],["{k}에 가고 싶어요","I want to go to {e}","Places"],["오늘 {k}를 공부했습니다","Today I studied {e}","CS Yonsei"],["{k}는 매우 중요합니다","{e} is very important","GKS Interview"],["저의 꿈은 {k}입니다","My dream is {e}","GKS Interview"],["{k} 때문에 행복합니다","I am happy because of {e}","Feelings"],["연세대에서 {k}를 배웁니다","I learn {e} at Yonsei","CS Yonsei"],["GKS 면접에서 {k}에 대해 말했습니다","In GKS interview I talked about {e}","GKS Interview"],["{k}를 매일 연습합니다","I practice {e} every day","Daily Life"],["{k}가 필요합니다","I need {e}","GKS Interview"]];
-function genWords(){const all=[];const seen=new Set();let id=1;BASE_WORDS.forEach(b=>{const k=b[1];if(!seen.has(k)){seen.add(k);all.push({id:id++,cat:b[0],k:b[1],r:b[2],e:b[3]})}});let idx=0;while(all.length<8000&&idx<50000){const base=BASE_WORDS[idx%BASE_WORDS.length];const p=PLACES_MOD[idx%PLACES_MOD.length];const t=TIMES_MOD[Math.floor(idx/2)%TIMES_MOD.length];const v=VERBS_MOD[Math.floor(idx/3)%VERBS_MOD.length];const pat=idx%6;let nk;if(pat==0)nk=t+" "+base[1]+" "+v;else if(pat==1)nk=p+" "+base[1]+" "+v;else if(pat==2)nk=base[1]+" "+v;else if(pat==3)nk=t+" "+p+" "+base[1];else if(pat==4)nk=base[1]+" "+p+" "+v;else nk=t+" "+base[1]+" "+p;if(!seen.has(nk)){seen.add(nk);all.push({id:id++,cat:base[0],k:nk,r:base[2]+" "+v,e:base[3]+" "+v})}idx++}return all}
-function genSents(words){const all=[];const seen=new Set();let id=1;let i=0;while(all.length<6000&&i<30000){const w=words[i%words.length];const t=SENT_TMPL[i%SENT_TMPL.length];const k=t[0].replace("{k}",w.k);const e=t[1].replace("{e}",w.e);if(!seen.has(k)){seen.add(k);all.push({id:id++,k:k,e:e,cat:t[2]})}i++}return all}
-const KOREAN_WORDS=genWords();const KOREAN_SENTENCES=genSents(KOREAN_WORDS);
-let curIdx=0,filtered=KOREAN_WORDS;
-function init(){document.getElementById('wordCount').textContent=KOREAN_WORDS.length;document.getElementById('sentCount').textContent=KOREAN_SENTENCES.length;const cats=[...new Set(KOREAN_WORDS.map(w=>w.cat))];document.getElementById('catCount').textContent=cats.length;const sel=document.getElementById('categoryFilter');const counts={};KOREAN_WORDS.forEach(w=>counts[w.cat]=(counts[w.cat]||0)+1);cats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' ('+counts[c]+')';sel.appendChild(o)});let html="";cats.forEach(c=>{html+=`<span class="badge">${c}: ${counts[c]}</span> `});document.getElementById('breakdown').innerHTML=html;sel.addEventListener('change',filterCat);show(0);showSents()}
-function filterCat(){const cat=document.getElementById('categoryFilter').value;filtered=cat=='All'?KOREAN_WORDS:KOREAN_WORDS.filter(w=>w.cat==cat);curIdx=0;show(0);showSents()}
-function show(idx){if(idx<0)idx=filtered.length-1;if(idx>=filtered.length)idx=0;curIdx=idx;const w=filtered[idx];document.getElementById('currentCat').textContent=w.cat;document.getElementById('currentK').textContent=w.k;document.getElementById('currentR').textContent=w.r;document.getElementById('currentE').textContent=w.e;document.getElementById('currentId').textContent='#'+w.id+' / '+filtered.length;document.getElementById('catBadge').innerHTML=`<span class="badge">${w.cat}</span>`}
-function nextWord(){show(curIdx+1);showSents()}function prevWord(){show(curIdx-1);showSents()}function shuffleWords(){filtered.sort(()=>Math.random()-0.5);curIdx=0;show(0);showSents()}
-function showSents(){const c=document.getElementById('sentenceList');const cat=filtered[curIdx]?.cat||'All';let s=KOREAN_SENTENCES.filter(x=>x.cat==cat).slice(0,8);if(s.length<3)s=KOREAN_SENTENCES.slice(curIdx,curIdx+8);c.innerHTML=s.map(x=>`<div style='padding:8px;border-bottom:1px solid #334155'><div style='color:#38bdf8'>${x.k}</div><div style='font-size:12px;color:#94a3b8'>${x.e}</div><button class='btn' style='padding:3px 8px;font-size:11px;margin-top:4px' onclick='speakText(this.dataset.k)' data-k="${x.k}">Speak</button></div>`).join('')}
-function speakCurrent(){speakText(filtered[curIdx].k)}function speakText(t){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=0.9;const vs=speechSynthesis.getVoices();const g=vs.find(v=>v.name.includes('Google')&&v.lang.includes('ko'));const k=vs.find(v=>v.lang.includes('ko'));if(g)u.voice=g;else if(k)u.voice=k;speechSynthesis.cancel();speechSynthesis.speak(u)}}
-window.speechSynthesis.onvoiceschanged=()=>{speechSynthesis.getVoices()};init();
-</script></body></html>
+let LESSONS = {
+  people: [
+    {k:"사람", r:"sa-ram", e:"Person", teach:"사람 = person. 가나 사람 = Ghanaian person (가나 + 사람).", conv:"AI: 그 사람은 누구예요? (Who is that person?)", tip:"Use 사람 for any person"},
+    {k:"아버지", r:"a-beo-ji", e:"Father", teach:"아버지 = father (formal/respectful). 아빠 = dad (casual).", conv:"AI: 아버지는 몇 살이에요?", tip:"Respectful: 아버지, 어머니"},
+    {k:"어머니", r:"eo-meo-ni", e:"Mother", teach:"어머니 = mother (formal). 엄마 = mom.", conv:"AI: 어머니는 어디에 계세요?", tip:"Formal for GKS interview"},
+    {k:"친구", r:"chin-gu", e:"Friend", teach:"친구 = friend. 제 친구 = my friend. 친구들 = friends.", conv:"AI: 친구가 많아요? (Many friends?)", tip:"Add 들 for plural"},
+    {k:"가나 사람", r:"ga-na sa-ram", e:"Ghanaian", teach:"가나 = Ghana, 사람 = person → 가나 사람 = Ghanaian. 한국 사람 = Korean.", conv:"AI: 당신은 가나 사람이에요?", tip:"Country + 사람 = nationality"},
+    {k:"가족", r:"ga-jok", e:"Family", teach:"가족 = family. 제 가족은 5명입니다 = My family is 5 people. 명 = people counter.", conv:"AI: 가족이 몇 명이에요?", tip:"명 = counter for people"}
+  ],
+  age: [
+    {k:"나이", r:"na-i", e:"Age", teach:"나이 = age. Question: 나이 = age, 몇 살 = how old (살 = age counter).", conv:"AI: 나이가 어떻게 돼요? (informal: 몇 살이에요?)", tip:"나이 is noun, 살 is counter"},
+    {k:"몇 살이에요?", r:"myeot sal-i-e-yo?", e:"How old are you?", teach:"몇 = how many, 살 = years old, 이에요 = are (polite). Full formal: 몇 살입니까?", conv:"AI asks you: 몇 살이에요? → You answer: 저는 ___ 살입니다", tip:"Most important phrase for People lesson!"},
+    {k:"저는 스무 살입니다", r:"jeo-neun seu-mu sal-im-ni-da", e:"I am 20 years old", teach:"저는 = I (formal), 스무 = 20 (native number for age), 살 = years old, 입니다 = am (formal).", conv:"Role-play: Interviewer asks age, you say this.", tip:"For age 1-99 use NATIVE numbers: 하나(1), 스물(20), 서른(30)"},
+    {k:"저는 스물두 살입니다", r:"seu-mul-du sal-im-ni-da", e:"I am 22 years old", teach:"스물두 = 22 (스물 20 + 두 2). 스물다섯 = 25. Age pattern: native number + 살 + 입니다", conv:"AI: 친구는 몇 살이에요? → My friend is 22", tip:"21 = 스물하나, 22 = 스물둘, 25 = 스물다섯"},
+    {k:"저는 열아홉 살입니다", r:"yeol-a-hop sal-im-ni-da", e:"I am 19 years old", teach:"열아홉 = 19. 10=열, 11=열하나, 18=열여덟, 19=열아홉. Common GKS age.", conv:"Practice: Say your real age in Korean!", tip:"18-20 is common GKS age - must know!"},
+    {k:"아버지는 쉰 살입니다", r:"a-beo-ji-neun swin sal-im-ni-da", e:"My father is 50 years old", teach:"아버지 + 는 = Father (topic). 쉰 = 50 (native). 40=마흔, 50=쉰, 60=예순.", conv:"AI: 아버지 나이? → 아버지는 쉰 살입니다", tip:"Build sentence: Person + 는 + age + 입니다"},
+    {k:"한 살, 두 살, 세 살", r:"han sal, du sal, se sal", e:"1, 2, 3 years old", teach:"1=한 살, 2=두 살, 3=세 살 (NOT 하나, 둘 - special for age!). 4=네 살.", conv:"For children: 아이는 두 살입니다", tip:"1-4 have special forms for age: 한/두/세/네 살"}
+  ],
+  greeting: [
+    {k:"안녕하세요", r:"an-nyeong-ha-se-yo", e:"Hello", teach:"안녕하세요 = Hello (formal). 안녕 = casual to friends.", conv:"AI: 안녕하세요! → You: 안녕하세요!", tip:"Most basic - use always"},
+    {k:"감사합니다", r:"kam-sa-ham-ni-da", e:"Thank you", teach:"감사합니다 = Thank you (formal). 고마워요 = casual thanks.", conv:"AI gives gift: → You say 감사합니다", tip:"For GKS interview, always formal"}
+  ],
+  introduction: [
+    {k:"제 이름은 ...입니다", r:"je i-reu-meun ...im-ni-da", e:"My name is ...", teach:"제 = my, 이름 = name, 은 = topic marker. Fill blank with your name.", conv:"AI: 이름이 뭐예요? → 제 이름은 ...입니다", tip:"Introduce yourself for GKS!"},
+    {k:"저는 가나에서 왔습니다", r:"jeo-neun ga-na-e-seo wat-seum-ni-da", e:"I am from Ghana", teach:"저는 = I, 가나에서 = from Ghana, 왔습니다 = came. Past tense.", conv:"AI: 어디에서 왔어요? → 저는 가나에서 왔습니다", tip:"GKS must-know sentence!"},
+    {k:"저는 가나 사람입니다", r:"ga-na sa-ram-im-ni-da", e:"I am Ghanaian", teach:"가나 사람 = Ghanaian, 입니다 = am. Simple intro.", conv:"AI: 국적이 어디예요? → Ghanaian", tip:"Nationality pattern"}
+  ],
+  food: [
+    {k:"저는 푸푸를 좋아합니다", r:"pu-pu-reul jo-a-ham-ni-da", e:"I like Fufu", teach:"를 = object marker, 좋아합니다 = like. Pattern: Object + 를 + 좋아합니다", conv:"AI: 무슨 음식을 좋아해요? → Fufu", tip:"을/를 = object particle"},
+    {k:"김치를 좋아해요?", r:"kim-chi-reul jo-a-hae-yo?", e:"Do you like Kimchi?", teach:"김치 = Kimchi, 좋아해요 = like (casual). 좋아합니다 = formal.", conv:"AI asks food preference", tip:"Korean food = 김치"}
+  ],
+  gks: [
+    {k:"저는 한국에서 공부하고 싶습니다", r:"han-guk-e-seo gong-bu-ha-go sip-seum-ni-da", e:"I want to study in Korea", teach:"한국에서 = in Korea, 공부하고 싶습니다 = want to study (고 싶다 = want to).", conv:"INTERVIEW: Why Korea? → This sentence!", tip:"GKS GOLD sentence - memorize!"},
+    {k:"장학금을 받고 싶습니다", r:"jang-hak-geu-meul bat-go sip-seum-ni-da", e:"I want to receive scholarship", teach:"장학금 = scholarship, 받고 싶다 = want to receive.", conv:"AI: 왜 GKS를 신청했어요? → ...", tip:"장학금 = GKS keyword"}
+  ]
+};
+
+let currentLesson="age";
+let currentIndex=0;
+let mode="teach";
+let recognition=null;
+let bestKoreanVoice=null;
+
+function loadLesson(){
+  currentLesson=document.getElementById('lesson-select').value;
+  currentIndex=0;
+  renderCard();
+}
+
+function getCurrentCards(){ return LESSONS[currentLesson]||[]; }
+
+function renderCard(){
+  const cards=getCurrentCards();
+  if(cards.length===0) return;
+  if(currentIndex>=cards.length) currentIndex=0;
+  const card=cards[currentIndex];
+  document.getElementById('card-hangul').innerText=card.k;
+  document.getElementById('card-roman').innerText=card.r;
+  document.getElementById('card-english').innerText=card.e;
+  document.getElementById('card-category').innerText=currentLesson.toUpperCase();
+  document.getElementById('teach-explain').innerHTML=card.teach.replace(/\n/g,"<br>");
+  document.getElementById('conversation-line').innerText=card.conv;
+  document.getElementById('card-index').innerText=(currentIndex+1)+" / "+cards.length;
+  document.getElementById('progress').innerText=`Step ${currentIndex+1}/${cards.length}`;
+  document.getElementById('score-box').classList.add('hidden');
+  document.getElementById('conversation-box').classList.toggle('hidden', mode!=='speak');
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('btn-teach').className=m==='teach'?'px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-600':'px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-800';
+  document.getElementById('btn-speak').className=m==='speak'?'px-3 py-1.5 rounded-full text-[10px] font-bold bg-blue-600':'px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-800';
+  document.getElementById('conversation-box').classList.toggle('hidden', m!=='speak');
+  document.getElementById('mic-btn').classList.toggle('hidden', false);
+  if(m==='speak') document.getElementById('mic-label').innerText="Role-play: Answer the AI - Like Teuida";
+  else document.getElementById('mic-label').innerText="Press to Speak Korean - Like Teuida";
+}
+
+function nextCard(){ const c=getCurrentCards(); currentIndex=(currentIndex+1)%c.length; renderCard(); }
+function prevCard(){ const c=getCurrentCards(); currentIndex=(currentIndex-1+c.length)%c.length; renderCard(); }
+
+// TTS
+function initVoices(){ const v=speechSynthesis.getVoices(); bestKoreanVoice=v.filter(x=>x.lang.toLowerCase().includes('ko')).find(x=>x.name.includes('Google'))||v.find(x=>x.lang.includes('ko')); }
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=initVoices; initVoices(); setTimeout(initVoices,800); }
+function speakKorean(){ const card=getCurrentCards()[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(card.k); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.9; speechSynthesis.speak(u); }
+function speakKoreanSlow(){ const card=getCurrentCards()[currentIndex]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(card.k); u.lang='ko-KR'; if(bestKoreanVoice) u.voice=bestKoreanVoice; u.rate=0.6; speechSynthesis.speak(u); }
+
+// SPEECH RECOGNITION - Teuida style
+function startListening(){
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+    alert("Your browser doesn't support mic. Use Chrome on Android. For now, just repeat aloud!");
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang='ko-KR';
+  recognition.interimResults=false;
+  recognition.maxAlternatives=1;
+  
+  const btn=document.getElementById('mic-btn');
+  const label=document.getElementById('mic-label');
+  btn.classList.add('pulse-ring');
+  label.innerText="Listening... Say: "+getCurrentCards()[currentIndex].k;
+  
+  recognition.start();
+  
+  recognition.onresult=(event)=>{
+    const spoken=event.results[0][0].transcript;
+    const target=getCurrentCards()[currentIndex].k;
+    const score=calculateScore(spoken, target);
+    showScore(spoken, target, score);
+    btn.classList.remove('pulse-ring');
+    label.innerText="Press to Speak Again";
+  };
+  
+  recognition.onerror=(e)=>{
+    btn.classList.remove('pulse-ring');
+    label.innerText="Mic error, try again";
+    console.log(e);
+  };
+  
+  recognition.onend=()=>{
+    btn.classList.remove('pulse-ring');
+  };
+}
+
+function calculateScore(spoken, target){
+  // Simple scoring like Teuida
+  const s=spoken.replace(/\s/g,""), t=target.replace(/\s/g,"");
+  if(s===t) return 100;
+  if(t.includes(s) || s.includes(t)) return 85;
+  // Check keywords
+  let match=0;
+  for(let char of t){ if(s.includes(char)) match++; }
+  const percent=Math.round((match/t.length)*100);
+  return Math.min(95, Math.max(20, percent));
+}
+
+function showScore(spoken, target, score){
+  const box=document.getElementById('score-box');
+  const text=document.getElementById('score-text');
+  const feed=document.getElementById('score-feedback');
+  box.classList.remove('hidden');
+  
+  if(score>=85){
+    box.className="mt-2 p-3 rounded-xl border text-center bg-emerald-500/10 border-emerald-500/30";
+    text.innerHTML=`✅ ${score}% - Great! You said: "${spoken}"`;
+    feed.innerText=`Target: ${target} - Perfect pronunciation! Next →`;
+    // Auto next after 2 sec like Teuida
+    setTimeout(()=>{ if(score>=90) nextCard(); }, 2000);
+  } else if(score>=60){
+    box.className="mt-2 p-3 rounded-xl border text-center bg-yellow-500/10 border-yellow-500/30";
+    text.innerHTML=`⚠️ ${score}% - Good try: "${spoken}"`;
+    feed.innerText=`Target: ${target}. Tip: Listen slow then try again.`;
+  } else {
+    box.className="mt-2 p-3 rounded-xl border text-center bg-rose-500/10 border-rose-500/30";
+    text.innerHTML=`❌ ${score}% - You said: "${spoken}"`;
+    feed.innerText=`Target: ${target}. Click 🔊 to listen slow, then try mic again.`;
+  }
+}
+
+renderCard();
+</script>
+</body>
+</html>
